@@ -13,13 +13,13 @@
         <!-- Styles -->
         <style>
             html, body {
-                background-color:#3900d449;
-                color: #636b6f;
+                background-image : url("inicial.jpg");
                 font-family: 'Nunito', sans-serif;
                 font-weight: 200;
                 height: 100vh;
                 margin: 0;
             }
+            
 
             .full-height {
                 height: 100vh;
@@ -39,20 +39,26 @@
                 position: absolute;
                 right: 10px;
                 top: 18px;
+                
+               
             }
 
             .content {
                 text-align: center;
+               
             }
 
             .title {
-                font-size: 84px;
+            
+                font: 100px Verdana;
             }
 
             .links > a {
-                color: #636b6f;
+                color: #ffffff;
+                background-color: #3110eb4f;
+                font: 18px arial;
                 padding: 0 25px;
-                font-size: 12px;
+                font-size: 20px;
                 font-weight: 600;
                 letter-spacing: .1rem;
                 text-decoration: none;
@@ -71,8 +77,8 @@
                     @auth
                         <a href="{{ url('/home') }}">Home</a>
                     @else
-                        <a href="{{ route('login') }}">Login</a>
-                        <a href="{{ route('register') }}">Register</a>
+                        <a href="{{ route('login') }}">Entrar</a>
+                        <a href="{{ route('register') }}">Registrar</a>
                     @endauth
                 </div>
             @endif
