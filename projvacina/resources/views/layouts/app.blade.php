@@ -40,6 +40,9 @@
 <li>
              <a class="navbar-brand" href="{{ url('caddose') }}">Cadastrar dose</a>
          </li>
+         <li>
+             <a class="navbar-brand" href="{{ url('carteira') }}">Carteira de vacinação</a>
+         </li>
          @endif
                     </ul>
 

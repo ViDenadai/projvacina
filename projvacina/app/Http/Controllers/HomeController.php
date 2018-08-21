@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\dose;
+
+
 class HomeController extends Controller
 {
     /**
@@ -21,8 +24,10 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+
+    public function index(dose $dose)
     {
-        return view('home');
+        $doses=$dose->where('id_user',auth()->user()->id)->get();
+        return view('home',compact('doses'));
     }
 }
