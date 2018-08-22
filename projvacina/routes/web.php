@@ -15,10 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/carteira',function(){
-    return view('dose');
-});
+Route::resource('caddose','DoseController');
+Route::resource('carteira','HomeController');

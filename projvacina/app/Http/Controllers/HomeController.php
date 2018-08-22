@@ -30,4 +30,9 @@ class HomeController extends Controller
         $doses=$dose->where('id_user',auth()->user()->id)->get();
         return view('home',compact('doses'));
     }
+    public function inicio()
+    {
+        
+        return view('welcome');
+    }
 }
