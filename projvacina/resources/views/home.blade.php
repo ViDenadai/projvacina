@@ -17,6 +17,7 @@
 
                     Você esta logado! 
                     @forelse($doses as $dose)
+                    @can('view_vacina','$post')
 <p>Nome:
     {{$dose->nome}}
 </p>
@@ -30,10 +31,12 @@
     {{$dose->numerodose}}
 </p>
 </br>
+@endcan
 @empty
 <p>
     sem doses cadastradas!!
 </p>
+
 @endforelse
 @endsection
 

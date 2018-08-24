@@ -1,20 +1,17 @@
-@extends('layouts.app')
+@extends('auth.Templates.template')
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
+@section('content-form')
+<div class="form-control">
 
-                <div class="card-body">
-                    @if (session('status'))
+@if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
+                        
                     @endif
+                    </div>
 
-                    <form method="POST" action="{{ route('password.email') }}" aria-label="{{ __('Reset Password') }}">
+                    <form class="login form" method="POST" action="{{ route('password.email') }}" aria-label="{{ __('Reset Password') }}">
                         @csrf
 
                         <div class="form-group row">
@@ -31,17 +28,12 @@
                             </div>
                         </div>
 
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Send Password Reset Link') }}
+                        <div class="form-group ">
+                            
+                                <button type="submit" class="btn btn-login">
+                                    {{ __('Enviar link de recuperação de senha.') }}
                                 </button>
-                            </div>
+                            
                         </div>
                     </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection

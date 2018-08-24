@@ -36,10 +36,11 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                     @if(!auth::guest())
-
+                    @can('edit_vacina','$post')
 <li>
              <a class="navbar-brand" href="{{ url('caddose') }}">Cadastrar dose</a>
          </li>
+         @endcan
          <li>
              <a class="navbar-brand" href="{{ url('carteira') }}">Carteira de vacinação</a>
          </li>
