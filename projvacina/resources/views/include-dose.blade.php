@@ -1,23 +1,27 @@
-@extends('layouts.app')
+@extends('painel.templates.template')
 
 @section('content')
 
+<!--Filters and actions-->
+<div class="actions">
+    <div class="container">
+        <a class="add" href="forms">
+            <i class="fa fa-plus-circle"></i>
+        </a>
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+        <form class="form-search form form-inline">
+            <input type="text" name="pesquisar" placeholder="Pesquisar?" class="form-control">
+            <input type="submit" name="pesquisar" value="Encontrar" class="btn btn-success">
+        </form>
 
-                    Você esta logado! 
-                    
-
-
-
-
-
-
+        <div class="col-md-2 text-center">
+				<a href="/caddose">
+				<img src="{{url("assets/painel/imgs/vacinaplus.png")}}" alt="Posts" class="img-submenu">
+					<h1 class="subtitle">Adicionar Dose</h1>
+				</a>
+</div>
+    </div>
+</div><!--Actions-->
 
 <div class="container">
     <div class="row justify-content-center">
@@ -95,7 +99,7 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-login">
                                     {{ __('Register') }}
                                 </button>
                             </div>
@@ -108,17 +112,20 @@
 </div>
 
 
-
-
-
-
-
-
-
-
-
 @endsection
 
-                </div>
-           
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

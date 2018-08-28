@@ -11,6 +11,17 @@
 |
 */
 
+Route::group(['prefix' => 'painel'],function(){
+     Route::get('vacinas', 'painel\VacinaController@index');
+     Route::get('permissions', 'painel\PermissionController@index');
+     Route::get('roles', 'painel\RoleController@index');
+     Route::get('users', 'painel\UserController@index');
+        Route::get('/', 'painel\PainelController@index');
+
+});
+
+
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -18,7 +29,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'painel\PainelController@index');
 
 Route::resource('caddose','DoseController');
 Route::resource('carteira','HomeController');
