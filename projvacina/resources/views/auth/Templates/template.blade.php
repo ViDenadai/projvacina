@@ -22,7 +22,7 @@
 <body>
 	<div class="login">
 		<div class="login-header">
-			<img src="{{url("Assets\Painel\imgs/acl-branca.png")}}" alt="acl" class="logo-login">
+			<img src="{{url("Assets\Painel\imgs/acl-branca.png")}}" alt="acl" class="logo-login2">
 		</div>
 
 @yield('content-form')

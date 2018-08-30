@@ -50,7 +50,7 @@
 
             .title {
             
-                font: 100px Verdana;
+                font: 50px Verdana;
             }
 
             .links > a {
@@ -66,8 +66,9 @@
             }
 
             .m-b-md {
-                margin-bottom: 30px;
+                margin-bottom: 15px;
             }
+            img.logo-login{max-width: 600px;}
         </style>
     </head>
     <body>
@@ -85,7 +86,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-               Minhas Vacinas
+                <img src="{{url("Assets\Painel\imgs/acl-branca.png")}}" alt="acl" class="logo-login"></a>
                 </div>
 <!--
                 <div class="links">

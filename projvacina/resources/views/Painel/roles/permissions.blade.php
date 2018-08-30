@@ -1,4 +1,4 @@
-@extends('painel.templates.template')
+@extends('painel.Templates.template')
 
 @section('content')
 
@@ -13,15 +13,6 @@
             <input type="text" name="pesquisar" placeholder="Pesquisar?" class="form-control">
             <input type="submit" name="pesquisar" value="Encontrar" class="btn btn-success">
         </form>
-        @can('create_vacina')
-        <div class="col-md-2 text-center">
-				<a href="/roleuser">
-				<i class="fas fa-users-cog"></i>
-					<h1 class="subtitle">Adicionar Dose</h1>
-				</a>
-</div>
-@endcan
-
     </div>
 </div><!--Actions-->
 
@@ -29,31 +20,22 @@
 
 <div class="container">
     <h1 class="title">
-        Listagem das roles
+        Permissions: <b>{{$role->name}}</b>
     </h1>
 
     <table class="table table-hover">
         <tr>
-            <th>Nome</th>
-            <th>label</th>
-           
-            
-            <th width="150px">Ações</th>
+            <th>Name</th>
+            <th>Label</th>
+            <th width="100px">Ações</th>
         </tr>
 
-        @forelse( $roles as $role )
+        @forelse( $permissions as $permission )
         <tr>
-            <td>{{$role->name}}</td>
-            <td>{{$role->label}}</td>
-            
+            <td>{{$permission->name}}</td>
+            <td>{{$permission->label}}</td>
             <td>
-                <a href="{{url("/painel/role/$role->id/permissions")}}" class="edit">
-                    <i class="fas fa-unlock-alt"></i>
-                </a>
-                <a href="{{url("/painel/role/$role->id/edit")}}" class="edit">
-                    <i class="fa fa-pencil-square-o"></i>
-                </a>
-                <a href="{{url("/painel/role/$role->id/delete")}}" class="delete">
+                <a href="{{url("/painel/permission/$permission->id/delete")}}" class="delete">
                     <i class="fa fa-trash"></i>
                 </a>
             </td>

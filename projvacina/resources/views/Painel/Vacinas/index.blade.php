@@ -43,6 +43,7 @@
         </tr>
 
         @forelse( $doses as $dose )
+       
         <tr>
             <td>{{$dose->nome}}</td>
             <td>{{$dose->local}}</td>
@@ -58,12 +59,14 @@
                 </a>
             </td>
         </tr>
+       
         @empty
         <tr>
             <td colspan="90">
                 <p>Nenhum Resultado!</p>
             </td>
         </tr>
+        
         @endforelse
     </table>
 

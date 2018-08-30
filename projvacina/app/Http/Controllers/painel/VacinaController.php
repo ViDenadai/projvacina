@@ -5,6 +5,7 @@ namespace App\Http\Controllers\painel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\dose;
+use App\User;
 
 class VacinaController extends Controller
 {
@@ -17,12 +18,25 @@ class VacinaController extends Controller
         
     }
     
-    public function index()
+   
+    public function index(user $user,dose $dose)
     {
+        if( $user->hasAnyRoles('adm') ){
         $doses = $this->dose->all();
-            //abort(403, 'Not Permissions Lists Post');
+        return view('painel.Vacinas.index', compact('doses'));}
+else
+        $doses=$dose->where('id_user',auth()->user()->id)->get();
+        return view('painel.Vacinas.index',compact('doses'));
+    }
+    public function update($iddose)
+    {
+        $dose = Dose::find($iddose);
         
-        return view('painel.Vacinas.index', compact('doses'));
+       
+        if( Gate::denies('update-dose', $dose) )
+                abort(403, 'Unauthorized');
+        
+        return view('dose-update', compact('dose'));
     }
     //
 }

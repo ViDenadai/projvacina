@@ -30,6 +30,16 @@ class HomeController extends Controller
         $doses=$dose->where('id_user',auth()->user()->id)->get();
         return view('home',compact('doses'));
     }
+    public function update($iddose)
+    {
+        $dose = Dose::find($iddose);
+        
+       
+        if( Gate::denies('update-dose', $dose) )
+                abort(403, 'Unauthorized');
+        
+        return view('dose-update', compact('dose'));
+    }
     public function inicio()
     {
         

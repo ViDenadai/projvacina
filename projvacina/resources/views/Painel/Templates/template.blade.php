@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<title>Painel </title>
     <!-- FALTA CORRIGIR AS IMAGENS -->
-
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
@@ -62,30 +62,24 @@
 				</a>
 			</li>
 			@endcan
+			
 
 			<li class="col-md-2 text-center">
-				<a href="/logout">
-					<img src="{{url("Assets\Painel\imgs\sair-acl.png")}}" alt="Sair" class="img-menu">
-					<h1>Sair</h1>
-				</a>
-			</li>
-			<li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                    <a href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        <img src="{{url('assets/painel/imgs/sair-acl.png')}}" alt="Sair" class="img-menu">
+                        <h1>Sair</h1>
+					</a>
+					<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>
-                                </div>
-                            </li>
+                </li>
+				
+			
+			
+			
+							
 		</ul>
 	</div><!--Menu-->
 

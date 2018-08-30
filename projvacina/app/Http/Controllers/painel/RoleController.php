@@ -24,5 +24,16 @@ class RoleController extends Controller
         
         return view('painel.roles.index', compact('roles'));
     }
+    public function permissions($id)
+    {
+        //Recupera o role
+        $role = $this->role->find($id);
+        
+        //recuperar permissões
+        $permissions = $role->permissions()->get();
+        
+        return view('painel.roles.permissions', compact('role', 'permissions'));
+    }
+    
     //
 }
