@@ -1,7 +1,9 @@
 @extends('painel.templates.template')
 
 @section('content')
-
+@if(!empty($successMsg))
+  <div class="alert alert-success"> Dose cadastrada com sucesso!</div>
+@endif
 <!--Filters and actions-->
 <div class="actions">
     <div class="container">

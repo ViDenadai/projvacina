@@ -14,12 +14,18 @@
             <input type="submit" name="pesquisar" value="Encontrar" class="btn btn-success">
         </form>
         @can('create_vacina')
+       
         <div class="col-md-2 text-center">
-				<a href="/caddose">
-				<img src="{{url("assets/painel/imgs/vacinaplus.png")}}" alt="Posts" class="img-submenu">
-					<h1 class="subtitle">Adicionar Dose</h1>
+				<a href="/roleuser">
+                
+				<span style="font-size: 50px; color: #fff;">
+  <i class="fas fa-syringe"><h1 class="subtitle">Adicionar dose</h1></i>
+  
+</span>
+					
 				</a>
 </div>
+
 @endcan
     </div>
 </div><!--Actions-->
@@ -37,11 +43,11 @@
             <th>Local</th>
             <th>Dose</th>
             <th>Validade</th>
-            <th>Usuário ID</th>
+            @can('create_vacina')<th>Usuário ID</th>
             
             <th width="100px">Ações</th>
         </tr>
-
+        @endcan
         @forelse( $doses as $dose )
        
         <tr>
@@ -49,14 +55,18 @@
             <td>{{$dose->local}}</td>
             <td>{{$dose->numerodose}}</td>
             <td>{{$dose->validade}}</td>
+            @can('create_vacina')
             <td>{{$dose->id_user}}</td>
-            <td>
+            <td> 
                 <a href="{{url("/painel/dose/$dose->id/edit")}}" class="edit">
                     <i class="fa fa-pencil-square-o"></i>
                 </a>
+                @endcan
+                 @can('create_vacina')
                 <a href="{{url("/painel/dose/$dose->id/delete")}}" class="delete">
                     <i class="fa fa-trash"></i>
                 </a>
+                @endcan
             </td>
         </tr>
        

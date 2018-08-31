@@ -13,11 +13,13 @@
             <input type="text" name="pesquisar" placeholder="Pesquisar?" class="form-control">
             <input type="submit" name="pesquisar" value="Encontrar" class="btn btn-success">
         </form>
-        @can('create_vacina')
+        @can('view_users')
         <div class="col-md-2 text-center">
 				<a href="/roleuser">
-				<i class="fas fa-users-cog"></i>
-					<h1 class="subtitle">Adicionar Dose</h1>
+				<span style="font-size: 50px; color: #fff;">
+  <i class="fas fa-users-cog"><h1 class="subtitle">Adicionar Função</h1></i>
+</span>
+					
 				</a>
 </div>
 @endcan

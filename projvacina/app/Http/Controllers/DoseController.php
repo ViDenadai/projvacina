@@ -24,7 +24,9 @@ class DoseController extends Controller
         $dose->numerodose = $request->numerodose;
         $dose->validade = $request->validade;
         $dose->save();
-        return redirect()->route('home')->with('message', 'Produto criado com sucesso!');
+       
+        return view('include-dose', compact('dose'))->with('successMsg','Property is updated .');
+       
     }
 
     public function show($id) {

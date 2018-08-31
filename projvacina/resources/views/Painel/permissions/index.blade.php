@@ -13,6 +13,16 @@
             <input type="text" name="pesquisar" placeholder="Pesquisar?" class="form-control">
             <input type="submit" name="pesquisar" value="Encontrar" class="btn btn-success">
         </form>
+        @can('view_users')
+        <div class="col-md-2 text-center">
+				<a href="/roleuser">
+				<span style="font-size: 50px; color: #fff;">
+  <i class="fas fa-user-check"><h1 class="subtitle">Adicionar Permissão</h1></i>
+</span>
+					
+				</a>
+</div>
+@endcan
     </div>
 </div><!--Actions-->
 
