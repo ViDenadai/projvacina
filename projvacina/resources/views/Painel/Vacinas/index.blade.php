@@ -13,10 +13,10 @@
             <input type="text" name="pesquisar" placeholder="Pesquisar?" class="form-control">
             <input type="submit" name="pesquisar" value="Encontrar" class="btn btn-success">
         </form>
-        @can('create_vacina')
+        @can('create_vacina') <!--PRECISA ARRUMAR AQUI-->
        
         <div class="col-md-2 text-center">
-				<a href="/roleuser">
+				<a href="/caddose">
                 
 				<span style="font-size: 50px; color: #fff;">
   <i class="fas fa-syringe"><h1 class="subtitle">Adicionar dose</h1></i>

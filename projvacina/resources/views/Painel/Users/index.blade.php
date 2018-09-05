@@ -25,6 +25,7 @@
 
     <table class="table table-hover">
         <tr>
+        <th>Id</th>
         <th>Nome</th>
             <th>E-mail</th>
             
@@ -33,6 +34,7 @@
 
         @forelse( $users as $user )
         <tr>
+        <td>{{$user->id}}</td>
         <td>{{$user->name}}</td>
             <td>{{$user->email}}</td>
             <td>

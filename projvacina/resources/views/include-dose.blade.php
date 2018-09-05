@@ -16,12 +16,7 @@
             <input type="submit" name="pesquisar" value="Encontrar" class="btn btn-success">
         </form>
 
-        <div class="col-md-2 text-center">
-				<a href="/caddose">
-				<img src="{{url("assets/painel/imgs/vacinaplus.png")}}" alt="Posts" class="img-submenu">
-					<h1 class="subtitle">Adicionar Dose</h1>
-				</a>
-</div>
+        
     </div>
 </div><!--Actions-->
 
@@ -29,7 +24,9 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Registrar Dose') }}</div>
+                <div class="card-header"><h2 align="center">Registrar dose</h2></div>
+                <br>
+                
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('caddose.store') }}" aria-label="{{ __('Register') }}">

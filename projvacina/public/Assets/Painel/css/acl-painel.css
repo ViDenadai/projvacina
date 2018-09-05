@@ -5,7 +5,7 @@
     
 }
 .menu{
-    background: rgba(47, 0, 255, 0.719);
+    background: rgba(25, 0, 138, 0.726);
     margin: 0px;
     padding: 0px;
 }
@@ -24,14 +24,14 @@ ul.menu li{
 ul.menu li h1{
     font-size: 18px;
     margin: 4px;
-    color: #FFF;
+    color: rgb(255, 255, 255);
     font-weight: bold;
 }
 img.img-menu{
     max-width: 50px;
 }
 img.img-submenu{
-    border: 1px solid rgba(10, 23, 207, 0.596); 
+    border: 1px solid rgba(0, 17, 255, 0.472); 
     padding: 10px 10px; 
     border-radius: 1px;
     max-width: 80px;
@@ -42,7 +42,7 @@ a:hover{text-decoration: none;}
 
 
 .actions{
-    background: #3008e4;
+    background: #3313e9a6;
 }
 a.add{
     background: rgba(9, 13, 236, 0.63);
@@ -61,24 +61,25 @@ form.form-search{
 ul.relatorios{
     float: left;
     
-    width: 100%;
+    width: 90%;
     list-style: none;
     margin: 39px 0px;
 }
 ul.relatorios li a{
-    background: rgba(253, 0, 0, 0.801);
-    margin: 14px 0px;
-    float: left;
+    background: rgba(253, 0, 0, 0.657);
+    margin: 20px 40px;
+    float: left;    
+    width: 90%;
+    padding: 10px;
+    border: 3px solid rgba(255, 0, 0, 0.267);
+    border-radius: 90px;
     
-
-    width: 100%;
-    padding: 14px;
 }
 ul.relatorios li h1{
     color: #FFF;
     font-size: 26px;
-    border: 1px;
-    border-color: #FFF;
+    border: 3px;
+    border-color: rgb(50, 0, 97);
 
 }
 
@@ -136,7 +137,7 @@ img.logo-login2{max-width: 200px;
    
     }
 form.login input{
-    border-radius: 0px;
+    border-radius: 10px;
     height: 50px;
     color: rgba(28, 72, 70, 0.87);
 }
