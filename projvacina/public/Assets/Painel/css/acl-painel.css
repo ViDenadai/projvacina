@@ -29,10 +29,11 @@ ul.menu li h1{
 }
 img.img-menu{
     max-width: 50px;
+    padding: 5px 5px; 
 }
 img.img-submenu{
     border: 1px solid rgba(0, 17, 255, 0.472); 
-    padding: 10px 10px; 
+    padding: 20px 20px; 
     border-radius: 1px;
     max-width: 80px;
 }

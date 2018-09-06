@@ -13,6 +13,20 @@
             <input type="text" name="pesquisar" placeholder="Pesquisar?" class="form-control">
             <input type="submit" name="pesquisar" value="Encontrar" class="btn btn-success">
         </form>
+        @can('view_users') 
+       
+       <div class="col-md-2 text-center">
+               <a href="/caddose">
+               
+               <span style="font-size: 50px; color: #fff;">
+ <i class="fas fa-user-shield"><h1 class="subtitle">Alterar Função</h1></i>
+ 
+</span>
+                   
+               </a>
+</div>
+
+@endcan
     </div>
 </div><!--Actions-->
 
@@ -28,6 +42,7 @@
         <th>Id</th>
         <th>Nome</th>
             <th>E-mail</th>
+            <th>Função</th>
             
             <th width="100px">Ações</th>
         </tr>
@@ -37,6 +52,9 @@
         <td>{{$user->id}}</td>
         <td>{{$user->name}}</td>
             <td>{{$user->email}}</td>
+           
+            <td></td>
+            
             <td>
                 <a href="{{url("/painel/user/$user->id/edit")}}" class="edit">
                     <i class="fa fa-pencil-square-o"></i>

@@ -15,7 +15,7 @@
         </form>
         @can('view_users')
         <div class="col-md-2 text-center">
-				<a href="/roleuser">
+				<a href="/painel/newpermission">
 				<span style="font-size: 50px; color: #fff;">
   <i class="fas fa-user-check"><h1 class="subtitle">Adicionar Permissão</h1></i>
 </span>

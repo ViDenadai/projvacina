@@ -13,7 +13,7 @@
             <input type="text" name="pesquisar" placeholder="Pesquisar?" class="form-control">
             <input type="submit" name="pesquisar" value="Encontrar" class="btn btn-success">
         </form>
-        @can('create_vacina') <!--PRECISA ARRUMAR AQUI-->
+        @can('create_vacina') 
        
         <div class="col-md-2 text-center">
 				<a href="/caddose">
