@@ -35,7 +35,7 @@
     </h1>
 
     <table class="table table-hover">
-        <tr>
+        <tr><th>ID</th>
             <th>Nome</th>
             <th>label</th>
            
@@ -44,7 +44,7 @@
         </tr>
 
         @forelse( $roles as $role )
-        <tr>
+        <tr><td>{{$role->id}}</td>
             <td>{{$role->name}}</td>
             <td>{{$role->label}}</td>
             

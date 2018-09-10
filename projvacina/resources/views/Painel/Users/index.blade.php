@@ -16,7 +16,7 @@
         @can('view_users') 
        
        <div class="col-md-2 text-center">
-               <a href="/caddose">
+               <a href="/painel/newfunction">
                
                <span style="font-size: 50px; color: #fff;">
  <i class="fas fa-user-shield"><h1 class="subtitle">Alterar Função</h1></i>

@@ -38,5 +38,8 @@ else
         
         return view('dose-update', compact('dose'));
     }
+    public function new() {
+        return view('include-dose');
+    }
     //
 }

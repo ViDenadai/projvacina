@@ -5,6 +5,7 @@ namespace App\Http\Controllers\painel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Permission;
+use App\role_user;
 
 class PermissionController extends Controller
 { private $permission;
@@ -18,14 +19,20 @@ class PermissionController extends Controller
     
     public function index()
     {
-        $permissions = $this->permission->all();
-            //abort(403, 'Not Permissions Lists Post');
+       
         
-        return view('painel.permissions.index', compact('permissions'));
+        return view('newfunction');
     }
     
-    public function new() {
+    public function new(Request $request) {
+        $roleuser = new roleuser;
+        $roleuser->user_id = $request->user_id;
+        $roleuser->role_id = $request->role_id;
        
-        return view('Painel.permissions.new');
+        $roleuser->save();
+       
+        return view('newfunction', compact('roleuser'))->with('successMsg','Property is updated .');
+       
     }
+
 }

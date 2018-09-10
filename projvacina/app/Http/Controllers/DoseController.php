@@ -12,7 +12,7 @@ class DoseController extends Controller
         return view('include-dose');
     }
 
-    public function create() {
+    public function new() {
         return view('include-dose');
     }
 

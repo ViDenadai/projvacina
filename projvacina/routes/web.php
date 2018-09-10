@@ -19,6 +19,8 @@ Route::group(['prefix' => 'painel'],function(){
      Route::get('users', 'painel\UserController@index');
      Route::get('/', 'painel\PainelController@index');
      Route::get('newpermission', 'painel\PermissionController@new');
+     Route::get('newfunction', 'painel\UserController@newfunction');
+     Route::get('newvacina', 'painel\VacinaController@new');
 
 });
 
@@ -36,3 +38,4 @@ Route::get('home', 'painel\PainelController@index');
 
 Route::resource('caddose','DoseController');
 Route::resource('carteira','HomeController');
+Route::resource('newfunctions','painel\UserController');

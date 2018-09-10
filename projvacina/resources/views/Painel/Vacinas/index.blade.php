@@ -16,7 +16,7 @@
         @can('create_vacina') 
        
         <div class="col-md-2 text-center">
-				<a href="/caddose">
+				<a href="/painel/newvacina">
                 
 				<span style="font-size: 50px; color: #fff;">
   <i class="fas fa-syringe"><h1 class="subtitle">Adicionar dose</h1></i>
