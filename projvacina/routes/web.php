@@ -35,7 +35,8 @@ Auth::routes();
 
 Route::get('/home', 'painel\PainelController@index');
 Route::get('home', 'painel\PainelController@index');
-
+Route::resource('users','painel\UserController');
+Route::resource('painel','painel\PainelController');
 Route::resource('caddose','DoseController');
 Route::resource('carteira','HomeController');
 Route::resource('newfunctions','painel\UserController');

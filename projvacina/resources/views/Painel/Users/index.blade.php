@@ -55,14 +55,20 @@
            
             <td></td>
             
-            <td>
-                <a href="{{url("/painel/user/$user->id/edit")}}" class="edit">
-                    <i class="fa fa-pencil-square-o"></i>
-                </a>
-                <a href="{{url("/painel/user/$user->id/delete")}}" class="delete">
-                    <i class="fa fa-trash"></i>
-                </a>
-            </td>
+            <td id="center">
+                             <a href="{{route('users.edit', $user->id)}}" 
+                                               data-toggle="tooltip" 
+                                               data-placement="top"
+                                               title="Alterar"><i class="fa fa-pencil"></i></a>
+                                            &nbsp;<form style="display: inline-block;" method="POST" 
+                                                        action="{{route('users.destroy', $user->id)}}"                                                        
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="Excluir" 
+                                                        onsubmit="return confirm('Confirma exclusão?')">
+                                                {{method_field('DELETE')}}{{ csrf_field() }}                                                
+                                                <button type="submit" style="background-color: #fff">
+                                                    <a><i class="fa fa-trash-o"></i></a>                                                    
+                                                </button></form></td> 
         </tr>
         @empty
         <tr>

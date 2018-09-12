@@ -39,5 +39,16 @@ class UserController extends Controller
         $role_user->save(); 
         return view('newfunction', compact('role_user'))->with('successMsg','Property is updated .');       
     }
+    public function edit($id) {
+        $users = user::findOrFail($id);
+        return view('/painel', compact('users'));
+    }
+    public function destroy($id) {
+        $users = user::findOrFail($id);
+        $users->delete();
+        return redirect()->route('painel/users')->with('message', 'Produto excluído com sucesso!');
+   
+    }
+
 }
 

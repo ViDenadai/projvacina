@@ -45,13 +45,13 @@ class DoseController extends Controller
         $dosess->quantity = $request->quantity;
         $dosess->price = $request->price;
         $dosess->save();
-        return redirect()->route('dosess.index')->with('message', 'Produto alterado com sucesso!');
+        return redirect()->route('dosess.index')->with('message', 'usuario alterado com sucesso!');
     }
 
     public function destroy($id) {
         $dosess = dose::findOrFail($id);
         $dosess->delete();
-        return redirect()->route('dosess.index')->with('message', 'Produto excluído com sucesso!');
+        return redirect()->route('painel.index')->with('message', 'usuario excluído com sucesso!');
     }
 
 }
