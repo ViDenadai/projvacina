@@ -13,6 +13,7 @@
 
 Route::group(['prefix' => 'painel'],function(){
      Route::get('vacinas', 'painel\VacinaController@index');
+     Route::get('carteira', 'painel\VacinaController@carteira');
      Route::get('permissions', 'painel\PermissionController@index');
      Route::get('roles', 'painel\RoleController@index');
      Route::get('role/{id}/permissions', 'painel\RoleController@permissions');

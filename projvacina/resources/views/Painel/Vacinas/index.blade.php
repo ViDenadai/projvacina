@@ -2,17 +2,13 @@
 
 @section('content')
 
+
 <!--Filters and actions-->
 <div class="actions">
     <div class="container">
-        <a class="add" href="forms">
-            <i class="fa fa-plus-circle"></i>
-        </a>
+       
 
-        <form class="form-search form form-inline">
-            <input type="text" name="pesquisar" placeholder="Pesquisar?" class="form-control">
-            <input type="submit" name="pesquisar" value="Encontrar" class="btn btn-success">
-        </form>
+         
         @can('create_vacina') 
        
         <div class="col-md-2 text-center">
@@ -33,8 +29,11 @@
 <div class="clear"></div>
 
 <div class="container">
+<a href="/painel/carteira">
+                   acessar versão com filtros
+                </a>
     <h1 class="title">
-        Listagem das doses
+        Listagem das minhas vacinas
     </h1>
 
     <table class="table table-hover">
@@ -49,7 +48,7 @@
         </tr>
         @endcan
         @forelse( $doses as $dose )
-       
+        
         <tr>
             <td>{{$dose->nome}}</td>
             <td>{{$dose->local}}</td>
@@ -78,8 +77,14 @@
         </tr>
         
         @endforelse
+       
     </table>
+    
 
 </div>
 
+
 @endsection
+	
+
+    
