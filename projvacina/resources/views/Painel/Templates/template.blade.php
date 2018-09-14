@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Painel </title>
-    <!--  -->
+    <!--icones utilizados no sistemas estão disponiveis em https://fontawesome.com/   -->
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -21,7 +21,8 @@
 	
 	<style>
             html, body {
-                background-image : url("fundos.jpg");
+				/* imagem de fundo do painel */
+                background-image : url("fundos.jpg"); 
                 font-family: 'Nunito', sans-serif;
                 font-weight: 200;
                 height: 100vh;
@@ -90,7 +91,7 @@
 			
 							
 		</ul>
-	</div><!--Menu-->
+	</div>
 	
 
 	

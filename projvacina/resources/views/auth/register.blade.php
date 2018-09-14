@@ -1,6 +1,7 @@
 @extends('auth.Templates.template')
 
 @section('content-form')
+
 <form class="login form" method="POST" action="{{ route('register') }}" aria-label="{{ __('Register') }}">
                         @csrf
 
@@ -8,6 +9,7 @@
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Nome Completo') }}</label>
 
                             <div class="col-md-6">
+                           
                                 <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required autofocus>
 
                                 @if ($errors->has('name'))
@@ -69,7 +71,7 @@
                         </div>
 
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
+                            <div class="col-md-12 offset-md-4">
                                 <button type="submit" class="btn btn-login">
                                     {{ __('Registrar') }}
                                 </button>

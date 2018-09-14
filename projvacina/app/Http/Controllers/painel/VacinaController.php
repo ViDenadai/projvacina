@@ -41,8 +41,5 @@ else
     public function new() {
         return view('include-dose');
     }
-    public function carteira(user $user,dose $dose) {
-        $doses=$dose->where('id_user',auth()->user()->id)->get();
-        return view('painel.Vacinas.versaocarteira',compact('doses'));
-    }
+    
 }

@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- tela de inicio do sistema minhas vacinas -->
 <html lang="{{ app()->getLocale() }}">
     <head>
         <meta charset="utf-8">
@@ -13,6 +14,7 @@
         <!-- Styles -->
         <style>
             html, body {
+                /* Aqui esta a imagem de fundo */
                 background-image : url("inicial.jpg");
                 font-family: 'Nunito', sans-serif;
                 font-weight: 200;
@@ -76,6 +78,7 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     @auth
+                    <!-- se o usuario estiver logado aparece a opção de home -->
                         <a href="{{ url('/home') }}">Home</a>
                     @else
                         <a href="{{ route('login') }}">Entrar</a>
