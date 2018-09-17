@@ -29,7 +29,7 @@
                 
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('newfunctions.store') }}" aria-label="{{ __('Register') }}">
+                    <form method="POST" action="{{ route('funcoes.store') }}" aria-label="{{ __('Register') }}">
                         @csrf
 
                         <div class="form-group row">

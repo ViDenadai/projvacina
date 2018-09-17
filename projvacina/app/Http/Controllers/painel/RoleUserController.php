@@ -7,12 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Permission;
 use App\role_user;
 
-class PermissionController extends Controller
-{ private $permission;
+class RoleUserController extends Controller
+{ private $role_user;
     
-    public function __construct(permission $permissions)
+    public function __construct(permission $role_users)
     {
-        $this->permission = $permissions;
+        $this->role_user = $role_users;
         
         
     }
@@ -23,13 +23,19 @@ class PermissionController extends Controller
         
         return view('newfunction');
     }
+    public function newfunction()
+    {
+       
+        
+        return view('newfunction');
+    }
     
     public function new(Request $request) {
-        $roleuser = new roleuser;
-        $roleuser->user_id = $request->user_id;
-        $roleuser->role_id = $request->role_id;
+        $roleusers = new roleuser;
+        $roleusers->user_id = $request->user_id;
+        $roleusers->role_id = $request->role_id;
        
-        $roleuser->save();
+        $roleusers->save();
        
         return view('newfunction', compact('roleuser'))->with('successMsg','Property is updated .');
        
