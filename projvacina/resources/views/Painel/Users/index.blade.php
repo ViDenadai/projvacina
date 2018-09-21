@@ -64,6 +64,7 @@
         <tr>
         <td>{{$user->id}}</td>
         <td>{{$user->name}}</td>
+        
             <td>{{$user->email}}</td>
            
             <td></td>
@@ -73,6 +74,7 @@
                                                data-toggle="tooltip" 
                                                data-placement="top"
                                                title="Alterar"><i class="fa fa-pencil-square-o"></i></a>
+                                               
                                             &nbsp;<form style="display: inline-block;" method="POST" 
                                                         action="{{route('users.destroy', $user->id)}}"                                                        
                                                         data-toggle="tooltip" data-placement="top"

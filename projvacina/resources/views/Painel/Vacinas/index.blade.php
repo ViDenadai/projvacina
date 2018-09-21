@@ -74,9 +74,15 @@
                 </a>
                 @endcan
                  @can('create_vacina')
-                <a href="{{url("/painel/dose/$dose->id/delete")}}" class="delete">
-                    <i class="fa fa-trash"></i>
-                </a>
+                 &nbsp;<form style="display: inline-block;" method="POST" 
+                 action="{{route('vacinas.destroy', $dose->id)}}"                                                        
+                 data-toggle="tooltip" data-placement="top"
+                 title="Excluir" 
+                 onsubmit="return confirm('Confirma exclusão?')">
+         {{method_field('DELETE')}}{{ csrf_field() }}                                                
+         <button type="submit" style="background-color: #fff">
+             <a><i class="fa fa-trash"></i></a>                                                    
+         </button></form>
                 @endcan
             </td>
         </tr>

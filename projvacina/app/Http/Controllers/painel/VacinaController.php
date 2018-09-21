@@ -41,5 +41,10 @@ else
     public function new() {
         return view('include-dose');
     }
+    public function destroy($id) {
+        $dose = dose::findOrFail($id);
+        $dose->delete();
+        return redirect('painel/vacinas')->with('successMsg', 'Dose removida com sucesso!');
+    }
     
 }

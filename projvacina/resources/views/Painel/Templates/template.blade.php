@@ -36,6 +36,11 @@
 			<li class="col-md-2 text-center">
 				<a href="/painel">
                 <img src="{{url("Assets\Painel\imgs/acl-branca.png")}}" alt="acl" class="logo-login">				</a>
+				<p1>Bem Vindo!</p1>
+				<br>
+				<p1>{{ Auth::user()->name }}</p1>
+				<br>
+				<p1>ID: {{ Auth::user()->id }}</p1>
 			</li>
 			@can('view_users')
 			<li class="col-md-2 text-center">
@@ -79,8 +84,9 @@
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                         <img src="{{url('assets/painel/imgs/sair-acl.png')}}" alt="Sair" class="img-menu">
-                        <h1>Sair</h1>
-					</a>
+						<h1>Sair</h1></a>
+						
+					
 					<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>

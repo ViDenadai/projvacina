@@ -32,11 +32,17 @@
                     <form method="POST" action="{{ route('funcoes.store') }}" aria-label="{{ __('Register') }}">
                         @csrf
 
+
+                        
+
+
+
+
                         <div class="form-group row">
                             <label for="role_id" class="col-md-4 col-form-label text-md-right">{{ __('ID DA FUNÇÃO') }}</label>
 
                             <div class="col-md-6">
-                                <input id="role_id" type="text" class="form-control{{ $errors->has('role_id') ? ' is-invalid' : '' }}" name="role_id" value="{{ old('role_id') }}" required autofocus>
+                                <input id="role_id" type="number" class="form-control{{ $errors->has('role_id') ? ' is-invalid' : '' }}" name="role_id" value="{{ old('role_id') }}" required autofocus>
 
                                 @if ($errors->has('role_id'))
                                     <span class="invalid-feedback" role="alert">
@@ -50,7 +56,7 @@
                             <label for="user_id" class="col-md-4 col-form-label text-md-right">{{ __('ID DO USUARIO ') }}</label>
 
                             <div class="col-md-6">
-                                <input id="user_id" type="user_id" class="form-control{{ $errors->has('user_id') ? ' is-invalid' : '' }}" name="user_id" value="{{ old('user_id') }}" required>
+                                <input id="user_id" type="number" class="form-control{{ $errors->has('user_id') ? ' is-invalid' : '' }}" name="user_id" value="{{ old('user_id') }}" required>
 
                                 @if ($errors->has('user_id'))
                                     <span class="invalid-feedback" role="alert">

@@ -1,0 +1,10 @@
+1-implentar dropbox em abas de usuarios
+2-Melhorar interfaces
+3-alterar usuarios
+4-alterar  vacinas
+5-inserir funções
+6- inserir permissões
+7- Associar funções e permissões
+8- expirar sessão
+9-deixar o site responsivo
+

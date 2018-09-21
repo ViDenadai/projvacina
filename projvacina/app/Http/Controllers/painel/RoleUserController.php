@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Permission;
 use App\role_user;
+use App\User;
 
 class RoleUserController extends Controller
 { private $role_user;
+   
     
     public function __construct(permission $role_users)
     {
@@ -17,6 +19,7 @@ class RoleUserController extends Controller
         
     }
     
+   
     public function index()
     {
        
@@ -25,7 +28,8 @@ class RoleUserController extends Controller
     }
     public function newfunction()
     {
-       
+        
+        
         
         return view('newfunction');
     }

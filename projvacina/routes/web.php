@@ -13,7 +13,7 @@
 
 Route::group(['prefix' => 'painel'],function(){
      Route::get('vacinas', 'painel\VacinaController@index');
-     
+     Route::get('vacinasdelete', 'painel\VacinaController@destroy');
      Route::get('permissions', 'painel\PermissionController@index');
      Route::get('roles', 'painel\RoleController@index');
      Route::get('role/{id}/permissions', 'painel\RoleController@permissions');
@@ -38,6 +38,7 @@ Auth::routes();
 Route::get('/home', 'painel\PainelController@index');
 Route::get('home', 'painel\PainelController@index');
 Route::resource('users','painel\UserController');
+Route::resource('vacinas','painel\VacinaController');
 Route::resource('painel','painel\PainelController');
 Route::resource('caddose','DoseController');
 Route::resource('carteira','HomeController');
