@@ -13,6 +13,7 @@
 
         <!-- Styles -->
         <style>
+            /* css especifico para esta view */
             html, body {
                 /* Aqui esta a imagem de fundo */
                 background-image : url("inicial.jpg");
@@ -81,8 +82,11 @@
                     <!-- se o usuario estiver logado aparece a opção de home -->
                         <a href="{{ url('/home') }}">Home</a>
                     @else
+                    {{-- se o usuario nao estiver logado aparece as opções de registro e login --}}
                         <a href="{{ route('login') }}">Entrar</a>
+                        {{-- rota para a pagina de login do usauario --}}
                         <a href="{{ route('register') }}">Registrar</a>
+                        {{-- rota para a pagina de registro de um novo usuario --}}
                     @endauth
                 </div>
             @endif
@@ -90,6 +94,7 @@
             <div class="content">
                 <div class="title m-b-md">
                 <img src="{{url("Assets\Painel\imgs/acl-branca.png")}}" alt="acl" class="logo-login"></a>
+                {{-- logo do sistema minhas vacinas --}}
                 </div>
 <!--
                 <div class="links">

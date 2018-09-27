@@ -15,7 +15,7 @@
                         @csrf
 
                         <div class="form-group">
-                            
+                            {{-- formulario de login composto por email e senha --}}
 
                             <div class="col-md-7">
                             E-mail:
