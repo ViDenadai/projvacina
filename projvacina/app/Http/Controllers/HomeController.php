@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\dose;
+use App\Dose;
 
 
 class HomeController extends Controller

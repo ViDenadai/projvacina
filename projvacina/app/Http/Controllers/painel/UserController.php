@@ -5,7 +5,7 @@ namespace App\Http\Controllers\painel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
-use App\role_user;
+use App\Role_user;
 
 
 class UserController extends Controller

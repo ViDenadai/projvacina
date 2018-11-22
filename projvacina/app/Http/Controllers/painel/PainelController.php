@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Role;
 use App\Permission;
-use App\dose;
+use App\Dose;
 class PainelController extends Controller
 {
     public function index()

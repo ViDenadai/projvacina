@@ -25,8 +25,7 @@
         <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                Minhas Vacinas
-                
+                    Minhas Vacinas
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -36,15 +35,15 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                     @if(!auth::guest())
-                    @can('edit_vacina','$post')
-<li>
-             <a class="navbar-brand" href="{{ url('caddose') }}">Cadastrar dose</a>
-         </li>
-         @endcan
-         <li>
-             <a class="navbar-brand" href="{{ url('carteira') }}">Carteira de vacinação</a>
-         </li>
-         @endif
+                        @can('edit_vacina','$post')
+                        <li>
+                            <a class="navbar-brand" href="{{ url('caddose') }}">Cadastrar dose</a>
+                        </li>
+                        @endcan
+                        <li>
+                            <a class="navbar-brand" href="{{ url('carteira') }}">Carteira de vacinação</a>
+                        </li>
+                    @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\painel;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\dose;
+use App\Dose;
 use App\User;
 
 class VacinaController extends Controller
@@ -22,12 +22,13 @@ class VacinaController extends Controller
     public function index(user $user,dose $dose)
     {
         if( $user->hasAnyRoles('adm') ){
-        $doses = $this->dose->all();
-        return view('painel.Vacinas.index', compact('doses'));}
-else
-        $doses=$dose->where('id_user',auth()->user()->id)->get();
-        return view('painel.Vacinas.index',compact('doses'));
-        // view da carteira de vacinação com todas as doses
+            $doses = $this->dose->all();
+            return view('painel.Vacinas.index', compact('doses'));
+        } else {
+            $doses = $dose->where('id_user', auth()->user()->id)->get();
+            return view('painel.Vacinas.index',compact('doses'));
+            // view da carteira de vacinação com todas as doses
+        }
     }
     public function update($iddose)
         {
