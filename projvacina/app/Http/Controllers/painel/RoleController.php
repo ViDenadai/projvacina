@@ -34,6 +34,4 @@ class RoleController extends Controller
         
         return view('painel.roles.permissions', compact('role', 'permissions'));
     }
-    
-    //
 }
