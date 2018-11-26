@@ -18,10 +18,8 @@
             <div class="mr-auto p-2"><b>Minhas Vacinas</b></div>
             @can('create_vacina')
                 <div class="ml-auto p-2">
-                    <a href="/painel/newvacina">
-                        <span style="font-size: 35px;">
-                            <b><i class="far fa-plus-square"></i></b>
-                        </span>	
+                    <a href="/painel/newvacina" data-toggle="modal" data-target="#vaccineAddModal">
+                        <b><i class="far fa-plus-square add"></i></b>
                     </a>  
                 </div>
             @endcan
@@ -70,7 +68,121 @@
             @endforeach
         </tbody>
     </table>
-    <p class="pb-3"></p>
+
+    <!-- Modal de adição de vacinas -->
+    <div class="modal fade" id="vaccineAddModal" role="dialog" aria-labelledby="vaccineAddModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form method="POST" action="{{ route('painel.storeVaccine') }}" aria-label="{{ __('formVaccine') }}">
+                    <!-- Modal header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Adicionar Dose</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <!-- CSRF protection -->
+                        @csrf
+
+                        <!-- Nome da vacina -->
+                        <div class="form-group row">
+                            <label for="nome" class="col-md-4 col-form-label text-md-right">{{ __('Nome da vacina') }}</label>
+                            <div class="col-md-6">
+                                <input id="nome" 
+                                    type="text" 
+                                    class="form-control{{ $errors->has('nome') ? ' is-invalid' : '' }}" 
+                                    name="nome" value="{{ old('nome') }}" 
+                                    required 
+                                    autofocus>
+
+                                @if ($errors->has('nome'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('nome') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Local da aplicação -->
+                        <div class="form-group row">
+                            <label for="local" class="col-md-4 col-form-label text-md-right">{{ __('Local da aplicação ') }}</label>
+                            <div class="col-md-6">
+                                <input id="local" 
+                                    type="local" 
+                                    class="form-control{{ $errors->has('local') ? ' is-invalid' : '' }}" 
+                                    name="local" 
+                                    value="{{ old('local') }}" 
+                                    required>
+
+                                @if ($errors->has('local'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('local') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Nome do paciente -->
+                        <div class="form-group row">
+                            <label for="id_user" class="col-md-4 col-form-label text-md-right">{{ __('Paciente') }}</label>
+                            <div class="col-md-6">                                
+                                <select id="patientSelect" style="width: 100%" required></select>
+                                @if ($errors->has('id_user'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('id_user') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Número da Dose -->
+                        <div class="form-group row">
+                            <label for="numerodose" class="col-md-4 col-form-label text-md-right">{{ __('Número da dose') }}</label>
+
+                            <div class="col-md-6">
+                                <!-- <input id="numerodose" type="number"  min="1" max="5" class="form-control" name="numerodose" required> -->
+                                <select id="numerodose" style="width: 15%" required>
+                                    <option value="1">1ª</option>
+                                    <option value="2">2ª</option>
+                                    <option value="3">3ª</option>
+                                    <option value="4">4ª</option>
+                                    <option value="5">5ª</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Validade Dose -->
+                        <div class="form-group row">
+                            <label for="validade" class="col-md-4 col-form-label text-md-right">{{ __('Validade') }}</label>
+                            <div class="col-md-6">
+                                <input id="date" 
+                                    type="date" 
+                                    class="form-control{{ $errors->has('validade') ? ' is-invalid' : '' }}" 
+                                    name="validade" 
+                                    required>
+
+                                @if ($errors->has('validade'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('validade') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>                                
+                    
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">{{ __('Adicionar') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </div>
 @endsection
 
@@ -79,14 +191,12 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
 
+<!-- Select2 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
 <script>
     $(document).ready(function(){
-        // $("#myInput").on("keyup", function() {
-        //     var value = $(this).val().toLowerCase();
-        //     $("#myTable tr").filter(function() {
-        //     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        //     });
-        // });
         $('#vaccineTable').DataTable({
             "language": {
                 "decimal":        "",
@@ -112,6 +222,37 @@
                     "sortDescending": ": ativar ordenação decrescente da coluna"
                 }
             }
+        });
+
+        // Select de pacientes na adição de doses
+        // Nome dos pacientes sem formatação vindos da VacinaController
+        var patientsName = {!! json_encode($patientsName->toArray()) !!};
+
+        // Array com os nomes dos pacientes formatados
+        // para o select
+        var patientsSelect = [];
+        // Formatação para adequação ao select
+        for (key in patientsName) {
+            patientsSelect.push({id:key, text:patientsName[key].name});
+        };
+
+        // Inicialização select de paciente   
+        $('#patientSelect').select2({
+            "data": patientsSelect,
+            "language": {
+                "noResults": function(){
+                    return "Nenhum resultado foi encontrado...";
+                }
+            },
+        });
+
+        // Inicialização select de número da dose 
+        $('#numerodose').select2({
+            "language": {
+                "noResults": function(){
+                    return "";
+                }
+            },
         });
     });
 </script>

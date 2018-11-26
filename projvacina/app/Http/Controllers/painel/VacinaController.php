@@ -21,21 +21,34 @@ class VacinaController extends Controller
     
     public function index(user $user,dose $dose)
     {
+        // Nome dos pacientes existentes na plataforma
+        $patientsName = DB::table('users')->select('name')->get();
+
         if( $user->hasAnyRoles('adm') ){
-            // Todas as informações de doses junto com os nomes dos usuários correspondentes 
+            // Recupera todas as informações de doses junto com os nomes dos usuários correspondentes 
             $doses = DB::table('doses')
                         ->join('users', 'doses.id_user', '=', 'users.id')
                         ->select('doses.*', 'users.name')
                         ->get();
-            return view('painel.Vacinas.index', compact('doses'));
+
+            // Formatação de data
+            foreach ($doses as $dose) {
+                $dose->validade = date_format(new \DateTime($dose->validade), 'd/m/Y'); 
+            }
+            return view('painel.Vacinas.index', compact('doses', 'patientsName'));
         } else {
-            // Todas as informações de doses junto com o nome do usuário correspondente 
+            // Recupera todas as informações de doses junto com o nome do usuário correspondente 
             $doses = DB::table('doses')
                         ->join('users', 'doses.id_user', '=', 'users.id')
                         ->select('doses.*', 'users.name as user_name')
                         ->where('id_user', auth()->user()->id)
                         ->get();
-            return view('painel.Vacinas.index', compact('doses'));
+
+            // Formatação de data
+            foreach ($doses as $dose) {
+                $dose->validade = date_format(new \DateTime($dose->validade), 'd/m/Y'); 
+            }
+            return view('painel.Vacinas.index', compact('doses', 'patientsName'));
             // painel.Vacinas.index => view da carteira de vacinação com todas as doses
         }
     }
@@ -53,6 +66,11 @@ class VacinaController extends Controller
     {
         return view('include-dose');
         // retorna view para inserir uma nova dose na tabela
+    }
+
+    public function store(Request $request)
+    {
+        dd($request);
     }
 
     public function destroy($id) 

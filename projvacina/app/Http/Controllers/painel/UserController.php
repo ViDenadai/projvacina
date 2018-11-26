@@ -14,8 +14,6 @@ class UserController extends Controller
     public function __construct(user $users)
     {
         $this->user = $users;
-        
-        
     }
     
     public function index()

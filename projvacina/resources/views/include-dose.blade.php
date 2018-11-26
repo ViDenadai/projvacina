@@ -5,7 +5,7 @@
   <div class="alert alert-success"> Dose cadastrada com sucesso!</div>
 @endif
 <!--Filters and actions-->
-<div class="actions">
+<!-- <div class="actions">
     <div class="container">
         <a class="add" href="forms">
             <i class="fa fa-plus-circle"></i>
@@ -18,7 +18,7 @@
 
         
     </div>
-</div><!--Actions-->
+</div>Actions -->
 
 <div class="container">
     <div class="row justify-content-center">
@@ -26,8 +26,7 @@
             <div class="card">
                 <div class="card-header"><h2 align="center">Registrar dose</h2></div>
                 <br>
-                
-
+            
                 <div class="card-body">
                     <form method="POST" action="{{ route('caddose.store') }}" aria-label="{{ __('Register') }}">
                         @csrf
