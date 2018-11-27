@@ -10,39 +10,39 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::group(['prefix' => 'painel'],function(){
-    // aqui temos as rotas que possuem como prefixo /painel
+// aqui temos as rotas que possuem como prefixo /painel
+Route::group(['prefix' => 'painel', 'as' => 'painel.'], function(){
+    
     Route::get('vacinas', 'painel\VacinaController@index');
+    //  rota que direciona para a função index do controller vacina
 
-    //  rota que direciona para a função index do controller vacina 
     Route::get('vacinasdelete', 'painel\VacinaController@destroy');
-
     //  rota que direciona para a função destroy do controller de vacinas
+
     Route::get('permissions', 'painel\PermissionController@index');
-
     //  rota que direciona para a função index do controller permission
+
     Route::get('roles', 'painel\RoleController@index');
-
     //  rota que direciona para a função index do controller roles são as funções presentes no sistema
+
     Route::get('role/{id}/permissions', 'painel\RoleController@permissions');
-
     //  rota que direciona para a função permissions do controller roles onde mostra as permissões atribuidas para cada função
+
     Route::get('users', 'painel\UserController@index');
-
     //  rota que direciona para a função index do controller users 
+
     Route::get('/', 'painel\PainelController@index');
+    //  rota que direciona para a função index do controller painel,pagina inicial
 
-    //  rota que direciona para a função index do controller painel,pagina inicial 
     Route::get('newpermission', 'painel\PermissionController@new');
+    //  rota que direciona para a função new do controller Permission
 
-    //  rota que direciona para a função new do controller Vacina 
     Route::get('newvacina', 'painel\VacinaController@new');
-
-    //  rota que direciona para a função store do controller Vacina
-    Route::post('storeVaccine', 'painel\VacinaController@store');
-
     //  rota que direciona para a função new do controller vacina 
+
+    //  Rota que direciona para a função store do controller Vacina
+    Route::post('storeVaccine', ['as' => 'storeVaccine', 'uses' => 'painel\VacinaController@store']);
+      
     Route::get('newfunction','painel\RoleUserController@newfunction');
 });
 

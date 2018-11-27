@@ -3,55 +3,62 @@
 @section('content')
 <div class="container">
     <br>
-    <!-- @can('create_vacina')
-        <a href="/painel/newvacina">                
-            <span style="font-size: 50px; color: rgba(4, 199, 199, 0.733);">
-                <i class="fas fa-syringe"><h1 class="subtitle">Adicionar dose</h1></i>                
-            </span>					
-        </a>     
-    @endcan -->
-    <!-- <h2> Filtro </h2>
-    <input class="form-control" id="myInput" type="text" placeholder="Digite o nome da"> -->
-
     <h1 class="title">
         <div class="d-flex">
             <div class="mr-auto p-2"><b>Minhas Vacinas</b></div>
-            @can('create_vacina')
+            @if (Auth::user()->can('create_dose'))
                 <div class="ml-auto p-2">
                     <a href="/painel/newvacina" data-toggle="modal" data-target="#vaccineAddModal">
                         <b><i class="far fa-plus-square add"></i></b>
                     </a>  
                 </div>
-            @endcan
+            @endif
         </div>
     </h1>
-    <hr>
-    <table id="vaccineTable" class="table table-striped" cellspacing="0" width="100%">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Local</th>
-                <th>Dose</th>
-                <th>Validade</th>
-                @can('create_vacina')
-                    <th>Nome do usuário</th>
-                    <th width="100px">Ações</th>        
-                @endcan
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($doses as $dose)
+
+    <!-- Se o usuário for administrador ele pode ver todas as vacinas (1 - adm; 2 - usuário comum; 3 - profissional da saúde) -->
+    @if ($userType == 1)
+        <h1 class="title">
+            <div class="d-flex">
+                <div class="mr-auto p-2"><b>Todas as Vacinas</b></div>
+                @if (Auth::user()->can('create_dose'))
+                    <div class="ml-auto p-2">
+                        <a href="/painel/newvacina" data-toggle="modal" data-target="#vaccineAddModal">
+                            <b><i class="far fa-plus-square add"></i></b>
+                        </a>  
+                    </div>
+                @endif
+            </div>
+        </h1>
+        <hr>
+        <table id="vaccineTable" class="table table-striped" cellspacing="0" width="100%">
+            <thead>
                 <tr>
-                    <td>{{$dose->nome}}</td>
-                    <td>{{$dose->local}}</td>
-                    <td>{{$dose->numerodose}}ª</td>
-                    <td>{{$dose->validade}}</td>
-                    @can('create_vacina')
+                    <th>Nome</th>
+                    <th>Local</th>
+                    <th>Dose</th>
+                    <th>Validade</th>
+                    <th>Nome do usuário</th>
+                    @if (Auth::user()->can('edit_dose') || Auth::user()->can('delete_dose'))
+                        <th width="100px">Ações</th>        
+                    @endif
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($doses as $dose)
+                    <tr>
+                        <td>{{$dose->vaccine_name}}</td>
+                        <td>{{$dose->local}}</td>
+                        <td>{{$dose->numerodose}}ª</td>
+                        <td>{{$dose->validade}}</td>
                         <td>{{$dose->user_name}}</td>
                         <td> 
+                        @if(Auth::user()->can('edit_dose'))
                             <a href="{{url('/painel/dose/$dose->id/edit')}}" class="edit" title="Editar">
                                 <i class="fa fa-pencil-square-o"></i>
                             </a>
+                        @endif
+                        @if(Auth::user()->can('delete_dose'))
                             <form style="display: inline-block;" method="POST" 
                                 action="{{route('vacinas.destroy', $dose->id)}}"                                                        
                                 data-toggle="tooltip" data-placement="top"
@@ -62,12 +69,14 @@
                                     <i class="fa fa-trash"></i>                                                    
                                 </button>
                             </form>
+                        @endif
                         </td>
-                    @endcan
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+                        
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
 
     <!-- Modal de adição de vacinas -->
     <div class="modal fade" id="vaccineAddModal" role="dialog" aria-labelledby="vaccineAddModalLabel" aria-hidden="true">
@@ -129,7 +138,7 @@
                         <div class="form-group row">
                             <label for="id_user" class="col-md-4 col-form-label text-md-right">{{ __('Paciente') }}</label>
                             <div class="col-md-6">                                
-                                <select id="patientSelect" style="width: 100%" required></select>
+                                <select id="patientSelectName" name="patientSelectName" style="width: 100%" required></select>
                                 @if ($errors->has('id_user'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('id_user') }}</strong>
@@ -144,7 +153,7 @@
 
                             <div class="col-md-6">
                                 <!-- <input id="numerodose" type="number"  min="1" max="5" class="form-control" name="numerodose" required> -->
-                                <select id="numerodose" style="width: 15%" required>
+                                <select id="numerodose" name="numerodose" style="width: 15%" required>
                                     <option value="1">1ª</option>
                                     <option value="2">2ª</option>
                                     <option value="3">3ª</option>
@@ -233,11 +242,11 @@
         var patientsSelect = [];
         // Formatação para adequação ao select
         for (key in patientsName) {
-            patientsSelect.push({id:key, text:patientsName[key].name});
+            patientsSelect.push({id:patientsName[key].name, text:patientsName[key].name});
         };
 
         // Inicialização select de paciente   
-        $('#patientSelect').select2({
+        $('#patientSelectName').select2({
             "data": patientsSelect,
             "language": {
                 "noResults": function(){

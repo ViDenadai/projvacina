@@ -274,6 +274,22 @@ ul.relatorios li h1{
 
 }
 
+/* Sidebar */
+@media (max-width: 768px) {
+    .nav > li {
+        float:left;
+    }
+    .nav.navbar-nav.navbar-left {
+        float:left;
+    }
+    .nav.navbar-nav.navbar-middle{
+        float:right;
+    }
+    .nav.navbar-nav.navbar-right{
+        float:right;
+    }
+}
+
 /* Botão de adicionar */
 .add{
     background: rgb(255, 255, 255);

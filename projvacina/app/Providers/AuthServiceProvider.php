@@ -42,7 +42,7 @@ class AuthServiceProvider extends ServiceProvider
         }
 
         $gate->before(function(User $user, $ability){
-            
+            // Caso o usuário seja adm, possui permissão para fazer qualquer coisa
             if ( $user->hasAnyRoles('adm') )
                 return true;
             

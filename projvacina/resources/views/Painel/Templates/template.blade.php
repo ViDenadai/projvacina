@@ -18,7 +18,7 @@
 
 	<!--Fonts-->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-
+	
 	<!--CSS-->
 	<link rel="stylesheet" href="{{url("Assets\Painel\css\acl-painel.css")}}">
 
@@ -32,6 +32,7 @@
 		html, body {
 			/* imagem de fundo do painel */
 			/* background-image : url("fundos.jpg");  */
+			background-color: white;
 			font-family: 'Nunito', sans-serif;
 			font-weight: 200;
 			height: 100vh;
