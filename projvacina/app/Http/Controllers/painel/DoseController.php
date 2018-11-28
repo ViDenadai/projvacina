@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Dose;
 use App\User;
 
-class VacinaController extends Controller
+class DoseController extends Controller
 {
     private $dose;
     
@@ -20,7 +20,8 @@ class VacinaController extends Controller
         // referencia a tabela dose        
     }
     
-    public function index()
+    // Se há alguma mensagem de sucesso ela é passada à view
+    public function index($successMsg = null)
     {
         // Usuário logado
         $user = Auth::user();
@@ -39,20 +40,20 @@ class VacinaController extends Controller
             foreach ($doses as $dose) {
                 $dose->validade = date_format(new \DateTime($dose->validade), 'd/m/Y'); 
             }
-        } else {
-            // Recupera todas as informações de doses junto com o nome do usuário correspondente 
-            $doses = DB::table('doses')
-                        ->join('users', 'doses.id_user', '=', 'users.id')
-                        ->join('vaccines', 'doses.vaccine_id', '=', 'vaccines.id')
-                        ->select('doses.*', 'users.name as user_name', 'vaccines.name as vaccine_name')
-                        ->where('id_user', $user->id)
-                        ->get();
-
-            // Formatação de data
-            foreach ($doses as $dose) {
-                $dose->validade = date_format(new \DateTime($dose->validade), 'd/m/Y'); 
-            }          
         }
+
+        // Recupera as doses do usuário logado
+        $myDoses = DB::table('doses')
+                    ->join('users', 'doses.id_user', '=', 'users.id')
+                    ->join('vaccines', 'doses.vaccine_id', '=', 'vaccines.id')
+                    ->select('doses.*', 'users.name as user_name', 'vaccines.name as vaccine_name')
+                    ->where('id_user', $user->id)
+                    ->get();
+
+        // Formatação de data
+        foreach ($myDoses as $myDose) {
+            $myDose->validade = date_format(new \DateTime($myDose->validade), 'd/m/Y'); 
+        } 
 
         // Tipo do usuário (1 - adm; 2 - usuário comum; 3 - profissional da saúde)
         $userType = (DB::table('role_user')
@@ -60,25 +61,32 @@ class VacinaController extends Controller
                         ->select('role_id')
                         ->where('user_id', $user->id)
                         ->first())->role_id;
-
+                        
         // painel.Vacinas.index => view da carteira de vacinação com todas as doses
-        return view('painel.Vacinas.index', compact('doses', 'patientsName', 'userType'));
+        return view('painel.Vacinas.index', compact('doses', 'myDoses', 'patientsName', 'userType' , 'successMsg'));
     }
 
-    public function update($iddose)
+    public function update(Request $request)
     {
-        $dose = Dose::find($iddose);            
+        $dose = Dose::findOrFail($request->idDose);            
         if( Gate::denies('update-dose', $dose) )
                 abort(403, 'Unauthorized');
+
         
-        return view('dose-update', compact('dose'));
+        // $dose->save();
+
+        // Após o tipo de vacina ser atualizado
+        // retorna para a página de tipos de vacinas por meio do index
+        // com uma mensagem de confirmação
+        $successMsg = 'Tipo de vacina atualizado com sucesso!'; 
+        return $this->index($successMsg); 
     }
 
-    public function new() 
-    {
-        return view('include-dose');
-        // retorna view para inserir uma nova dose na tabela
-    }
+    // public function new() 
+    // {
+    //     return view('include-dose');
+    //     // retorna view para inserir uma nova dose na tabela
+    // }
 
     public function store(Request $request)
     {
@@ -88,17 +96,22 @@ class VacinaController extends Controller
         $dose->id_user = (DB::table('users')->select('id')->where('name', '=', $request->patientSelectName)->first())->id;
         $dose->numerodose = $request->numerodose;
         $dose->validade = $request->validade;
-        $dose->save(); 
-        $this->index();
+        $dose->save();
+        $successMsg = 'Dose adicionada com sucesso!'; 
+        return $this->index($successMsg);      
     }
 
-    public function destroy($id) 
+    // Função que recebe no parâmetro o id da dose a ser removida da tabela
+    public function destroy(Request $request) 
     {
-        // função que recebe como parametro o id da vacina para ser removida da tabela
-        $dose = dose::findOrFail($id);
+        $dose = Dose::findOrFail($request->doseId);
         $dose->delete();
-        return redirect('painel/vacinas')->with('successMsg', 'Dose removida com sucesso!');
-        // após a dose ser removida retorna para a pagina de vacinas com uma mensagem de confirmação
+
+        // Após a dose ser removida 
+        // retorna para a página de doses por meio do index
+        // com uma mensagem de confirmação
+        $successMsg = 'Dose removida com sucesso!';
+        return $this->index($successMsg);      
     }
     
 }

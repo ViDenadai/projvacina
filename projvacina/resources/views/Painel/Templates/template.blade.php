@@ -93,15 +93,26 @@
 				</li>
 				@endif
 
-				<!-- Seção de vacinas -->
-				@can('view_vacina')
+				<!-- Seção de funcionalidades relacionadas à vacinas -->
 				<li>
-					<a href="/painel/vacinas">
-						<i class="fas fa-syringe"></i> Vacinas
-						<!-- <img src="{{url('Assets\painel\imgs\noticias-acl.png')}}" alt="Posts" class="img-menu"> -->						
-					</a>
+					<a href="#vaccinesSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-syringe"></i> Vacinas</a>
+					<ul class="collapse list-unstyled" id="vaccinesSubmenu">
+						@can('view_vacina')
+						<li>
+							<a href="{{ route('painel.doses') }}">
+								<i class="fa fa-id-card" aria-hidden="true"></i></i> Carteira de vacinação						
+							</a>
+						</li>
+						@endcan
+						@can ('view_vaccine_types')
+						<li>
+							<a href="{{ route('painel.vaccines') }}">
+								<i class="fa fa-list" aria-hidden="true"></i> Tipos de vacina						
+							</a>
+						</li>
+						@endcan
+					</ul>
 				</li>
-				@endcan
 
 				<!-- Seção para desconectar do sistema -->
 				<li>

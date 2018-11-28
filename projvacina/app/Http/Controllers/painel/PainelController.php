@@ -14,7 +14,7 @@ class PainelController extends Controller
     {
         $totalUsers = User::count();
         $totalRoles = Role::count();
-        $totalPermissions =Permission::count();
+        $totalPermissions = Permission::count();
         $totalPosts = dose::count();
         // contadores  de registros das tabelas user, role,permission,dose
         return view('painel.home.index', compact('totalUsers', 'totalRoles', 'totalPermissions', 'totalPosts'));

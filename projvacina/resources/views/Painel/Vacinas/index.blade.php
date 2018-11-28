@@ -2,13 +2,16 @@
 
 @section('content')
 <div class="container">
+    @if(!empty($successMsg))
+    <div class="alert alert-success" role="alert"><i class="fas fa-check"></i> {{ $successMsg }} </div>
+    @endif
     <br>
     <h1 class="title">
         <div class="d-flex">
             <div class="mr-auto p-2"><b>Minhas Vacinas</b></div>
             @if (Auth::user()->can('create_dose'))
                 <div class="ml-auto p-2">
-                    <a href="/painel/newvacina" data-toggle="modal" data-target="#vaccineAddModal">
+                    <a href="/painel/newDose" data-toggle="modal" data-target="#vaccineAddModal">
                         <b><i class="far fa-plus-square add"></i></b>
                     </a>  
                 </div>
@@ -23,7 +26,7 @@
                 <div class="mr-auto p-2"><b>Todas as Vacinas</b></div>
                 @if (Auth::user()->can('create_dose'))
                     <div class="ml-auto p-2">
-                        <a href="/painel/newvacina" data-toggle="modal" data-target="#vaccineAddModal">
+                        <a href="/painel/newDose" data-toggle="modal" data-target="#vaccineAddModal">
                             <b><i class="far fa-plus-square add"></i></b>
                         </a>  
                     </div>
@@ -60,11 +63,12 @@
                         @endif
                         @if(Auth::user()->can('delete_dose'))
                             <form style="display: inline-block;" method="POST" 
-                                action="{{route('vacinas.destroy', $dose->id)}}"                                                        
+                                action="{{route('painel.deleteDose')}}"                                                        
                                 data-toggle="tooltip" data-placement="top"
                                 title="Excluir" 
                                 onsubmit="return confirm('Confirma exclusão?')">
-                                {{method_field('DELETE')}}{{ csrf_field() }}                                                
+                                <input type="hidden" id="doseId" name="doseId" value='{{ $dose->id }}'>
+                                {{-- method_field('DELETE') --}}{{ csrf_field() }}                                                
                                 <button type="submit" class ="delete">
                                     <i class="fa fa-trash"></i>                                                    
                                 </button>
@@ -78,11 +82,11 @@
         </table>
     @endif
 
-    <!-- Modal de adição de vacinas -->
+    <!-- Modal de adição de doses -->
     <div class="modal fade" id="vaccineAddModal" role="dialog" aria-labelledby="vaccineAddModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <form method="POST" action="{{ route('painel.storeVaccine') }}" aria-label="{{ __('formVaccine') }}">
+                <form method="POST" action="{{ route('painel.storeDose') }}" aria-label="{{ __('formVaccine') }}">
                     <!-- Modal header -->
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Adicionar Dose</h5>
@@ -184,14 +188,13 @@
                     
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-success">{{ __('Adicionar') }}</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
 </div>
 @endsection
 
@@ -206,6 +209,7 @@
 
 <script>
     $(document).ready(function(){
+        // Tabela de todas de vacinas
         $('#vaccineTable').DataTable({
             "language": {
                 "decimal":        "",
@@ -234,7 +238,7 @@
         });
 
         // Select de pacientes na adição de doses
-        // Nome dos pacientes sem formatação vindos da VacinaController
+        // Nome dos pacientes sem formatação vindos da DoseController
         var patientsName = {!! json_encode($patientsName->toArray()) !!};
 
         // Array com os nomes dos pacientes formatados
