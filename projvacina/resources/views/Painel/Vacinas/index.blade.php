@@ -18,6 +18,33 @@
             @endif
         </div>
     </h1>
+    <hr>
+    <table id="myVaccineTable" class="myVaccineTable table" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th class="firstHeader">
+                        <span class="sup">Vacinas</span>
+                        <span class="inf">Doses</span>
+                    </th>
+                    @foreach($vaccinesName as $vaccineName)
+                        <th>{{ $vaccineName->name }}</th>                    
+                    @endforeach
+                </tr>
+            </thead>
+            <tbody>
+                    <tr>
+                        <td>1ª</td>
+                        @foreach($myDoses as $dose)                        
+                            <td>
+                            Nome: {{ $dose->vaccine_name }}
+                            Nº: {{ $dose->numerodose }}
+                            Validade: {{ $dose->validade }}
+                            Local: {{ $dose->local }} 
+                            </td>
+                        @endforeach                       
+                    </tr>
+            </tbody>
+        </table>
 
     <!-- Se o usuário for administrador ele pode ver todas as vacinas (1 - adm; 2 - usuário comum; 3 - profissional da saúde) -->
     @if ($userType == 1)
@@ -50,11 +77,11 @@
             <tbody>
                 @foreach($doses as $dose)
                     <tr>
-                        <td>{{$dose->vaccine_name}}</td>
-                        <td>{{$dose->local}}</td>
-                        <td>{{$dose->numerodose}}ª</td>
-                        <td>{{$dose->validade}}</td>
-                        <td>{{$dose->user_name}}</td>
+                        <td>{{ $dose->vaccine_name }}</td>
+                        <td>{{ $dose->local }}</td>
+                        <td>{{ $dose->numerodose }}ª</td>
+                        <td>{{ $dose->validade }}</td>
+                        <td>{{ $dose->user_name }}</td>
                         <td> 
                         @if(Auth::user()->can('edit_dose'))
                             <a href="{{url('/painel/dose/$dose->id/edit')}}" class="edit" title="Editar">
@@ -98,26 +125,7 @@
                     <!-- Modal body -->
                     <div class="modal-body">
                         <!-- CSRF protection -->
-                        @csrf
-
-                        <!-- Nome da vacina -->
-                        <div class="form-group row">
-                            <label for="nome" class="col-md-4 col-form-label text-md-right">{{ __('Nome da vacina') }}</label>
-                            <div class="col-md-6">
-                                <input id="nome" 
-                                    type="text" 
-                                    class="form-control{{ $errors->has('nome') ? ' is-invalid' : '' }}" 
-                                    name="nome" value="{{ old('nome') }}" 
-                                    required 
-                                    autofocus>
-
-                                @if ($errors->has('nome'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('nome') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
+                        @csrf                        
 
                         <!-- Local da aplicação -->
                         <div class="form-group row">
@@ -143,11 +151,14 @@
                             <label for="id_user" class="col-md-4 col-form-label text-md-right">{{ __('Paciente') }}</label>
                             <div class="col-md-6">                                
                                 <select id="patientSelectName" name="patientSelectName" style="width: 100%" required></select>
-                                @if ($errors->has('id_user'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('id_user') }}</strong>
-                                    </span>
-                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Nome da vacina -->
+                        <div class="form-group row">
+                            <label for="nome" class="col-md-4 col-form-label text-md-right">{{ __('Nome da vacina') }}</label>
+                            <div class="col-md-6">
+                                <select id="vaccineNameSelect"class="vaccineNameSelect" name="vaccineNameSelect" style="width: 100%" required></select>
                             </div>
                         </div>
 
@@ -156,14 +167,14 @@
                             <label for="numerodose" class="col-md-4 col-form-label text-md-right">{{ __('Número da dose') }}</label>
 
                             <div class="col-md-6">
-                                <!-- <input id="numerodose" type="number"  min="1" max="5" class="form-control" name="numerodose" required> -->
-                                <select id="numerodose" name="numerodose" style="width: 15%" required>
+                                <input id="numerodose" type="text" class="form-control" name="numerodose" style="width: 11%" value="" required disabled>
+                                <!-- <select class="doseSelect" id="numerodose" name="numerodose" style="width: 15%" required disabled>
                                     <option value="1">1ª</option>
                                     <option value="2">2ª</option>
                                     <option value="3">3ª</option>
                                     <option value="4">4ª</option>
                                     <option value="5">5ª</option>
-                                </select>
+                                </select> -->
                             </div>
                         </div>
 
@@ -199,9 +210,11 @@
 @endsection
 
 @section("scripts")
-<!-- DataTable -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
-<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
+<!-- DataTable Bootstrap 4 -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"/>
+<!-- DataTable Js Bootstrap 4 -->
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
 <!-- Select2 -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
@@ -236,9 +249,21 @@
                 }
             }
         });
+        
+        // Select de nome de vacinas na adição de doses
+        // Nome das vacinas, sem formatação, vindos da DoseController
+        var vaccinesName = {!! json_encode($vaccinesName->toArray()) !!};
+
+        // Array com os nomes dos pacientes formatados
+        // para o select
+        var vaccinesNameSelect = [];
+        // Formatação para adequação ao select
+        for (key in vaccinesName) {
+            vaccinesNameSelect.push({id:vaccinesName[key].id, text:vaccinesName[key].name});
+        };
 
         // Select de pacientes na adição de doses
-        // Nome dos pacientes sem formatação vindos da DoseController
+        // Nome dos pacientes, sem formatação, vindos da DoseController
         var patientsName = {!! json_encode($patientsName->toArray()) !!};
 
         // Array com os nomes dos pacientes formatados
@@ -248,6 +273,16 @@
         for (key in patientsName) {
             patientsSelect.push({id:patientsName[key].name, text:patientsName[key].name});
         };
+        
+        // Inicialização select de nome da vacina 
+        $('#vaccineNameSelect').select2({
+            "data": vaccinesNameSelect,
+            "language": {
+                "noResults": function(){
+                    return "Nenhum resultado foi encontrado...";
+                }
+            },
+        })
 
         // Inicialização select de paciente   
         $('#patientSelectName').select2({
@@ -259,14 +294,35 @@
             },
         });
 
-        // Inicialização select de número da dose 
-        $('#numerodose').select2({
-            "language": {
-                "noResults": function(){
-                    return "";
+        // Evento ao alterar o nome da vacina que 
+        // busca o número da próxima dose
+        $('.vaccineNameSelect').on("change", function (e) { 
+            console.log($('.vaccineNameSelect').val()); 
+            $.ajax({
+                type: "GET",
+                data: {
+                    // Recupera o id do tipo de vacina selecionado
+                    vaccineId: $('.vaccineNameSelect').val()
+                },
+                url: "{{ route('painel.addDose_ajax')}}",                
+                dataType : 'json',
+                success: function(response) {
+                    $("#numerodose").val(response.numerodose+"ª");
+                },
+                error: function(request, status, error) {
+                    console.log(error);
                 }
-            },
+            });
         });
+
+        // Inicialização select de número da dose 
+        // $('#numerodose').select2({
+        //     "language": {
+        //         "noResults": function(){
+        //             return "";
+        //         }
+        //     },
+        // });
     });
 </script>
 @endsection

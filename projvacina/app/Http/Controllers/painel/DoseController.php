@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Dose;
 use App\User;
+use App\Vaccine;
 
 class DoseController extends Controller
 {
@@ -61,9 +62,18 @@ class DoseController extends Controller
                         ->select('role_id')
                         ->where('user_id', $user->id)
                         ->first())->role_id;
-                        
+        
+        // Nome das vacinas existentes na plataforma
+        $vaccinesName = DB::table('vaccines')->get();
+        
         // painel.Vacinas.index => view da carteira de vacinação com todas as doses
-        return view('painel.Vacinas.index', compact('doses', 'myDoses', 'patientsName', 'userType' , 'successMsg'));
+        return view('painel.Vacinas.index', compact(
+                                                'doses', 
+                                                'myDoses', 
+                                                'patientsName', 
+                                                'userType' , 
+                                                'successMsg', 
+                                                'vaccinesName'));
     }
 
     public function update(Request $request)
@@ -81,17 +91,20 @@ class DoseController extends Controller
         $successMsg = 'Tipo de vacina atualizado com sucesso!'; 
         return $this->index($successMsg); 
     }
-
-    // public function new() 
-    // {
-    //     return view('include-dose');
-    //     // retorna view para inserir uma nova dose na tabela
-    // }
+    
+    public function addDose_ajax()
+    {
+        // Id do nome da vacina selecionada
+        $vaccineId = Input::get('vaccineId');
+        $vaccine = Vaccine::findOrFail($vaccineId); 
+        return response()->json(array('vaccine' => $vaccine));      
+    }
+    
 
     public function store(Request $request)
     {
-        $dose = new dose;
-        $dose->nome = $request->nome;
+        $dose = new Dose;
+        $dose->vaccine_id = $request->vaccineNameSelect;
         $dose->local = $request->local;
         $dose->id_user = (DB::table('users')->select('id')->where('name', '=', $request->patientSelectName)->first())->id;
         $dose->numerodose = $request->numerodose;

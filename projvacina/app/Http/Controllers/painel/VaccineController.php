@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\painel;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 
 use App\Http\Controllers\Controller;
 use App\Vaccine;
@@ -59,7 +60,7 @@ class VaccineController extends Controller
         // É necessário setar o timestamps para false,
         // já que a tabela não possui timestamps
         $vaccine->timestamps = false;
-        $vaccine->name = $request->name;
+        $vaccine->name = $request->nameAdd;
         $vaccine->save();
         
         // Após o tipo de vacina ser adicionado 
@@ -76,10 +77,12 @@ class VaccineController extends Controller
      * @return   array      $vaccine        Vetor contendo o tipo de vacina
      *
      */
-    public function ajax_update()
+    public function update_ajax()
     {
-        $vaccine = Vaccine::findOrFail($request->vaccineId); 
-        return Response::json(array('vaccine' => $vaccine));
+        // Id do nome da vacina selecionada
+        $vaccineId = Input::get('vaccineId');
+        $vaccine = Vaccine::findOrFail($vaccineId); 
+        return response()->json(array('vaccine' => $vaccine));  
     }
 
     /**
@@ -92,12 +95,12 @@ class VaccineController extends Controller
      */
     public function update(Request $request)
     {
-        $vaccine = Vaccine::findOrFail($request->vaccineId); 
+        $vaccine = Vaccine::findOrFail($request->vaccineIdUpdate); 
         
         // É necessário setar o timestamps para false,
         // já que a tabela não possui timestamps
         $vaccine->timestamps = false;
-        $vaccine->name = $request->name;
+        $vaccine->name = $request->nameUpdate;
         $vaccine->save();
 
         // Após o tipo de vacina ser atualizado

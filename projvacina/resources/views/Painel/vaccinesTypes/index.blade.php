@@ -33,7 +33,7 @@
                             <i class="fa fa-pencil-square-o"></i>
                         </a>
                         <form style="display: inline-block;" method="POST" 
-                            action="{{route('painel.deleteVaccine')}}"                                                        
+                            action="{{ route('painel.deleteVaccine') }}"                                                        
                             data-toggle="tooltip" data-placement="top"
                             title="Excluir" 
                             onsubmit="return confirm('Caso você exclua esse tipo de vacina, todas as doses relacionadas à esse tipo serão excluídas. Você deseja excluir?')">
@@ -53,10 +53,10 @@
     <div class="modal fade" id="vaccineAddModal" role="dialog" aria-labelledby="vaccineAddModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <form method="POST" action="{{ route('painel.storeVaccine') }}" aria-label="{{ __('formVaccine') }}">
+                <form method="POST" action="{{ route('painel.storeVaccine') }}" aria-label="{{ __('formAddVaccine') }}">
                     <!-- Modal header -->
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Adicionar tipo de vacina</h5>
+                        <h5 class="modal-title" id="modalAddLabel">Adicionar tipo de vacina</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -69,18 +69,18 @@
 
                         <!-- Nome da vacina -->
                         <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Nome da vacina') }}</label>
+                            <label for="nameAdd" class="col-md-4 col-form-label text-md-right">{{ __('Nome da vacina') }}</label>
                             <div class="col-md-6">
-                                <input id="name" 
-                                    type="text" 
-                                    class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" 
-                                    name="name" value="{{ old('name') }}" 
+                                <input id="nameAdd" 
+                                    type="text"
+                                    class="form-control{{ $errors->has('nameAdd') ? ' is-invalid' : '' }}" 
+                                    name="nameAdd" value="{{ old('nameAdd') }}" 
                                     required 
                                     autofocus>
 
                                 @if ($errors->has('name'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('name') }}</strong>
+                                        <strong>{{ $errors->first('nameAdd') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -98,13 +98,61 @@
     </div>
 
     <!-- Modal de edição do tipo de vacina -->
+    <div class="modal fade" id="vaccineUpdateModal" role="dialog" aria-labelledby="vaccineUpdateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form method="POST" action="{{ route('painel.updateVaccine') }}" aria-label="{{ __('formUpdateVaccine') }}">
+                    <!-- Modal header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalUpdateLabel">Alterar tipo de vacina</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <!-- CSRF protection -->
+                        @csrf
+
+                        <!-- Nome da vacina -->
+                        <div class="form-group row">
+                            <label for="nameUpdate" class="col-md-4 col-form-label text-md-right">{{ __('Nome da vacina') }}</label>
+                            <div class="col-md-6">
+                                <input id="nameUpdate" 
+                                    type="text" 
+                                    class="form-control{{ $errors->has('nameUpdate') ? ' is-invalid' : '' }}" 
+                                    name="nameUpdate" value="" 
+                                    required 
+                                    autofocus>
+                                    <input type="hidden" id="vaccineIdUpdate" name="vaccineIdUpdate" value="">
+                                @if ($errors->has('nameUpdate'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('nameUpdate') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>                                
+                    
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">{{ __('Alterar') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 
 @section("scripts")
-<!-- DataTable -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
-<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
+<!-- DataTable Bootstrap 4 -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"/>
+<!-- DataTable Js Bootstrap 4 -->
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
 <script>
     $(document).ready(function(){
@@ -138,17 +186,23 @@
         
         // Edição do tipos de vacina
         $('.edit').on('click', function () {
-            var vaccineId = $(this).closest('.vaccineId').val();
-            console.log(vaccineId);
-            // var Status = $(this).val();
-            // $.ajax({
-            //     url: 'Ajax/StatusUpdate.php',
-            //     data: {
-            //         text: $("textarea[name=Status]").val(),
-            //         Status: Status
-            //     },
-            //     dataType : 'json'
-            // });
+            $.ajax({
+                type: "GET",
+                data: {
+                    // Recupera o id do tipo de vacina que se quer modificar
+                    vaccineId: $(this).parent().find('.vaccineId').val()
+                },
+                url: "{{ route('painel.updateVaccine_ajax')}}",                
+                dataType : 'json',
+                success: function(response) {
+                    $("#nameUpdate").val(response.vaccine.name);
+                    $("#vaccineIdUpdate").val(response.vaccine.id);
+                    $("#vaccineUpdateModal").modal("show");
+                },
+                error: function(request, status, error) {
+                    alert("Algum erro ocorreu na requisição, tente mais tarde.");
+                }
+            });
         });
 
     });
