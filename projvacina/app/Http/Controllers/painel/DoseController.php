@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\painel;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
+
 
 use App\Http\Controllers\Controller;
 use App\Dose;
@@ -42,20 +44,6 @@ class DoseController extends Controller
                 $dose->validade = date_format(new \DateTime($dose->validade), 'd/m/Y'); 
             }
         }
-
-        // Recupera as doses do usuário logado
-        $myDoses = DB::table('doses')
-                    ->join('users', 'doses.id_user', '=', 'users.id')
-                    ->join('vaccines', 'doses.vaccine_id', '=', 'vaccines.id')
-                    ->select('doses.*', 'users.name as user_name', 'vaccines.name as vaccine_name')
-                    ->where('id_user', $user->id)
-                    ->get();
-
-        // Formatação de data
-        foreach ($myDoses as $myDose) {
-            $myDose->validade = date_format(new \DateTime($myDose->validade), 'd/m/Y'); 
-        } 
-
         // Tipo do usuário (1 - adm; 2 - usuário comum; 3 - profissional da saúde)
         $userType = (DB::table('role_user')
                         ->join('users', 'role_user.user_id', '=', 'users.id')
@@ -64,7 +52,51 @@ class DoseController extends Controller
                         ->first())->role_id;
         
         // Nome das vacinas existentes na plataforma
-        $vaccinesName = DB::table('vaccines')->get();
+        $vaccinesName = DB::table('vaccines')->orderBy('name', 'asc')->get();
+
+        // Inicialização do array de tabela de vacinação 
+        $myDosesTable = [];
+
+        // Maior número da dose entre as vacinas que o usuário tomou,         
+        $maxDoseNumber = DB::table('doses')
+                            ->join('users', 'doses.id_user', '=', 'users.id')
+                            ->select('doses.*', 'users.name as patientName')
+                            ->where('doses.id_user', $user->id)
+                            ->orderBy('numerodose', 'desc')
+                            ->first();
+
+        // * Se $maxDoseNumber é null, o usuário não possui nenhum registro 
+        // na plataforma
+        // * Se esse valor for menor do que 4, o valor mínimo é posto
+        // como 4, caso contrário, o valor será 1 unidade maior que esse
+        // máximo
+        if(!$maxDoseNumber){        
+            $maxDoseNumber = 4;
+        } else {
+            if($maxDoseNumber->numerodose < 4) {
+                $maxDoseNumber = 4;
+            } else {
+                // A próxima dose será 1 unidade maior que o valor anterior
+                $maxDoseNumber = intval($maxDoseNumber->numerodose) + 1;  
+            }            
+        }
+        dd($maxDoseNumber);
+        // Formatação para a carteira de vacinação do usuário
+        foreach ($vaccinesName as $vaccineName) {
+            // Recupera as doses da vacina atual do usuário logado
+            $myDoses = DB::table('doses')
+                            ->join('users', 'doses.id_user', '=', 'users.id')
+                            ->join('vaccines', 'doses.vaccine_id', '=', 'vaccines.id')
+                            ->select('doses.*')
+                            ->where('doses.id_user', $user->id)
+                            ->where('vaccines.name', $vaccineName)
+                            ->get();
+            // Formatação de data
+            foreach ($myDoses as $myDose) {
+                $myDose->validade = date_format(new \DateTime($myDose->validade), 'd/m/Y'); 
+            } 
+            
+        }
         
         // painel.Vacinas.index => view da carteira de vacinação com todas as doses
         return view('painel.Vacinas.index', compact(
@@ -78,26 +110,44 @@ class DoseController extends Controller
 
     public function update(Request $request)
     {
-        $dose = Dose::findOrFail($request->idDose);            
-        if( Gate::denies('update-dose', $dose) )
-                abort(403, 'Unauthorized');
+        // $dose = Dose::findOrFail($request->idDose);            
+        // if( Gate::denies('update-dose', $dose) )
+        //         abort(403, 'Unauthorized');
 
         
-        // $dose->save();
+        // // $dose->save();
 
-        // Após o tipo de vacina ser atualizado
-        // retorna para a página de tipos de vacinas por meio do index
-        // com uma mensagem de confirmação
-        $successMsg = 'Tipo de vacina atualizado com sucesso!'; 
-        return $this->index($successMsg); 
+        // // Após o tipo de vacina ser atualizado
+        // // retorna para a página de tipos de vacinas por meio do index
+        // // com uma mensagem de confirmação
+        // $successMsg = 'Tipo de vacina atualizado com sucesso!'; 
+        // return $this->index($successMsg); 
     }
     
     public function addDose_ajax()
     {
         // Id do nome da vacina selecionada
-        $vaccineId = Input::get('vaccineId');
-        $vaccine = Vaccine::findOrFail($vaccineId); 
-        return response()->json(array('vaccine' => $vaccine));      
+        // dd(Input::get('patientName'));
+        $vaccine_id = Input::get('vaccineId');
+        $patientName = Input::get('patientName');
+        // Recupera o número da última dose tomada pelo paciente da vacina escolhida
+        $doseNumber = DB::table('doses')
+                        ->join('users', 'doses.id_user', '=', 'users.id')
+                        ->select('doses.*', 'users.name as patientName')
+                        ->where('vaccine_id', '=', $vaccine_id)
+                        ->where('users.name', '=', $patientName)
+                        ->orderBy('numerodose', 'desc')
+                        ->first();
+        // Se o paciente não tomou nenhuma dose da vacina
+        // o valor de $doseNumber será null, logo,
+        // será a 1ª
+        if(!$doseNumber){
+            $doseNumber = "1";
+        } else {
+            // A próxima dose será 1 unidade maior que o valor anterior
+            $doseNumber = strval(intval($doseNumber->numerodose) + 1);
+        }
+        return response()->json(array('doseNumber' => $doseNumber));      
     }
     
 

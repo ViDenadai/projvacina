@@ -20,31 +20,31 @@
     </h1>
     <hr>
     <table id="myVaccineTable" class="myVaccineTable table" cellspacing="0" width="100%">
-            <thead>
+        <thead>
+            <tr>
+                <th class="firstHeader">
+                    <!-- <span class="sup">Vacinas</span>
+                    <span class="inf">Doses</span> -->
+                </th>
+                @foreach($vaccinesName as $vaccineName)
+                    <th>{{ $vaccineName->name }}</th>                    
+                @endforeach
+            </tr>
+        </thead>
+        <tbody>
                 <tr>
-                    <th class="firstHeader">
-                        <span class="sup">Vacinas</span>
-                        <span class="inf">Doses</span>
-                    </th>
-                    @foreach($vaccinesName as $vaccineName)
-                        <th>{{ $vaccineName->name }}</th>                    
-                    @endforeach
+                    <td>1ª Dose</td>
+                    @foreach($myDoses as $dose)                        
+                        <td>
+                        Nome: {{ $dose->vaccine_name }}
+                        Nº: {{ $dose->numerodose }}
+                        Validade: {{ $dose->validade }}
+                        Local: {{ $dose->local }} 
+                        </td>
+                    @endforeach                       
                 </tr>
-            </thead>
-            <tbody>
-                    <tr>
-                        <td>1ª</td>
-                        @foreach($myDoses as $dose)                        
-                            <td>
-                            Nome: {{ $dose->vaccine_name }}
-                            Nº: {{ $dose->numerodose }}
-                            Validade: {{ $dose->validade }}
-                            Local: {{ $dose->local }} 
-                            </td>
-                        @endforeach                       
-                    </tr>
-            </tbody>
-        </table>
+        </tbody>
+    </table>
 
     <!-- Se o usuário for administrador ele pode ver todas as vacinas (1 - adm; 2 - usuário comum; 3 - profissional da saúde) -->
     @if ($userType == 1)
@@ -93,7 +93,7 @@
                                 action="{{route('painel.deleteDose')}}"                                                        
                                 data-toggle="tooltip" data-placement="top"
                                 title="Excluir" 
-                                onsubmit="return confirm('Confirma exclusão?')">
+                                onsubmit="return confirm('Confirmar exclusão?')">
                                 <input type="hidden" id="doseId" name="doseId" value='{{ $dose->id }}'>
                                 {{-- method_field('DELETE') --}}{{ csrf_field() }}                                                
                                 <button type="submit" class ="delete">
@@ -150,7 +150,7 @@
                         <div class="form-group row">
                             <label for="id_user" class="col-md-4 col-form-label text-md-right">{{ __('Paciente') }}</label>
                             <div class="col-md-6">                                
-                                <select id="patientSelectName" name="patientSelectName" style="width: 100%" required></select>
+                                <select id="patientSelectName" class="patientSelectName" name="patientSelectName" style="width: 100%" required></select>
                             </div>
                         </div>
 
@@ -158,7 +158,7 @@
                         <div class="form-group row">
                             <label for="nome" class="col-md-4 col-form-label text-md-right">{{ __('Nome da vacina') }}</label>
                             <div class="col-md-6">
-                                <select id="vaccineNameSelect"class="vaccineNameSelect" name="vaccineNameSelect" style="width: 100%" required></select>
+                                <select id="vaccineNameSelect" class="vaccineNameSelect" name="vaccineNameSelect" style="width: 100%" required></select>
                             </div>
                         </div>
 
@@ -296,18 +296,18 @@
 
         // Evento ao alterar o nome da vacina que 
         // busca o número da próxima dose
-        $('.vaccineNameSelect').on("change", function (e) { 
-            console.log($('.vaccineNameSelect').val()); 
+        $('.vaccineNameSelect').on("change", function (e) {  
             $.ajax({
                 type: "GET",
                 data: {
                     // Recupera o id do tipo de vacina selecionado
-                    vaccineId: $('.vaccineNameSelect').val()
+                    vaccineId: $('.vaccineNameSelect').val(),
+                    patientName: $('.patientSelectName').val()
                 },
                 url: "{{ route('painel.addDose_ajax')}}",                
                 dataType : 'json',
                 success: function(response) {
-                    $("#numerodose").val(response.numerodose+"ª");
+                    $("#numerodose").val(response.doseNumber+"ª");
                 },
                 error: function(request, status, error) {
                     console.log(error);

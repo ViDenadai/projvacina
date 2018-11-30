@@ -21,7 +21,7 @@ Route::group(['prefix' => 'painel', 'as' => 'painel.'], function(){
     //  rota que direciona para a função index do controller Dose
     Route::get('doses', ['as' => 'doses', 'uses' => 'painel\DoseController@index']);
     //  rota para a requisição ajax de adição de dose
-    Route::get('updateVaccine_ajax', ['as' => 'addDose_ajax', 'uses' => 'painel\VaccineController@add_ajax']);    
+    Route::get('addDose_ajax', ['as' => 'addDose_ajax', 'uses' => 'painel\DoseController@addDose_ajax']);    
     //  Rota que direciona para a função store do controller Dose
     Route::post('storeDose', ['as' => 'storeDose', 'uses' => 'painel\DoseController@store']);
     //  Rota que direciona para a função update do controller Dose
