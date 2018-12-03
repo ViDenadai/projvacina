@@ -24,14 +24,22 @@ class DoseController extends Controller
     }
     
     // Se há alguma mensagem de sucesso ela é passada à view
-    public function index($successMsg = null)
+    public function index()
     {
+        // dd(Input::get('successMsg'));
+        // Se há uma mensagem de sucesso
+        if (!empty(Input::get('successMsg'))) {
+            $successMsg = Input::get('successMsg');
+        }
+
+        $vaccine_id = Input::get('vaccineId');
+
         // Usuário logado
         $user = Auth::user();
 
         // Nome dos pacientes existentes na plataforma
         $patientsName = DB::table('users')->select('name')->get();
-        if( $user->hasAnyRoles('adm') ){
+        if ($user->hasAnyRoles('adm')) {
             // Recupera todas as informações de doses junto com os nomes dos usuários correspondentes 
             $doses = DB::table('doses')
                         ->join('users', 'doses.id_user', '=', 'users.id')
@@ -70,17 +78,16 @@ class DoseController extends Controller
         // * Se esse valor for menor do que 4, o valor mínimo é posto
         // como 4, caso contrário, o valor será 1 unidade maior que esse
         // máximo
-        if(!$maxDoseNumber){        
+        if (!$maxDoseNumber) {        
             $maxDoseNumber = 4;
         } else {
-            if($maxDoseNumber->numerodose < 4) {
+            if ($maxDoseNumber->numerodose < 4) {
                 $maxDoseNumber = 4;
             } else {
                 // A próxima dose será 1 unidade maior que o valor anterior
                 $maxDoseNumber = intval($maxDoseNumber->numerodose) + 1;  
             }            
-        }
-        dd($maxDoseNumber);
+        }        
         // Formatação para a carteira de vacinação do usuário
         foreach ($vaccinesName as $vaccineName) {
             // Recupera as doses da vacina atual do usuário logado
@@ -89,15 +96,47 @@ class DoseController extends Controller
                             ->join('vaccines', 'doses.vaccine_id', '=', 'vaccines.id')
                             ->select('doses.*')
                             ->where('doses.id_user', $user->id)
-                            ->where('vaccines.name', $vaccineName)
+                            ->where('vaccines.name', $vaccineName->name)
                             ->get();
-            // Formatação de data
-            foreach ($myDoses as $myDose) {
-                $myDose->validade = date_format(new \DateTime($myDose->validade), 'd/m/Y'); 
-            } 
-            
+
+            // Loop para construção da tabela de doses
+            for ($i = 0; $i < $maxDoseNumber; $i++) {
+                if (!empty($myDoses[$i])) {
+                    $myDosesTable[$vaccineName->name][$i]['validity'] = date_format(new \DateTime($myDoses[$i]->validade), 'd/m/Y');
+                    $myDosesTable[$vaccineName->name][$i]['place'] = $myDoses[$i]->local;
+                } else {
+                    $myDosesTable[$vaccineName->name][$i]['validity'] = '';
+                    $myDosesTable[$vaccineName->name][$i]['place'] = '';
+                }
+            }            
         }
-        
+
+        // Primeiro número de dose presente na adição de uma nova dose
+        // depende do primeiro valor no select de nome de paciente 
+        // e do primeiro valor no select de nome de vacina
+        $firstDoseValue = DB::table('doses')
+                            ->join('users', 'doses.id_user', '=', 'users.id')
+                            ->select('doses.*', 'users.name as patientName')
+                            ->where('vaccine_id', '=', $vaccinesName[0]->id)
+                            ->where('users.name', '=', $patientsName[0]->name)
+                            ->orderBy('numerodose', 'desc')
+                            ->first();
+
+        // Se o paciente não tomou nenhuma dose da vacina
+        // o valor de $doseNumber será null, logo,
+        // será a 1ª
+        if(!$firstDoseValue){
+            $firstDoseValue = "1";
+        } else {
+            // A próxima dose será 1 unidade maior que o valor anterior
+            $firstDoseValue = strval(intval($firstDoseValue->numerodose) + 1);
+        }
+        // dd($myDosesTable);
+        // for ($i = 0; $i < $maxDoseNumber; $i++) {
+        //     foreach($myDosesTable as $vaccineName=>$dose){
+        //         dd($dose[$i]['validity']);
+        //     }
+        // }    
         // painel.Vacinas.index => view da carteira de vacinação com todas as doses
         return view('painel.Vacinas.index', compact(
                                                 'doses', 
@@ -105,7 +144,10 @@ class DoseController extends Controller
                                                 'patientsName', 
                                                 'userType' , 
                                                 'successMsg', 
-                                                'vaccinesName'));
+                                                'vaccinesName',
+                                                'firstDoseValue',
+                                                'myDosesTable',
+                                                'maxDoseNumber'));
     }
 
     public function update(Request $request)
@@ -157,11 +199,14 @@ class DoseController extends Controller
         $dose->vaccine_id = $request->vaccineNameSelect;
         $dose->local = $request->local;
         $dose->id_user = (DB::table('users')->select('id')->where('name', '=', $request->patientSelectName)->first())->id;
-        $dose->numerodose = $request->numerodose;
+        // Em numerodose permanece apenas os números
+        $dose->numerodose = filter_var($request->numerodose, FILTER_SANITIZE_NUMBER_INT);
         $dose->validade = $request->validade;
         $dose->save();
         $successMsg = 'Dose adicionada com sucesso!'; 
-        return $this->index($successMsg);      
+        return redirect()->action(
+            'painel\DoseController@index', ['successMsg' => $successMsg]
+        ); 
     }
 
     // Função que recebe no parâmetro o id da dose a ser removida da tabela
@@ -174,7 +219,9 @@ class DoseController extends Controller
         // retorna para a página de doses por meio do index
         // com uma mensagem de confirmação
         $successMsg = 'Dose removida com sucesso!';
-        return $this->index($successMsg);      
+        return redirect()->action(
+            'painel\DoseController@index', ['successMsg' => $successMsg]
+        );     
     }
     
 }

@@ -19,30 +19,42 @@
         </div>
     </h1>
     <hr>
-    <table id="myVaccineTable" class="myVaccineTable table" cellspacing="0" width="100%">
+    <table id="myVaccineTable" class="table table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr>
-                <th class="firstHeader">
+                <th style="width: 10%" class="headersTopMyVaccine">
                     <!-- <span class="sup">Vacinas</span>
                     <span class="inf">Doses</span> -->
                 </th>
-                @foreach($vaccinesName as $vaccineName)
-                    <th>{{ $vaccineName->name }}</th>                    
+                @foreach($myDosesTable as $myDosesVaccineName => $myDoses)
+                    <th class="headersTopMyVaccine" style="width: 20%; text-align: center; vertical-align:middle;" scope="col">{{ $myDosesVaccineName }}</th>                    
                 @endforeach
             </tr>
         </thead>
         <tbody>
+            @for ($i = 0; $i < $maxDoseNumber; $i++)
                 <tr>
-                    <td>1ª Dose</td>
-                    @foreach($myDoses as $dose)                        
-                        <td>
-                        Nome: {{ $dose->vaccine_name }}
-                        Nº: {{ $dose->numerodose }}
-                        Validade: {{ $dose->validade }}
-                        Local: {{ $dose->local }} 
+                    <th class="headersLeftMyVaccine" style="text-align: center; vertical-align:middle" scope="row">{{$i + 1 }}ª Dose</th>
+                    @foreach($myDosesTable as $$myDosesVaccineName => $myDoses)                       
+                        @if($myDoses[$i]['validity'] != '' || $myDoses[$i]['place'] != '')
+                            <td>
+                                <div class="stamp">
+                                        Validade: {{ $myDoses[$i]['validity'] }}
+                                        <br>
+                                        Local: {{ $myDoses[$i]['place'] }} 
+                                </div>
+                            </td>
+                        @else
+                        <td>                            
+                            <br>
+                            <br>  
+                            <br>
+                            <br>                          
                         </td>
+                        @endif
                     @endforeach                       
                 </tr>
+            @endfor
         </tbody>
     </table>
 
@@ -167,7 +179,16 @@
                             <label for="numerodose" class="col-md-4 col-form-label text-md-right">{{ __('Número da dose') }}</label>
 
                             <div class="col-md-6">
-                                <input id="numerodose" type="text" class="form-control" name="numerodose" style="width: 11%" value="" required disabled>
+                                <input  id="numerodose" 
+                                        type="text" 
+                                        class="form-control" 
+                                        name="numerodose" 
+                                        style="width: 11%" 
+                                        value=  @if(!empty($firstDoseValue)) 
+                                                    {{$firstDoseValue}}ª  
+                                                @endif
+                                        required 
+                                        readonly>
                                 <!-- <select class="doseSelect" id="numerodose" name="numerodose" style="width: 15%" required disabled>
                                     <option value="1">1ª</option>
                                     <option value="2">2ª</option>
@@ -220,6 +241,8 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
+<link href="https://fonts.googleapis.com/css?family=Swanky+and+Moo+Moo" rel="stylesheet">
+
 <script>
     $(document).ready(function(){
         // Tabela de todas de vacinas
@@ -257,6 +280,7 @@
         // Array com os nomes dos pacientes formatados
         // para o select
         var vaccinesNameSelect = [];
+
         // Formatação para adequação ao select
         for (key in vaccinesName) {
             vaccinesNameSelect.push({id:vaccinesName[key].id, text:vaccinesName[key].name});
@@ -269,6 +293,7 @@
         // Array com os nomes dos pacientes formatados
         // para o select
         var patientsSelect = [];
+
         // Formatação para adequação ao select
         for (key in patientsName) {
             patientsSelect.push({id:patientsName[key].name, text:patientsName[key].name});
