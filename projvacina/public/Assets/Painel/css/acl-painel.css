@@ -248,8 +248,7 @@ ul.relatorios{
 ul.relatorios li a{
     background: rgba(253, 0, 0, 0.657);
     margin: 30px 70px ;
-    float: left;
-       
+    float: left;       
     width: 70%;
     padding: 0px;
     border: 3px solid rgba(255, 0, 0, 0.267);
@@ -272,94 +271,159 @@ ul.relatorios li h1{
     border-color: rgb(255, 0, 0);
 }
 
-/* Cabeçalho carteira vacinação */
-.headersTopMyVaccine {
-    background: #09be54;
-}
+/* Tabela de carteira de vacinação */
+    .myVaccineTable {
+        /* border-collapse:separate; */
+        border:solid rgb(207, 207, 207) 3px;
+        border-radius: 5px !important;
+        border-width: 2px !important;
+        border-style: solid !important;
+        -moz-border-radius:8px;
+    }
 
-.headersLeftMyVaccine {
-    background: #069943;
-}
+    /* Primeiro header */
+    @media screen  and (max-width: 6000px){
+        .first-header-top-my-vaccine {
+            font-family: 'PT Mono', monospace;
+            font-size: 15px;
+            padding: .45rem !important;
+            font-weight: 900;
+            background: #ffffff;
+        }
+    }
+    @media screen  and (max-width: 2000px){
+        .first-header-top-my-vaccine {
+            font-family: 'PT Mono', monospace;
+            font-size: 14px;
+            padding: .45rem !important;
+            font-weight: 900;
+            background: #ffffff;
+        }
+    }
+    @media screen  and (max-width: 1365px){
+        .first-header-top-my-vaccine {
+            font-family: 'PT Mono', monospace;
+            font-size: 12px;
+            padding: .45rem !important;
+            font-weight: 900;
+            background: #ffffff;
+        }
+    }
+    
+    /* Diagonal de separação */
+    .diagonal-line{
+        background: 
+            linear-gradient(to top right,
+                rgb(184, 184, 184,0) 0%,
+                rgb(184, 184, 184,0) calc(50% - 2px),
+                rgb(204, 204, 204) 50%,
+                rgb(184, 184, 184,0) calc(50% + 2px),
+                rgb(184, 184, 184,0) 100%);
+    }
 
-/* Selo Vacina */
-.stamp {
-    font-family: 'Swanky and Moo Moo', cursive;
-    font-size: 20px;
-    text-align: center;
-    margin-top: 20px;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-bottom: 20px;
-    position: relative;
-    width: 250px;
-    height: 50px;
-    background: #08e464;
-    color: #072072;
-    -webkit-filter: drop-shadow(3px 3px 1px black);
-    filter: drop-shadow(0px 0px 5px white);
-}
-.stamp:before {
-    position: absolute;
-    top: -20px;
-    display: block;
-    content: "";
-    background: radial-gradient(circle, transparent 7px, #08e464 8px);
-    background-size: 50px 40px;
-    background-position: -20px -20px;
-    width: 100%;
-    height: 40px;
-    z-index: -1;
-}
-.stamp:after {
-    position: absolute;
-    bottom: -20px;
-    content: "";
-    display: block;
-    background: radial-gradient(circle, transparent 7px, #08e464 8px);
-    background-size: 50px 40px;
-    background-position: -20px -20px;
-    width: 100%;
-    height: 40px;
-    z-index: -1;
-}
+    /* Conteúdo superior direito */
+    .diagonal-sup{
+        display: block;
+        position: relative;
+        float: right;
+        padding-top: 0.1%;
+        padding-right: 0.1px;
+        padding-bottom: 50%;
+        line-height: 50%;
+        z-index: 1;
+    }
 
-/* .stamp2 {
-    font-family: 'Swanky and Moo Moo', cursive;
-    font-size: 25px;
-      color: #555;
-      border: 0.25rem solid #555;
-      display: inline-block;
-      padding: 0.25rem 1rem;
-      border-radius: 1rem;
-      -webkit-mask-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/grunge.png');
-    -webkit-mask-size: 944px 604px;
-    mix-blend-mode: multiply;
-  }
+    /* Conteúdo inferior esquerdo */
+    .diagonal-inf{
+        display: block;
+        position: relative;
+        float: left;
+        padding-top: 50%;
+        padding-left: 0.1px;
+        padding-bottom: 0.1%;
+        line-height: 50%;
+        z-index: 1;
+    }
 
-.is-approved {
-	color: #0A9928;
-	border: 0.5rem solid #0A9928;
-	-webkit-mask-position: 13rem 6rem;
-  border-radius: 0;
-}  */
+    /* Headers carteira vacinação */
+    .headers-top-my-vaccine {
+        font-family: 'PT Mono', monospace;
+        font-size: 20px;
+        font-weight: 900;
+        background: #0be064a4;
+    }
+    .headers-left-my-vaccine {
+        font-family: 'PT Mono', monospace;
+        font-size: 20px;
+        font-weight: 900;
+        background: #06994398;
+    }
 
-/* Carteira de vacinação */
-.myVaccineTable{
-    width: 100%;
-    background: #eeeeee;
-}
+    /* Selo Vacina */
+    .stamp {
+        font-family: 'Swanky and Moo Moo', cursive;
+        font-size: 23.5px;
+        font-weight: 900;
+        text-align: center;
+        margin-top: 20px;
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-bottom: 20px;
+        position: relative;
+        min-width: 100px;
+        min-height: 20px;
+        background: #f5f5f5;
+        color: #072072;
+        -webkit-filter: drop-shadow(3px 3px 1px rgb(180, 180, 180));
+        filter: drop-shadow(0px 0px 5px rgb(180, 180, 180));
+    }
 
-/* Primeiro header */
-.myVaccineTable .sup{
-    display: block;
-    position: relative;
-    width: 50%;
-    float: right;
-    padding-bottom: 15%;
-    line-height: 100%;
-    text-align: center;
-    z-index: 1;
-}
+    .stamp:before {
+        position: absolute;
+        top: -20px;
+        display: block;
+        content: "";
+        background: radial-gradient(circle, transparent 4px, #f5f5f5 5px);
+        background-size: 15px 40px;
+        background-position: -20px -20px;
+        width: 100%;
+        height: 40px;
+        z-index: -1;
+    }
+
+    .stamp:after {
+        position: absolute;
+        bottom: -20px;
+        content: "";
+        display: block;
+        background: radial-gradient(circle, transparent 4px, #f5f5f5 5px);
+        background-size: 15px 40px;
+        background-position: -20px -20px;
+        width: 100%;
+        height: 40px;
+        z-index: -1;
+    }
+
+    /* .stamp2 {
+        font-family: 'Swanky and Moo Moo', cursive;
+        font-size: 25px;
+        color: #555;
+        border: 0.25rem solid #555;
+        display: inline-block;
+        padding: 0.25rem 1rem;
+        border-radius: 1rem;
+        -webkit-mask-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/grunge.png');
+        -webkit-mask-size: 944px 604px;
+        mix-blend-mode: multiply;
+    }
+
+    .is-approved {
+        color: #0A9928;
+        border: 0.5rem solid #0A9928;
+        -webkit-mask-position: 13rem 6rem;
+    border-radius: 0;
+    }  */
+
 
 .myVaccineTable .inf{
     display: block;
@@ -370,27 +434,6 @@ ul.relatorios li h1{
     line-height: 100%;
     text-align: center;
     z-index: 1;
-}
-
-.firstHeader::after{
-    /* content: ""; */
-    /* position: absolute;
-    z-index: 0;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255,255,255,.5); */
-
-    position: relative;
-    z-index: 1;
-    left: -61px;
-    width: 423px;
-    height: 1px;
-    background-color: #000;
-    transform: rotate(45deg);
-    /* background-size: cover; */
-    /* clip-path: polygon(100% 0%, 0% 0%, 0% 100%); */
 }
 
 /* Sidebar */

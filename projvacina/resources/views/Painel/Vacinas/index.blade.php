@@ -19,22 +19,31 @@
         </div>
     </h1>
     <hr>
-    <table id="myVaccineTable" class="table table-bordered" cellspacing="0" width="100%">
+    <table id="myVaccineTable" class="table table-bordered myVaccineTable" cellspacing="0" width="100%">
         <thead>
             <tr>
-                <th style="width: 10%" class="headersTopMyVaccine">
-                    <!-- <span class="sup">Vacinas</span>
-                    <span class="inf">Doses</span> -->
+                <th style="width: 10%" class="first-header-top-my-vaccine diagonal-line">                    
+                    <span class="diagonal-sup">Vacinas</span>
+                    <br>
+                    <span class="diagonal-inf">Doses</span>                                       
                 </th>
                 @foreach($myDosesTable as $myDosesVaccineName => $myDoses)
-                    <th class="headersTopMyVaccine" style="width: 20%; text-align: center; vertical-align:middle;" scope="col">{{ $myDosesVaccineName }}</th>                    
+                    <th class="headers-top-my-vaccine" style="width: 25%; text-align: center; vertical-align:middle;" scope="col">{{ $myDosesVaccineName }}</th>                    
                 @endforeach
+                <!-- <th width="(100/{{ $vaccineNumber }})%" class="first-header-top-my-vaccine diagonal-line">                    
+                    <span class="diagonal-sup">Vacinas</span>
+                    <br>
+                    <span class="diagonal-inf">Doses</span>                                       
+                </th>
+                @foreach($myDosesTable as $myDosesVaccineName => $myDoses)
+                    <th class="headers-top-my-vaccine" width="(100/{{ $vaccineNumber }})%" style="text-align: center; vertical-align:middle;" scope="col">{{ $myDosesVaccineName }}</th>                    
+                @endforeach -->
             </tr>
         </thead>
         <tbody>
             @for ($i = 0; $i < $maxDoseNumber; $i++)
                 <tr>
-                    <th class="headersLeftMyVaccine" style="text-align: center; vertical-align:middle" scope="row">{{$i + 1 }}ª Dose</th>
+                    <th class="headers-left-my-vaccine" style="text-align: center; vertical-align:middle" scope="row">{{$i + 1 }}ª Dose</th>
                     @foreach($myDosesTable as $$myDosesVaccineName => $myDoses)                       
                         @if($myDoses[$i]['validity'] != '' || $myDoses[$i]['place'] != '')
                             <td>
@@ -242,6 +251,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
 <link href="https://fonts.googleapis.com/css?family=Swanky+and+Moo+Moo" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=PT+Mono" rel="stylesheet">
 
 <script>
     $(document).ready(function(){

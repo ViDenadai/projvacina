@@ -131,12 +131,10 @@ class DoseController extends Controller
             // A próxima dose será 1 unidade maior que o valor anterior
             $firstDoseValue = strval(intval($firstDoseValue->numerodose) + 1);
         }
-        // dd($myDosesTable);
-        // for ($i = 0; $i < $maxDoseNumber; $i++) {
-        //     foreach($myDosesTable as $vaccineName=>$dose){
-        //         dd($dose[$i]['validity']);
-        //     }
-        // }    
+        
+        // Quantidade de vacinas existentes
+        $vaccineNumber = count($vaccinesName);
+        
         // painel.Vacinas.index => view da carteira de vacinação com todas as doses
         return view('painel.Vacinas.index', compact(
                                                 'doses', 
@@ -147,7 +145,8 @@ class DoseController extends Controller
                                                 'vaccinesName',
                                                 'firstDoseValue',
                                                 'myDosesTable',
-                                                'maxDoseNumber'));
+                                                'maxDoseNumber',
+                                                'vaccineNumber'));
     }
 
     public function update(Request $request)
