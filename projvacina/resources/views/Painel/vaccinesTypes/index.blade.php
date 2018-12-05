@@ -31,6 +31,7 @@
                     <td> 
                         <a class="edit" href="#" title="Editar">
                             <i class="fa fa-pencil-square-o"></i>
+                            <input type="hidden" class="vaccineId" id="vaccineId" name="vaccineId" value='{{ $vaccine->id }}'>
                         </a>
                         <form style="display: inline-block;" method="POST" 
                             action="{{ route('painel.deleteVaccine') }}"                                                        
@@ -185,7 +186,8 @@
         });
         
         // Edição do tipos de vacina
-        $('.edit').on('click', function () {
+        $('#vaccineTable').on('click','.edit', function (event) {
+            event.preventDefault();
             $.ajax({
                 type: "GET",
                 data: {

@@ -11,7 +11,7 @@
             <div class="mr-auto p-2"><b>Minhas Vacinas</b></div>
             @if (Auth::user()->can('create_dose'))
                 <div class="ml-auto p-2">
-                    <a href="/painel/newDose" data-toggle="modal" data-target="#vaccineAddModal">
+                    <a href="/painel/newDose" data-toggle="modal" data-target="#doseAddModal">
                         <b><i class="far fa-plus-square add"></i></b>
                     </a>  
                 </div>
@@ -22,13 +22,13 @@
     <table id="myVaccineTable" class="table table-bordered myVaccineTable" cellspacing="0" width="100%">
         <thead>
             <tr>
-                <th style="width: 10%" class="first-header-top-my-vaccine diagonal-line">                    
+                <th width="8%" class="first-header-top-my-vaccine diagonal-line">                    
                     <span class="diagonal-sup">Vacinas</span>
                     <br>
                     <span class="diagonal-inf">Doses</span>                                       
                 </th>
                 @foreach($myDosesTable as $myDosesVaccineName => $myDoses)
-                    <th class="headers-top-my-vaccine" style="width: 25%; text-align: center; vertical-align:middle;" scope="col">{{ $myDosesVaccineName }}</th>                    
+                    <th class="headers-top-my-vaccine" width="(100/{{ $vaccineNumber }})%" style="text-align: center; vertical-align:middle;" scope="col">{{ $myDosesVaccineName }}</th>                    
                 @endforeach
                 <!-- <th width="(100/{{ $vaccineNumber }})%" class="first-header-top-my-vaccine diagonal-line">                    
                     <span class="diagonal-sup">Vacinas</span>
@@ -48,9 +48,9 @@
                         @if($myDoses[$i]['validity'] != '' || $myDoses[$i]['place'] != '')
                             <td>
                                 <div class="stamp">
-                                        Validade: {{ $myDoses[$i]['validity'] }}
-                                        <br>
-                                        Local: {{ $myDoses[$i]['place'] }} 
+                                    Validade: {{ $myDoses[$i]['validity'] }}
+                                    <br>
+                                    Local: {{ $myDoses[$i]['place'] }} 
                                 </div>
                             </td>
                         @else
@@ -74,7 +74,7 @@
                 <div class="mr-auto p-2"><b>Todas as Vacinas</b></div>
                 @if (Auth::user()->can('create_dose'))
                     <div class="ml-auto p-2">
-                        <a href="/painel/newDose" data-toggle="modal" data-target="#vaccineAddModal">
+                        <a href="/painel/newDose" data-toggle="modal" data-target="#doseAddModal">
                             <b><i class="far fa-plus-square add"></i></b>
                         </a>  
                     </div>
@@ -105,8 +105,9 @@
                         <td>{{ $dose->user_name }}</td>
                         <td> 
                         @if(Auth::user()->can('edit_dose'))
-                            <a href="{{url('/painel/dose/$dose->id/edit')}}" class="edit" title="Editar">
+                            <a class="edit" href="#" title="Editar">
                                 <i class="fa fa-pencil-square-o"></i>
+                                <input type="hidden" class="doseId" id="doseId" name="doseId" value='{{ $dose->id }}'>
                             </a>
                         @endif
                         @if(Auth::user()->can('delete_dose'))
@@ -115,7 +116,7 @@
                                 data-toggle="tooltip" data-placement="top"
                                 title="Excluir" 
                                 onsubmit="return confirm('Confirmar exclusão?')">
-                                <input type="hidden" id="doseId" name="doseId" value='{{ $dose->id }}'>
+                                <input type="hidden" class="doseId" id="doseId" name="doseId" value='{{ $dose->id }}'>
                                 {{-- method_field('DELETE') --}}{{ csrf_field() }}                                                
                                 <button type="submit" class ="delete">
                                     <i class="fa fa-trash"></i>                                                    
@@ -131,10 +132,10 @@
     @endif
 
     <!-- Modal de adição de doses -->
-    <div class="modal fade" id="vaccineAddModal" role="dialog" aria-labelledby="vaccineAddModalLabel" aria-hidden="true">
+    <div class="modal fade" id="doseAddModal" role="dialog" aria-labelledby="doseAddModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <form method="POST" action="{{ route('painel.storeDose') }}" aria-label="{{ __('formVaccine') }}">
+                <form method="POST" action="{{ route('painel.storeDose') }}" aria-label="{{ __('formDoseAdd') }}">
                     <!-- Modal header -->
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Adicionar Dose</h5>
@@ -153,7 +154,7 @@
                             <label for="local" class="col-md-4 col-form-label text-md-right">{{ __('Local da aplicação ') }}</label>
                             <div class="col-md-6">
                                 <input id="local" 
-                                    type="local" 
+                                    type="text" 
                                     class="form-control{{ $errors->has('local') ? ' is-invalid' : '' }}" 
                                     name="local" 
                                     value="{{ old('local') }}" 
@@ -198,13 +199,6 @@
                                                 @endif
                                         required 
                                         readonly>
-                                <!-- <select class="doseSelect" id="numerodose" name="numerodose" style="width: 15%" required disabled>
-                                    <option value="1">1ª</option>
-                                    <option value="2">2ª</option>
-                                    <option value="3">3ª</option>
-                                    <option value="4">4ª</option>
-                                    <option value="5">5ª</option>
-                                </select> -->
                             </div>
                         </div>
 
@@ -231,6 +225,106 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-success">{{ __('Adicionar') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de edição do tipo de vacina -->
+    <div class="modal fade" id="doseUpdateModal" role="dialog" aria-labelledby="doseUpdateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form method="POST" action="{{ route('painel.updateDose') }}" aria-label="{{ __('formUpdateDose') }}">
+                    <!-- Modal header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalUpdateLabel">Alterar informações da dose</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <!-- CSRF protection -->
+                        @csrf                        
+
+                        <!-- Local da aplicação -->
+                        <div class="form-group row">
+                            <label for="local" class="col-md-4 col-form-label text-md-right">{{ __('Local da aplicação ') }}</label>
+                            <div class="col-md-6">
+                                <input id="localUpdate" 
+                                    type="text" 
+                                    class="form-control{{ $errors->has('localUpdate') ? ' is-invalid' : '' }}" 
+                                    name="localUpdate" 
+                                    value="{{ old('localUpdate') }}" 
+                                    required>
+
+                                @if ($errors->has('local'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('localUpdate') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Nome do paciente -->
+                        <div class="form-group row">
+                            <label for="id_user" class="col-md-4 col-form-label text-md-right">{{ __('Paciente') }}</label>
+                            <div class="col-md-6">                                
+                                <select id="patientSelectNameUpdate" class="patientSelectNameUpdate" name="patientSelectNameUpdate" style="width: 100%" required></select>
+                            </div>                            
+                        </div>
+
+                        <!-- Nome da vacina -->
+                        <div class="form-group row">
+                            <label for="nome" class="col-md-4 col-form-label text-md-right">{{ __('Nome da vacina') }}</label>
+                            <div class="col-md-6">
+                                <select id="vaccineNameSelectUpdate" class="vaccineNameSelectUpdate" name="vaccineNameSelectUpdate" style="width: 100%" required></select>
+                            </div>
+                        </div>
+
+                        <!-- Número da Dose -->
+                        <div class="form-group row">
+                            <label for="numerodose" class="col-md-4 col-form-label text-md-right">{{ __('Números de doses disponíveis') }}</label>
+
+                            <div class="col-md-6">
+                                <select class="doseSelectUpdate" id="doseSelectUpdate" name="doseSelectUpdate" style="width: 15%" required></select>
+                                <!-- <input  id="numerodose" 
+                                        type="text" 
+                                        class="form-control" 
+                                        name="numerodose" 
+                                        style="width: 11%" 
+                                        value=  @if(!empty($firstDoseValue)) 
+                                                    {{$firstDoseValue}}ª  
+                                                @endif
+                                        required> -->
+                            </div>
+                        </div>
+
+                        <!-- Validade Dose -->
+                        <div class="form-group row">
+                            <label for="dateUpdate" class="col-md-4 col-form-label text-md-right">{{ __('Validade') }}</label>
+                            <div class="col-md-6">
+                                <input id="dateUpdate" 
+                                    type="date" 
+                                    class="form-control{{ $errors->has('dateUpdate') ? ' is-invalid' : '' }}" 
+                                    name="dateUpdate" 
+                                    required>
+
+                                @if ($errors->has('dateUpdate'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('dateUpdate') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div> 
+                    </div>                                
+                    
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">{{ __('Alterar') }}</button>
                     </div>
                 </form>
             </div>
@@ -309,7 +403,7 @@
             patientsSelect.push({id:patientsName[key].name, text:patientsName[key].name});
         };
         
-        // Inicialização select de nome da vacina 
+        // Inicialização select de nome da vacina no formulário de registro de dose
         $('#vaccineNameSelect').select2({
             "data": vaccinesNameSelect,
             "language": {
@@ -317,9 +411,9 @@
                     return "Nenhum resultado foi encontrado...";
                 }
             },
-        })
+        });
 
-        // Inicialização select de paciente   
+        // Inicialização select de paciente no formulário de registro de dose
         $('#patientSelectName').select2({
             "data": patientsSelect,
             "language": {
@@ -347,17 +441,108 @@
                 error: function(request, status, error) {
                     console.log(error);
                 }
+            });            
+        });
+
+        // Edição da dose
+        $('#vaccineTable').on('click','.edit', function (event) {
+            event.preventDefault();
+            $.ajax({
+                type: "GET",
+                data: {
+                    // Recupera o id da dose que se quer modificar
+                    doseId: $(this).parent().find('.doseId').val()
+                },
+                url: "{{ route('painel.updateDose_ajax')}}",                
+                dataType : 'json',
+                success: function(response) {
+                    // Valor antigo do local
+                    $('#localUpdate').val(response.dose.local);
+
+                    // Valor antigo do nome do paciente
+                    $('#patientSelectNameUpdate').val(response.dose.patientName); 
+                    $('#patientSelectNameUpdate').trigger('change');
+
+                    // Valor antigo do nome da vacina
+                    $('#vaccineNameSelectUpdate').val(response.dose.vaccine_id); 
+                    $('#vaccineNameSelectUpdate').trigger('change');
+
+                    // Array com os números das doses formatados
+                    // para o select
+                    var doseNumberSelect = [];
+
+                    // Formatação para adequação ao select de número de doses
+                    // Doses podem possuir valores de 1 a 15(É a minha definição,
+                    // alterar no DoseController se mais números forem necessários)
+                    for (key in response.doseNumbersPossibilities) {
+                        doseNumberSelect.push({id:response.doseNumbersPossibilities[key], text:response.doseNumbersPossibilities[key]+"ª"});
+                    };
+
+                    // Inicialização select de número de doses no formulário de atualização de dose
+                    $('#doseSelectUpdate').select2({
+                        "data": doseNumberSelect,
+                        "language": {
+                            "noResults": function(){
+                                return "Nenhum resultado foi encontrado...";
+                            }
+                        },
+                    });
+
+                    // Valor antigo de número de dose
+                    $('#doseSelectUpdate').val(response.dose.numerodose); 
+                    $('#doseSelectUpdate').trigger('change');
+
+                    // Valor antigo de validade
+                    $("#dateUpdate").val(response.dose.validade);
+                    $("#doseUpdateModal").modal("show");
+                },
+                error: function(request, status, error) {
+                    alert("Algum erro ocorreu na requisição, tente mais tarde.");
+                }
+            });
+
+            // Inicialização select de nome da vacina no formulário de atualização de dose
+            $('#vaccineNameSelectUpdate').select2({
+                "data": vaccinesNameSelect,
+                "language": {
+                    "noResults": function(){
+                        return "Nenhum resultado foi encontrado...";
+                    }
+                },
+            });
+
+            // Inicialização select de paciente no formulário de atualização de dose
+            $('#patientSelectNameUpdate').select2({
+                "data": patientsSelect,
+                "language": {
+                    "noResults": function(){
+                        return "Nenhum resultado foi encontrado...";
+                    }
+                },
             });
         });
 
-        // Inicialização select de número da dose 
-        // $('#numerodose').select2({
-        //     "language": {
-        //         "noResults": function(){
-        //             return "";
-        //         }
-        //     },
-        // });
+        // Evento ao alterar o nome da vacina que 
+        // busca os números de doses possíveis no
+        // formulário de alteração de dose
+        $('.vaccineNameSelectUpdate').on("change", function (e) {  
+            $.ajax({
+                type: "GET",
+                data: {
+                    // Recupera o id do tipo de vacina selecionado
+                    vaccineId: $('.vaccineNameSelect').val(),
+                    patientName: $('.patientSelectName').val()
+                },
+                url: "{{ route('painel.updateDoseNumber_ajax')}}",                
+                dataType : 'json',
+                success: function(response) {
+                    // $("#numerodose").val(response.doseNumber+"ª");
+                },
+                error: function(request, status, error) {
+                    console.log(error);
+                }
+            });            
+        });
     });
 </script>
 @endsection

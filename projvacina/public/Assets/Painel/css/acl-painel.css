@@ -59,7 +59,7 @@ a:focus {
 #sidebar {
     min-width: 250px;
     max-width: 250px;
-    background: rgba(2, 175, 175, 0.733);
+    background: linear-gradient(rgb(7, 230, 230), rgba(3, 95, 95, 0.596));
     color: #fff;
     transition: all 0.3s;
 }
@@ -70,7 +70,7 @@ a:focus {
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: rgba(4, 199, 199, 0.733);
+    background: linear-gradient(rgba(3, 95, 95, 0.596),rgba(5, 219, 219, 0.774));
 }
 
 #sidebar ul.components {
@@ -278,7 +278,9 @@ ul.relatorios li h1{
         border-radius: 5px !important;
         border-width: 2px !important;
         border-style: solid !important;
-        -moz-border-radius:8px;
+        -moz-border-radius: 8px;
+        table-layout: fixed;
+        width: 100%;
     }
 
     /* Primeiro header */
@@ -371,11 +373,17 @@ ul.relatorios li h1{
         margin-bottom: 20px;
         position: relative;
         min-width: 100px;
-        min-height: 20px;
+        min-height: 30px;
         background: #f5f5f5;
         color: #072072;
         -webkit-filter: drop-shadow(3px 3px 1px rgb(180, 180, 180));
         filter: drop-shadow(0px 0px 5px rgb(180, 180, 180));
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        -webkit-hyphens: auto;
+        -ms-hyphens: auto;
+        -moz-hyphens: auto;
+        hyphens: auto;
     }
 
     .stamp:before {

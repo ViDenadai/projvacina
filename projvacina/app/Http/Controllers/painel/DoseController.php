@@ -136,7 +136,7 @@ class DoseController extends Controller
         $vaccineNumber = count($vaccinesName);
         
         // painel.Vacinas.index => view da carteira de vacinação com todas as doses
-        return view('painel.Vacinas.index', compact(
+        return view('painel.doses.index', compact(
                                                 'doses', 
                                                 'myDoses', 
                                                 'patientsName', 
@@ -147,6 +147,49 @@ class DoseController extends Controller
                                                 'myDosesTable',
                                                 'maxDoseNumber',
                                                 'vaccineNumber'));
+    }
+
+    // Função que retorna os dados necessários para
+    // a atualização da dose
+    public function update_ajax()
+    {        
+        // Id da dose selecionada
+        $doseId = Input::get('doseId');
+
+        // Dose correspondente
+        $dose = DB::table('doses')
+                    ->join('users', 'doses.id_user', '=', 'users.id')
+                    ->select('doses.*', 'users.name as patientName')
+                    ->where('doses.id', '=', $doseId)
+                    ->first();
+
+        // Números das doses existentes para a vacina e a pessoa
+        // selecionada
+        $doseNumbers =  DB::table('doses')
+                            ->join('users', 'doses.id_user', '=', 'users.id')
+                            ->select('doses.numerodose')
+                            ->where('vaccine_id', '=', $dose->vaccine_id)
+                            ->where('id_user', '=', $dose->id_user)
+                            ->orderBy('numerodose', 'asc')
+                            ->distinct()
+                            ->get();
+        // Doses podem possuir valores de 1 a 15(É a minha definição,
+        // alterar aqui se mais números forem necessários)
+        $doseNumbersPossibilities = range(1, 15);
+        foreach ($doseNumbers as $doseNumber) {
+            // O número da dose atual do registro é mantido entre as
+            // possibilidades de seleção
+            if ($doseNumber->numerodose != $doseId) {
+                unset($doseNumbersPossibilities[intval($doseNumber->numerodose)-1]);
+            }
+        }
+
+        return response()->json(array('dose' => $dose, 'doseNumbersPossibilities' => $doseNumbersPossibilities));  
+    }
+
+    public function updateDoseNumber_ajax()
+    {
+
     }
 
     public function update(Request $request)
