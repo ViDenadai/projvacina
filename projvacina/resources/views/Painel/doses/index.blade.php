@@ -22,7 +22,7 @@
     <table id="myVaccineTable" class="table table-bordered myVaccineTable" cellspacing="0" width="100%">
         <thead>
             <tr>
-                <th width="8%" class="first-header-top-my-vaccine diagonal-line">                    
+                <th width="10%" class="first-header-top-my-vaccine diagonal-line">                    
                     <span class="diagonal-sup">Vacinas</span>
                     <br>
                     <span class="diagonal-inf">Doses</span>                                       
@@ -30,14 +30,6 @@
                 @foreach($myDosesTable as $myDosesVaccineName => $myDoses)
                     <th class="headers-top-my-vaccine" width="(100/{{ $vaccineNumber }})%" style="text-align: center; vertical-align:middle;" scope="col">{{ $myDosesVaccineName }}</th>                    
                 @endforeach
-                <!-- <th width="(100/{{ $vaccineNumber }})%" class="first-header-top-my-vaccine diagonal-line">                    
-                    <span class="diagonal-sup">Vacinas</span>
-                    <br>
-                    <span class="diagonal-inf">Doses</span>                                       
-                </th>
-                @foreach($myDosesTable as $myDosesVaccineName => $myDoses)
-                    <th class="headers-top-my-vaccine" width="(100/{{ $vaccineNumber }})%" style="text-align: center; vertical-align:middle;" scope="col">{{ $myDosesVaccineName }}</th>                    
-                @endforeach -->
             </tr>
         </thead>
         <tbody>
@@ -48,9 +40,12 @@
                         @if($myDoses[$i]['validity'] != '' || $myDoses[$i]['place'] != '')
                             <td>
                                 <div class="stamp">
-                                    Validade: {{ $myDoses[$i]['validity'] }}
+                                    <div class="stamp-template">Validade </div> 
+                                    
+                                    {{ $myDoses[$i]['validity'] }}
                                     <br>
-                                    Local: {{ $myDoses[$i]['place'] }} 
+                                    <div class="stamp-template">Local  </div>  
+                                    {{ $myDoses[$i]['place'] }} 
                                 </div>
                             </td>
                         @else
@@ -272,7 +267,7 @@
                         <div class="form-group row">
                             <label for="id_user" class="col-md-4 col-form-label text-md-right">{{ __('Paciente') }}</label>
                             <div class="col-md-6">                                
-                                <select id="patientSelectNameUpdate" class="patientSelectNameUpdate" name="patientSelectNameUpdate" style="width: 100%" required></select>
+                                <select id="patientSelectNameUpdate" class="selectsUpdate" name="patientSelectNameUpdate" style="width: 100%" required></select>
                             </div>                            
                         </div>
 
@@ -280,7 +275,7 @@
                         <div class="form-group row">
                             <label for="nome" class="col-md-4 col-form-label text-md-right">{{ __('Nome da vacina') }}</label>
                             <div class="col-md-6">
-                                <select id="vaccineNameSelectUpdate" class="vaccineNameSelectUpdate" name="vaccineNameSelectUpdate" style="width: 100%" required></select>
+                                <select id="vaccineNameSelectUpdate" class="selectsUpdate" name="vaccineNameSelectUpdate" style="width: 100%" required></select>
                             </div>
                         </div>
 
@@ -290,15 +285,6 @@
 
                             <div class="col-md-6">
                                 <select class="doseSelectUpdate" id="doseSelectUpdate" name="doseSelectUpdate" style="width: 15%" required></select>
-                                <!-- <input  id="numerodose" 
-                                        type="text" 
-                                        class="form-control" 
-                                        name="numerodose" 
-                                        style="width: 11%" 
-                                        value=  @if(!empty($firstDoseValue)) 
-                                                    {{$firstDoseValue}}ª  
-                                                @endif
-                                        required> -->
                             </div>
                         </div>
 
@@ -319,6 +305,9 @@
                                 @endif
                             </div>
                         </div> 
+
+                        <!-- Id da dose para o update -->
+                        <input type="hidden" class="doseIdUpdate" id="doseIdUpdate" name="doseIdUpdate" value=''>
                     </div>                                
                     
                     <!-- Modal footer -->
@@ -429,7 +418,7 @@
             $.ajax({
                 type: "GET",
                 data: {
-                    // Recupera o id do tipo de vacina selecionado
+                    // Recupera o id do tipo de vacina e o nome selecionado
                     vaccineId: $('.vaccineNameSelect').val(),
                     patientName: $('.patientSelectName').val()
                 },
@@ -446,7 +435,11 @@
 
         // Edição da dose
         $('#vaccineTable').on('click','.edit', function (event) {
+            // Previne o redirecionamento do link
             event.preventDefault();
+
+            // Id da dose é posto no form de update de dose
+            $("#doseIdUpdate").val($(this).parent().find('.doseId').val());
             $.ajax({
                 type: "GET",
                 data: {
@@ -465,36 +458,11 @@
 
                     // Valor antigo do nome da vacina
                     $('#vaccineNameSelectUpdate').val(response.dose.vaccine_id); 
-                    $('#vaccineNameSelectUpdate').trigger('change');
-
-                    // Array com os números das doses formatados
-                    // para o select
-                    var doseNumberSelect = [];
-
-                    // Formatação para adequação ao select de número de doses
-                    // Doses podem possuir valores de 1 a 15(É a minha definição,
-                    // alterar no DoseController se mais números forem necessários)
-                    for (key in response.doseNumbersPossibilities) {
-                        doseNumberSelect.push({id:response.doseNumbersPossibilities[key], text:response.doseNumbersPossibilities[key]+"ª"});
-                    };
-
-                    // Inicialização select de número de doses no formulário de atualização de dose
-                    $('#doseSelectUpdate').select2({
-                        "data": doseNumberSelect,
-                        "language": {
-                            "noResults": function(){
-                                return "Nenhum resultado foi encontrado...";
-                            }
-                        },
-                    });
-
-                    // Valor antigo de número de dose
-                    $('#doseSelectUpdate').val(response.dose.numerodose); 
-                    $('#doseSelectUpdate').trigger('change');
+                    $('#vaccineNameSelectUpdate').trigger('change');                
 
                     // Valor antigo de validade
-                    $("#dateUpdate").val(response.dose.validade);
-                    $("#doseUpdateModal").modal("show");
+                    $("#dateUpdate").val(response.dose.validade);                    
+                    $("#doseUpdateModal").modal("show");                    
                 },
                 error: function(request, status, error) {
                     alert("Algum erro ocorreu na requisição, tente mais tarde.");
@@ -525,18 +493,55 @@
         // Evento ao alterar o nome da vacina que 
         // busca os números de doses possíveis no
         // formulário de alteração de dose
-        $('.vaccineNameSelectUpdate').on("change", function (e) {  
+        $('.selectsUpdate').on("change", function (e) {  
             $.ajax({
                 type: "GET",
                 data: {
-                    // Recupera o id do tipo de vacina selecionado
-                    vaccineId: $('.vaccineNameSelect').val(),
-                    patientName: $('.patientSelectName').val()
+                    // Recupera o id da dose escolhida para o update
+                    doseId: $('#doseIdUpdate').val(),
+                    
+                    // Recupera o id do tipo de vacina e o nome selecionado
+                    vaccineId: $('#vaccineNameSelectUpdate').val(),
+                    patientName: $('#patientSelectNameUpdate').val()
                 },
                 url: "{{ route('painel.updateDoseNumber_ajax')}}",                
                 dataType : 'json',
                 success: function(response) {
-                    // $("#numerodose").val(response.doseNumber+"ª");
+                    // Remove as opções anteriores
+                    $("#doseSelectUpdate").empty().trigger("change");
+
+                    // Array com os números das doses formatados
+                    // para o select
+                    var doseNumberSelect = [];
+
+                    // Formatação para adequação ao select de número de doses
+                    // Doses podem possuir valores de 1 a 15(É a minha definição,
+                    // alterar no DoseController se mais números forem necessários)
+                    for (key in response.doseNumbersPossibilities) {
+                        doseNumberSelect.push({id:response.doseNumbersPossibilities[key], text:response.doseNumbersPossibilities[key]+"ª"});
+                    };
+
+                    // Inicialização select de números de doses no formulário de atualização de dose
+                    $('#doseSelectUpdate').select2({
+                        "data": doseNumberSelect,
+                        "language": {
+                            "noResults": function(){
+                                return "Nenhum resultado foi encontrado...";
+                            }
+                        },
+                    });
+
+                    // Adiciona os novos números de doses provenientes da requisição ajax
+                    $('#mySelect2').trigger({
+                        type: 'select2:select',
+                        params: {
+                            data: doseNumberSelect
+                        }
+                    });
+
+                    // Deixa selecionado o primeiro valor possível do número da dose
+                    $('#doseSelectUpdate').val(doseNumberSelect[0].id); 
+                    $('#doseSelectUpdate').trigger('change');                    
                 },
                 error: function(request, status, error) {
                     console.log(error);

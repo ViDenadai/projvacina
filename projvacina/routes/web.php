@@ -15,8 +15,10 @@ Route::group(['prefix' => 'painel', 'as' => 'painel.'], function(){
     //  rota que direciona para a função index do controller painel,pagina inicial
     Route::get('/', 'painel\PainelController@index');
 
-    //  rota que direciona para a função index do controller users 
+    //  rota que direciona para a função index do controller User 
     Route::get('users', 'painel\UserController@index');
+    //  rota que direciona para a função destroy do controller User
+    Route::post('deleteUser', ['as' => 'deleteUser', 'uses' => 'painel\UserController@destroy']);
     
     //  rota que direciona para a função index do controller Dose
     Route::get('doses', ['as' => 'doses', 'uses' => 'painel\DoseController@index']);

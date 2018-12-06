@@ -187,6 +187,7 @@
         
         // Edição do tipos de vacina
         $('#vaccineTable').on('click','.edit', function (event) {
+            // Previne o redirecionamento do link            
             event.preventDefault();
             $.ajax({
                 type: "GET",

@@ -281,6 +281,16 @@ ul.relatorios li h1{
         -moz-border-radius: 8px;
         table-layout: fixed;
         width: 100%;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        -webkit-hyphens: auto;
+        -ms-hyphens: auto;
+        -moz-hyphens: auto;
+        hyphens: auto;
+    }
+
+    .myVaccineTable th {
+        padding: .10rem;
     }
 
     /* Primeiro header */
@@ -305,7 +315,7 @@ ul.relatorios li h1{
     @media screen  and (max-width: 1365px){
         .first-header-top-my-vaccine {
             font-family: 'PT Mono', monospace;
-            font-size: 12px;
+            font-size: 11px;
             padding: .45rem !important;
             font-weight: 900;
             background: #ffffff;
@@ -364,7 +374,7 @@ ul.relatorios li h1{
     /* Selo Vacina */
     .stamp {
         font-family: 'Swanky and Moo Moo', cursive;
-        font-size: 23.5px;
+        font-size: 20.5px;
         font-weight: 900;
         text-align: center;
         margin-top: 20px;
@@ -372,7 +382,7 @@ ul.relatorios li h1{
         margin-right: 10px;
         margin-bottom: 20px;
         position: relative;
-        min-width: 100px;
+        min-width: 50px;
         min-height: 30px;
         background: #f5f5f5;
         color: #072072;
@@ -412,37 +422,12 @@ ul.relatorios li h1{
         z-index: -1;
     }
 
-    /* .stamp2 {
-        font-family: 'Swanky and Moo Moo', cursive;
-        font-size: 25px;
-        color: #555;
-        border: 0.25rem solid #555;
-        display: inline-block;
-        padding: 0.25rem 1rem;
-        border-radius: 1rem;
-        -webkit-mask-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/grunge.png');
-        -webkit-mask-size: 944px 604px;
-        mix-blend-mode: multiply;
+    .stamp-template {
+        font-family: 'PT Mono', monospace;
+        font-size: 14px;
+        padding-bottom: 0%;
+        color: #000000;
     }
-
-    .is-approved {
-        color: #0A9928;
-        border: 0.5rem solid #0A9928;
-        -webkit-mask-position: 13rem 6rem;
-    border-radius: 0;
-    }  */
-
-
-.myVaccineTable .inf{
-    display: block;
-    position: relative;
-    width: 50%;
-    float: right;
-    padding-top: 15%;
-    line-height: 100%;
-    text-align: center;
-    z-index: 1;
-}
 
 /* Sidebar */
 @media (max-width: 768px){

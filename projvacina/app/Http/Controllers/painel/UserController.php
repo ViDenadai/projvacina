@@ -3,13 +3,18 @@
 namespace App\Http\Controllers\painel;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
+
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Role_user;
 
 
 class UserController extends Controller
-{ private $user;
+{ 
+    private $user;
     
     public function __construct(user $users)
     {
@@ -18,9 +23,11 @@ class UserController extends Controller
     
     public function index()
     {
-        $users = $this->user->all();
-            //abort(403, 'Not Permissions Lists Post');
-        
+        $users = DB::table('users')
+                    ->join('role_user', 'users.id', '=', 'role_user.user_id')
+                    ->join('roles', 'role_user.role_id', '=', 'roles.id')
+                    ->select('users.*', 'roles.name as role_name', 'roles.label as role_label')
+                    ->get(); 
         return view('painel.users.index', compact('users'));
     }
 
