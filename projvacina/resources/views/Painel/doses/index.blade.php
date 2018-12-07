@@ -98,6 +98,8 @@
                         <td>{{ $dose->numerodose }}ª</td>
                         <td>{{ $dose->validade }}</td>
                         <td>{{ $dose->user_name }}</td>
+
+                        <!-- Ações(Editar/Excluir) -->
                         <td> 
                         @if(Auth::user()->can('edit_dose'))
                             <a class="edit" href="#" title="Editar">
@@ -105,21 +107,21 @@
                                 <input type="hidden" class="doseId" id="doseId" name="doseId" value='{{ $dose->id }}'>
                             </a>
                         @endif
-                        @if(Auth::user()->can('delete_dose'))
+                        
                             <form style="display: inline-block;" method="POST" 
                                 action="{{route('painel.deleteDose')}}"                                                        
                                 data-toggle="tooltip" data-placement="top"
                                 title="Excluir" 
                                 onsubmit="return confirm('Confirmar exclusão?')">
-                                <input type="hidden" class="doseId" id="doseId" name="doseId" value='{{ $dose->id }}'>
-                                {{-- method_field('DELETE') --}}{{ csrf_field() }}                                                
-                                <button type="submit" class ="delete">
-                                    <i class="fa fa-trash"></i>                                                    
-                                </button>
-                            </form>
-                        @endif
-                        </td>
-                        
+                                @if(Auth::user()->can('delete_dose'))
+                                    <input type="hidden" class="doseId" id="doseId" name="doseId" value='{{ $dose->id }}'>
+                                    {{-- method_field('DELETE') --}}{{ csrf_field() }}                                                
+                                    <button type="submit" class ="delete">
+                                        <i class="fa fa-trash"></i>                                                    
+                                    </button>
+                                @endif
+                            </form>                        
+                        </td>                        
                     </tr>
                 @endforeach
             </tbody>
@@ -167,7 +169,11 @@
                         <div class="form-group row">
                             <label for="id_user" class="col-md-4 col-form-label text-md-right">{{ __('Paciente') }}</label>
                             <div class="col-md-6">                                
-                                <select id="patientSelectName" class="patientSelectName" name="patientSelectName" style="width: 100%" required></select>
+                                <select id="patientSelectName" 
+                                    class="patientSelectName" 
+                                    name="patientSelectName" 
+                                    style="width: 100%" 
+                                    required></select>
                             </div>
                         </div>
 
@@ -175,7 +181,11 @@
                         <div class="form-group row">
                             <label for="nome" class="col-md-4 col-form-label text-md-right">{{ __('Nome da vacina') }}</label>
                             <div class="col-md-6">
-                                <select id="vaccineNameSelect" class="vaccineNameSelect" name="vaccineNameSelect" style="width: 100%" required></select>
+                                <select id="vaccineNameSelect" 
+                                    class="vaccineNameSelect" 
+                                    name="vaccineNameSelect" 
+                                    style="width: 100%" 
+                                    required></select>
                             </div>
                         </div>
 
@@ -333,6 +343,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
+<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css?family=Swanky+and+Moo+Moo" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=PT+Mono" rel="stylesheet">
 

@@ -10,13 +10,17 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-// aqui temos as rotas que possuem como prefixo /painel
+// Rotas que possuem como prefixo /painel
 Route::group(['prefix' => 'painel', 'as' => 'painel.'], function(){
-    //  rota que direciona para a função index do controller painel,pagina inicial
+    //  Rota que direciona para a função index do controller painel,pagina inicial
     Route::get('/', 'painel\PainelController@index');
 
-    //  rota que direciona para a função index do controller User 
+    //  Rota que direciona para a função index do controller User 
     Route::get('users', 'painel\UserController@index');
+    //  Rota que direciona para a função store do controller User
+    Route::post('storeUser', ['as' => 'storeUser', 'uses' => 'painel\UserController@store']);
+    //  Rota que direciona para a função update do controller User
+    Route::post('updateUser', ['as' => 'updateUser', 'uses' => 'painel\UserController@update']);
     //  rota que direciona para a função destroy do controller User
     Route::post('deleteUser', ['as' => 'deleteUser', 'uses' => 'painel\UserController@destroy']);
     

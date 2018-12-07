@@ -28,6 +28,8 @@
             @foreach($vaccines as $vaccine)
                 <tr>
                     <td>{{$vaccine->name}}</td>
+                    
+                    <!-- Ações(Editar/Excluir) -->
                     <td> 
                         <a class="edit" href="#" title="Editar">
                             <i class="fa fa-pencil-square-o"></i>

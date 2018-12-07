@@ -22,8 +22,7 @@ class DoseController extends Controller
         $this->dose = $doses;
         // referencia a tabela dose        
     }
-    
-    // Se há alguma mensagem de sucesso ela é passada à view
+
     public function index()
     {
         // dd(Input::get('successMsg'));
@@ -149,6 +148,51 @@ class DoseController extends Controller
                                                 'vaccineNumber'));
     }
 
+    public function addDose_ajax()
+    {
+        // Id do nome da vacina selecionada
+        $vaccine_id = Input::get('vaccineId');
+        // Nome do paciente
+        $patientName = Input::get('patientName');
+
+        // Recupera o número da última dose tomada pelo paciente da vacina escolhida
+        $doseNumber = DB::table('doses')
+                        ->join('users', 'doses.id_user', '=', 'users.id')
+                        ->select('doses.*', 'users.name as patientName')
+                        ->where('vaccine_id', '=', $vaccine_id)
+                        ->where('users.name', '=', $patientName)
+                        ->orderBy('numerodose', 'desc')
+                        ->first();
+
+        // Se o paciente não tomou nenhuma dose da vacina
+        // o valor de $doseNumber será null, logo,
+        // será a 1ª
+        if(!$doseNumber){
+            $doseNumber = "1";
+        } else {
+            // A próxima dose será 1 unidade maior que o valor anterior
+            $doseNumber = strval(intval($doseNumber->numerodose) + 1);
+        }
+        return response()->json(array('doseNumber' => $doseNumber));      
+    }
+
+    public function store(Request $request)
+    {
+        $dose = new Dose;
+        $dose->vaccine_id = $request->vaccineNameSelect;
+        $dose->local = $request->local;
+        $dose->id_user = (DB::table('users')->select('id')->where('name', '=', $request->patientSelectName)->first())->id;
+        
+        // Em numerodose permanecem apenas os números
+        $dose->numerodose = filter_var($request->numerodose, FILTER_SANITIZE_NUMBER_INT);
+        $dose->validade = $request->validade;
+        $dose->save();
+        $successMsg = 'Dose adicionada com sucesso!'; 
+        return redirect()->action(
+            'painel\DoseController@index', ['successMsg' => $successMsg]
+        ); 
+    }
+
     // Função que retorna os dados necessários para
     // a atualização da dose
     public function update_ajax()
@@ -220,52 +264,6 @@ class DoseController extends Controller
         return redirect()->action(
             'painel\DoseController@index', ['successMsg' => $successMsg]
         );  
-    }
-    
-    public function addDose_ajax()
-    {
-        // Id do nome da vacina selecionada
-        $vaccine_id = Input::get('vaccineId');
-        // Nome do paciente
-        $patientName = Input::get('patientName');
-
-        // Recupera o número da última dose tomada pelo paciente da vacina escolhida
-        $doseNumber = DB::table('doses')
-                        ->join('users', 'doses.id_user', '=', 'users.id')
-                        ->select('doses.*', 'users.name as patientName')
-                        ->where('vaccine_id', '=', $vaccine_id)
-                        ->where('users.name', '=', $patientName)
-                        ->orderBy('numerodose', 'desc')
-                        ->first();
-
-        // Se o paciente não tomou nenhuma dose da vacina
-        // o valor de $doseNumber será null, logo,
-        // será a 1ª
-        if(!$doseNumber){
-            $doseNumber = "1";
-        } else {
-            // A próxima dose será 1 unidade maior que o valor anterior
-            $doseNumber = strval(intval($doseNumber->numerodose) + 1);
-        }
-        return response()->json(array('doseNumber' => $doseNumber));      
-    }
-    
-
-    public function store(Request $request)
-    {
-        $dose = new Dose;
-        $dose->vaccine_id = $request->vaccineNameSelect;
-        $dose->local = $request->local;
-        $dose->id_user = (DB::table('users')->select('id')->where('name', '=', $request->patientSelectName)->first())->id;
-        
-        // Em numerodose permanecem apenas os números
-        $dose->numerodose = filter_var($request->numerodose, FILTER_SANITIZE_NUMBER_INT);
-        $dose->validade = $request->validade;
-        $dose->save();
-        $successMsg = 'Dose adicionada com sucesso!'; 
-        return redirect()->action(
-            'painel\DoseController@index', ['successMsg' => $successMsg]
-        ); 
     }
 
     // Função que recebe no parâmetro o id da dose a ser removida da tabela
