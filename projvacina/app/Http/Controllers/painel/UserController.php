@@ -5,12 +5,13 @@ namespace App\Http\Controllers\painel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
 
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Role_user;
-
+use App\Dose;
 
 class UserController extends Controller
 { 
@@ -23,6 +24,11 @@ class UserController extends Controller
     
     public function index()
     {
+        // Se há uma mensagem de sucesso
+        if (!empty(Input::get('successMsg'))) {
+            $successMsg = Input::get('successMsg');
+        }
+
         // Usuários do sistema junto com as suas funções
         $users = DB::table('users')
                     ->join('role_user', 'users.id', '=', 'role_user.user_id')
@@ -35,7 +41,7 @@ class UserController extends Controller
                     ->select('roles.name')
                     ->get();
         
-        return view('painel.users.index', compact('users', 'roles'));
+        return view('painel.users.index', compact('users', 'roles', 'successMsg'));
     }
 
     public function newfunction()
@@ -45,11 +51,37 @@ class UserController extends Controller
 
     public function store(Request $request) 
     {        
-        $role_user = new role_user;
-        $role_user->user_id = $request->user_id;
-        $role_user->role_id = $request->role_id;       
+        // dd($request);
+        // Persistência do usuário
+        $user = new User;
+        $user->name = $request->nameAdd;
+        $user->email = $request->emailAdd;
+        $user->password = Hash::make($request->passwordAdd);
+        $user->nascimento = $request->birthDate;
+        $user->save();
+
+        // Persistência do tipo de usuário
+        $role_user = new Role_user;
+        $role_user->timestamps = false;
+        $role_user->user_id = $user->id;
+        $role_user->role_id = (DB::table('roles')->where('name', '=', $request->roleAddSelect)->first())->id;       
         $role_user->save(); 
-        return view('newfunction', compact('role_user'))->with('successMsg','Property is updated .');       
+
+        // Após o usuário ser adicionado
+        // retorna para a página de usuários por meio do index
+        // com uma mensagem de confirmação
+        $successMsg = 'Usuário cadastrado com sucesso!'; 
+        return redirect()->action(
+            'painel\UserController@index', ['successMsg' => $successMsg]
+        );     
+    }
+
+    public function updateUser_ajax()
+    {
+        // Id do nome da vacina selecionada
+        $vaccineId = Input::get('vaccineId');
+        $vaccine = Vaccine::findOrFail($vaccineId); 
+        return response()->json(array('vaccine' => $vaccine));  
     }
 
     public function update(Request $request)
@@ -79,11 +111,31 @@ class UserController extends Controller
         return view('/painel', compact('users'));
     }
 
-    public function destroy($id) 
+    public function destroy(Request $request) 
     {
-        $users = user::findOrFail($id);
-        $users->delete();
-        return redirect()->route('painel/users')->with('message', 'Produto excluído com sucesso!');   
+        // Deleta o usuário
+        $user = User::findOrFail($request->userId);
+        $user->delete();
+
+        // Deleta o tipo de usuário relacionado
+        $role_user = DB::table('role_user')->where('user_id', '=', $user->id)->first();
+        $role_user = Role_user::findOrFail($role_user->id);
+        $role_user->delete();
+
+        // Deleta as doses relacionadas
+        $doses = DB::table('doses')->where('id_user', '=', $user->id)->get();
+        foreach ($doses as $dose) {
+            $dose = Dose::findOrFail($dose->id);
+            $dose->delete();
+        }
+
+        // Após o usuário ser excluído
+        // retorna para a página de usuários por meio do index
+        // com uma mensagem de confirmação
+        $successMsg = 'Usuário excluído com sucesso!'; 
+        return redirect()->action(
+            'painel\UserController@index', ['successMsg' => $successMsg]
+        );          
     }
 
 }

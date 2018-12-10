@@ -25,7 +25,6 @@ class DoseController extends Controller
 
     public function index()
     {
-        // dd(Input::get('successMsg'));
         // Se há uma mensagem de sucesso
         if (!empty(Input::get('successMsg'))) {
             $successMsg = Input::get('successMsg');
@@ -51,6 +50,7 @@ class DoseController extends Controller
                 $dose->validade = date_format(new \DateTime($dose->validade), 'd/m/Y'); 
             }
         }
+
         // Tipo do usuário (1 - adm; 2 - usuário comum; 3 - profissional da saúde)
         $userType = (DB::table('role_user')
                         ->join('users', 'role_user.user_id', '=', 'users.id')

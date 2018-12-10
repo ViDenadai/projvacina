@@ -19,6 +19,8 @@ Route::group(['prefix' => 'painel', 'as' => 'painel.'], function(){
     Route::get('users', 'painel\UserController@index');
     //  Rota que direciona para a função store do controller User
     Route::post('storeUser', ['as' => 'storeUser', 'uses' => 'painel\UserController@store']);
+    //  rota para a requisição ajax de update de usuário
+    Route::get('updateUser_ajax', ['as' => 'updateUser_ajax', 'uses' => 'painel\UserController@updateUser_ajax']);
     //  Rota que direciona para a função update do controller User
     Route::post('updateUser', ['as' => 'updateUser', 'uses' => 'painel\UserController@update']);
     //  rota que direciona para a função destroy do controller User
