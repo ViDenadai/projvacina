@@ -99,7 +99,7 @@
                     
                     <!-- Modal header -->
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalAddLabel">Adicionar usuário</h5>
+                        <h5 class="modal-title" id="modalAddLabel"><b>Adicionar usuário</b></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -200,7 +200,7 @@
                 <form method="POST" action="{{ route('painel.updateUser') }}" aria-label="{{ __('formUpdateUser') }}">
                     <!-- Modal header -->
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalUpdateLabel">Alterar informações do usuário</h5>
+                        <h5 class="modal-title" id="modalUpdateLabel"><b>Alterar informações do usuário</b></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -275,19 +275,22 @@
                         <div class="form-group row">
                             <label for="roleUpdateSelect" class="col-md-4 col-form-label text-md-right">{{ __('Tipo de usuário') }}</label>
                             <div class="col-md-6">
-                                <select id="roleAddSelect" 
+                                <select id="roleUpdateSelect" 
                                     class="roleUpdateSelect form-control" 
                                     name="roleUpdateSelect" 
                                     style="width: 100%" 
                                     required></select>                                    
                             </div>
                         </div>
+
+                        <!-- Id do usuário para o update -->
+                        <input type="hidden" class="userIdUpdate" id="userIdUpdate" name="userIdUpdate" value=''>
                     </div>  
                     
                     <!-- Modal footer -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-success" disabled>{{ __('Alterar') }}</button>
+                        <button type="submit" class="btn btn-success">{{ __('Alterar') }}</button>
                     </div>
                 </form>
             </div>
@@ -360,20 +363,23 @@
             },
         });
 
-        // // Inicialização select de nome da vacina no formulário de edição de dose
-        // $('#roleUpdateSelect').select2({
-        //     "data": vaccinesNameSelect,
-        //     "language": {
-        //         "noResults": function(){
-        //             return "Nenhum resultado foi encontrado...";
-        //         }
-        //     },
-        // });
+        // Inicialização select de nome da vacina no formulário de edição de dose
+        $('#roleUpdateSelect').select2({
+            "data": rolesSelect,
+            "language": {
+                "noResults": function(){
+                    return "Nenhum resultado foi encontrado...";
+                }
+            },
+        });
         
-        // Edição do tipos de vacina
+        // Edição do usuário
         $('#userTable').on('click','.edit', function (event) {
             // Previne o redirecionamento do link            
             event.preventDefault();
+
+            // Id da dose é posto no form de update de usuário
+            $("#userIdUpdate").val($(this).parent().find('.userId').val());
             $.ajax({
                 type: "GET",
                 data: {
@@ -383,9 +389,13 @@
                 url: "{{ route('painel.updateUser_ajax')}}",                
                 dataType : 'json',
                 success: function(response) {
-                    $("#nameUpdate").val(response.vaccine.name);
-                    $("#vaccineIdUpdate").val(response.vaccine.id);
-                    $("#vaccineUpdateModal").modal("show");
+                    // Valores antigos do usuário
+                    $("#nameUpdate").val(response.user.name);
+                    $("#emailUpdate").val(response.user.email);
+                    $("#birthDateUpdate").val(response.user.nascimento);                    
+                    $("#roleUpdateSelect").val(response.userRole.role_name);
+                    $('#roleUpdateSelect').trigger('change');                 
+                    $("#userUpdateModal").modal("show");
                 },
                 error: function(request, status, error) {
                     alert("Algum erro ocorreu na requisição, tente mais tarde.");

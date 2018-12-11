@@ -59,7 +59,7 @@
                 <form method="POST" action="{{ route('painel.storeVaccine') }}" aria-label="{{ __('formAddVaccine') }}">
                     <!-- Modal header -->
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalAddLabel">Adicionar tipo de vacina</h5>
+                        <h5 class="modal-title" id="modalAddLabel"><b>Adicionar tipo de vacina</b></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -107,7 +107,7 @@
                 <form method="POST" action="{{ route('painel.updateVaccine') }}" aria-label="{{ __('formUpdateVaccine') }}">
                     <!-- Modal header -->
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalUpdateLabel">Alterar tipo de vacina</h5>
+                        <h5 class="modal-title" id="modalUpdateLabel"><b>Alterar tipo de vacina</b></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

@@ -59,8 +59,16 @@ Route::group(['prefix' => 'painel', 'as' => 'painel.'], function(){
 
     //  rota que direciona para a função index do controller roles são as funções presentes no sistema
     Route::get('roles', 'painel\RoleController@index');   
-    //  rota que direciona para a função permissions do controller roles onde mostra as permissões atribuidas para cada função
-    Route::get('role/{id}/permissions', 'painel\RoleController@permissions');
+    //  Rota que direciona para a função store do controller User
+    Route::post('storeRole', ['as' => 'storeRole', 'uses' => 'painel\RoleController@store']);
+    //  rota para a requisição ajax de update de usuário
+    Route::get('updateRole_ajax', ['as' => 'updateRole_ajax', 'uses' => 'painel\RoleController@updateRole_ajax']);
+    //  Rota que direciona para a função update do controller User
+    Route::post('updateRole', ['as' => 'updateRole', 'uses' => 'painel\RoleController@update']);
+    //  rota que direciona para a função destroy do controller User
+    Route::post('deleteRole', ['as' => 'deleteRole', 'uses' => 'painel\RoleController@destroy']);
+    // //  rota que direciona para a função permissions do controller roles onde mostra as permissões atribuidas para cada função
+    // Route::get('role/{id}/permissions', 'painel\RoleController@permissions');
       
     //  Rota que direciona para a função new do controller RoleUser
     Route::get('newfunction','painel\RoleUserController@newfunction');

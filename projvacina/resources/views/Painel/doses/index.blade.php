@@ -64,7 +64,7 @@
 
     <!-- Se o usuário for administrador ele pode ver todas as vacinas (1 - adm; 2 - usuário comum; 3 - profissional da saúde) -->
     @if ($userType == 1)
-        <h1 class="title">
+        <h1 class="title pt-5">
             <div class="d-flex">
                 <div class="mr-auto p-2"><b>Todas as Vacinas</b></div>
                 @if (Auth::user()->can('create_dose'))
@@ -135,7 +135,7 @@
                 <form method="POST" action="{{ route('painel.storeDose') }}" aria-label="{{ __('formDoseAdd') }}">
                     <!-- Modal header -->
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Adicionar Dose</h5>
+                        <h5 class="modal-title" id="exampleModalLabel"><b>Adicionar Dose</b></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -243,7 +243,7 @@
                 <form method="POST" action="{{ route('painel.updateDose') }}" aria-label="{{ __('formUpdateDose') }}">
                     <!-- Modal header -->
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalUpdateLabel">Alterar informações da dose</h5>
+                        <h5 class="modal-title" id="modalUpdateLabel"><b>Alterar informações da dose</b></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -292,7 +292,6 @@
                         <!-- Número da Dose -->
                         <div class="form-group row">
                             <label for="numerodose" class="col-md-4 col-form-label text-md-right">{{ __('Números de doses disponíveis') }}</label>
-
                             <div class="col-md-6">
                                 <select class="doseSelectUpdate" id="doseSelectUpdate" name="doseSelectUpdate" style="width: 15%" required></select>
                             </div>

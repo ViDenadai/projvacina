@@ -44,14 +44,8 @@ class UserController extends Controller
         return view('painel.users.index', compact('users', 'roles', 'successMsg'));
     }
 
-    public function newfunction()
-    {        
-        return view('newfunction');
-    }
-
     public function store(Request $request) 
-    {        
-        // dd($request);
+    {    
         // Persistência do usuário
         $user = new User;
         $user->name = $request->nameAdd;
@@ -79,36 +73,46 @@ class UserController extends Controller
     public function updateUser_ajax()
     {
         // Id do nome da vacina selecionada
-        $vaccineId = Input::get('vaccineId');
-        $vaccine = Vaccine::findOrFail($vaccineId); 
-        return response()->json(array('vaccine' => $vaccine));  
+        $userId = Input::get('userId');
+        $user = User::findOrFail($userId);
+        
+        $userRole = DB::table('role_user')
+                        ->join('roles', 'role_user.role_id', '=', 'roles.id')
+                        ->select('roles.name as role_name')
+                        ->where('user_id', '=', $userId)
+                        ->first();
+        return response()->json(array('user' => $user, 'userRole' => $userRole));  
     }
 
     public function update(Request $request)
     {
-        $dose = Dose::findOrFail($request->doseIdUpdate); 
-        $dose->vaccine_id = $request->vaccineNameSelectUpdate;
-        $dose->local = $request->localUpdate;
-        $dose->id_user = (DB::table('users')->select('id')->where('name', '=', $request->patientSelectNameUpdate)->first())->id;
+        // Atualização do usuário
+        $user = User::findOrFail($request->userIdUpdate);
+        $user->name = $request->nameUpdate;
+        $user->email = $request->emailUpdate;
+        $user->password = Hash::make($request->passwordUpdate);
+        $user->nascimento = $request->birthDateUpdate;
+        $user->save();
         
-        // Em numerodose permanecem apenas os números
-        $dose->numerodose = filter_var($request->doseSelectUpdate, FILTER_SANITIZE_NUMBER_INT);
-        $dose->validade = $request->dateUpdate;
-        $dose->save();
+        // Atualização do tipo de usuário
+        $role_user = DB::table('role_user')
+                        ->join('roles', 'role_user.role_id', '=', 'roles.id')
+                        ->select('role_user.id')
+                        ->where('user_id', '=', $user->id)
+                        ->first();
+        $role_user = Role_user::findOrFail($role_user->id);
+        $role_user->timestamps = false;
+        $role_user->role_id = (DB::table('roles')->where('name', '=', $request->roleUpdateSelect)->first())->id;
+        $role_user->save(); 
 
-        // Após a dose ser atualizada
-        // retorna para a página de doses por meio do index
+
+        // Após o usuário ser atualizado
+        // retorna para a página de usuários por meio do index
         // com uma mensagem de confirmação
-        $successMsg = 'Dose atualizada com sucesso!'; 
+        $successMsg = 'Usuário atualizado com sucesso!'; 
         return redirect()->action(
-            'painel\DoseController@index', ['successMsg' => $successMsg]
+            'painel\UserController@index', ['successMsg' => $successMsg]
         );  
-    }
-    
-    public function edit($id) 
-    {
-        $users = user::findOrFail($id);
-        return view('/painel', compact('users'));
     }
 
     public function destroy(Request $request) 
