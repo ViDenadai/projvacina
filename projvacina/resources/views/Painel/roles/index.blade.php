@@ -8,7 +8,7 @@
     <br>
     <h1 class="title">
         <div class="d-flex">
-            <div class="mr-auto p-2"><b>Todos os tipos de usuário</b></div>
+            <div class="mr-auto p-2"><b>Todos os perfis de usuário</b></div>
                 <div class="ml-auto p-2">
                     <a href="/painel/newDose" data-toggle="modal" data-target="#roleAddModal">
                         <b><i class="far fa-plus-square add"></i></b>
@@ -38,22 +38,30 @@
                             {{-- $permission['id'] --}}
                             {{-- $permission['name'] --}}
                             <i class="fas fa-check" style="color:green"></i>                            
-                            {{$permission['label']}}
+                            {{ $permission['label'] }}
                             <br>
                         @endforeach
                     </td>
 
                     <!-- Ações(Editar/Excluir) -->
                     <td>
-                        <a class="edit" href="#" title="Editar">
-                            <i class="fa fa-pencil-square-o"></i>
-                            <input type="hidden" class="roleId" name="roleId" value="{{ $role['id'] }}">
-                        </a>                      
+                        <!-- A opção de editar só aparece para os tipos de usuário além do
+                            padrão(adm -> id:1, usuario -> id:2 e profissionl_saude -> id:3) -->
+                        @if ($role['id'] > 3)  
+                            <a class="edit" href="#" title="Editar">
+                                <i class="fa fa-pencil-square-o"></i>
+                                <input type="hidden" class="roleId" name="roleId" value="{{ $role['id'] }}">
+                            </a>
+                        @else    
+                            <button class="delete2" disabled>
+                                <i class="fa fa-pencil-square-o"></i>                                                    
+                            </button>
+                        @endif                  
                         <form style="display: inline-block;" method="POST" 
                             action="{{ route('painel.deleteRole') }}"                                                        
                             data-toggle="tooltip" data-placement="top"
                             title="Excluir" 
-                            onsubmit="return confirm('Caso você exclua esse tipo de usuário todos os usuários relacionados à essa função serão transformados em usuário comum. Você deseja excluir?')">
+                            onsubmit="return confirm('Caso você exclua esse perfil de usuário todos os usuários relacionados à essa função serão transformados em usuário comum. Você deseja excluir?')">
                             <!-- A opção de remover só aparece para os tipos de usuário além do
                                 padrão(adm -> id:1, usuario -> id:2 e profissionl_saude -> id:3) -->
                             @if ($role['id'] > 3)                                
@@ -74,20 +82,19 @@
         </tbody>
     </table>
 
-    <!-- Modal de adição de tipos de vacinas -->
-    <div class="modal fade" id="userAddModal" role="dialog" aria-labelledby="userAddModalLabel" aria-hidden="true">
+    <!-- Modal de adição de perfil de usuário -->
+    <div class="modal fade" id="roleAddModal" role="dialog" aria-labelledby="roleAddModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <form class="" 
                     method="POST" 
-                    action="{{ route('painel.storeUser') }}" 
-                    aria-label="{{ __('formAddUser') }}" 
-                    id="formAddUser"
-                    oninput='passwordAdd_confirm.setCustomValidity(passwordAdd_confirm.value != passwordAdd.value ? "As senhas não são iguais." : "")'>               
+                    action="{{ route('painel.storeRole') }}" 
+                    aria-label="{{ __('formRoleUser') }}" 
+                    id="formRoleUser">               
                     
                     <!-- Modal header -->
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalAddLabel"><b>Adicionar usuário</b></h5>
+                        <h5 class="modal-title" id="modalAddLabel"><b>Adicionar perfil de usuário</b></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -100,75 +107,64 @@
 
                         <!-- Nome -->
                         <div class="form-group row">
-                            <label for="nameAdd" class="col-md-4 col-form-label text-md-right">{{ __('Nome Completo') }}</label>
+                            <label for="nameAdd" class="col-md-4 col-form-label text-md-right">{{ __('Nome do perfil') }}</label>
                             <div class="col-md-6">                    
                                 <input id="nameAdd" 
                                     type="text" 
                                     class="nameAdd form-control" 
-                                    name="nameAdd" value="{{ old('nameAdd') }}" 
+                                    name="nameAdd" 
+                                    value="{{ old('nameAdd') }}" 
+                                    placeholder="Administrador"
+                                    required autofocus>
+                            </div>
+                        </div>
+                        
+                        <!-- Descrição do perfil -->
+                        <div class="form-group row">
+                            <label for="descriptionAdd" class="col-md-4 col-form-label text-md-right">{{ __('Descrição do perfil') }}</label>
+                            <div class="col-md-6">                    
+                                <input id="descriptionAdd" 
+                                    type="text" 
+                                    class="descriptionAdd form-control" 
+                                    name="descriptionAdd" 
+                                    value="{{ old('descriptionAdd') }}"
+                                    placeholder="Administrador do sistema" 
                                     required autofocus>
                             </div>
                         </div>
 
-                        <!-- E-mail -->
+                        <!-- Permissões -->
                         <div class="form-group row">
-                            <label for="emailAdd" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail ') }}</label>
-                            <div class="col-md-6">
-                                <input id="emailAdd" 
-                                    type="email" 
-                                    class="emailAdd form-control" 
-                                    name="emailAdd" 
-                                    value="{{ old('emailAdd') }}" 
-                                    required>
+                            <label for="permissionAdd" class="col-md-4 col-form-label text-md-right">{{ __('Permissões do usuário') }}</label>
+                            <div class="col-md-6"> 
+                                @foreach ($permissions as $key=>$permission)
+                                    <!-- A primeira permissão é sempre marcada -->
+                                    @if($key == 0)
+                                        <div class="form-check">
+                                            <input class="form-check-input fade5" 
+                                                type="checkbox"
+                                                name="{{ $permission->name }}" 
+                                                value="{{ $permission->name }}"
+                                                onclick="return false;" 
+                                                checked>
+                                            <label class="form-check-label fade5" for="gridCheck1">
+                                            {{ $permission->label }}
+                                            </label>
+                                        </div>
+                                    @else
+                                        <div class="form-check">
+                                            <input class="form-check-input" 
+                                                type="checkbox" 
+                                                name="{{ $permission->name }}"
+                                                value="{{ $permission->name }}">
+                                            <label class="form-check-label" for="gridCheck1">
+                                            {{ $permission->label }}
+                                            </label>
+                                        </div>
+                                    @endif
+                                @endforeach
                             </div>
-                        </div>
-
-                        <!-- Senha -->
-                        <div class="form-group row">
-                            <label for="passwordAdd" class="col-md-4 col-form-label text-md-right">{{ __('Senha') }}</label>
-                            <div class="col-md-6">
-                                <input id="passwordAdd" 
-                                    type="password"
-                                    class="passwordAdd form-control" 
-                                    name="passwordAdd" 
-                                    required>
-                            </div>
-                        </div>
-
-                        <!-- Confirmar senha -->
-                        <div class="form-group row">
-                            <label for="passwordAdd_confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirme a senha') }}</label>
-                            <div class="col-md-6">
-                                <input id="passwordAdd_confirm" 
-                                    type="password" 
-                                    class="passwordAdd_confirm form-control" 
-                                    name="passwordAdd_confirm" 
-                                    required>
-                            </div>
-                        </div>
-
-                        <!-- Data de nascimento -->
-                        <div class="form-group row">
-                            <label for="birthDate" class="col-md-4 col-form-label text-md-right">{{ __('Data de nascimento') }}</label>
-                            <div class="col-md-6">
-                                <input id="birthDate" 
-                                    type="date" class="birthDate form-control" 
-                                    name="birthDate" 
-                                    required>
-                            </div>
-                        </div>
-                    
-                        <!-- Tipo de usuário -->
-                        <div class="form-group row">
-                            <label for="roleAddSelect" class="col-md-4 col-form-label text-md-right">{{ __('Tipo de usuário') }}</label>
-                            <div class="col-md-6">
-                                <select id="roleAddSelect" 
-                                    class="roleAddSelect form-control" 
-                                    name="roleAddSelect" 
-                                    style="width: 100%" 
-                                    required></select>                                    
-                            </div>
-                        </div>
+                        </div>                    
                     </div>                                
                     
                     <!-- Modal footer -->
@@ -181,14 +177,14 @@
         </div>
     </div>
 
-    <!-- Modal de edição do usuário -->
-    <div class="modal fade" id="userUpdateModal" role="dialog" aria-labelledby="userUpdateModal" aria-hidden="true">
+    <!-- Modal de edição de perfil de usuário -->
+    <div class="modal fade" id="roleUpdateModal" role="dialog" aria-labelledby="roleUpdateModal" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <form method="POST" action="{{ route('painel.updateUser') }}" aria-label="{{ __('formUpdateUser') }}">
+                <form method="POST" action="{{ route('painel.updateRole') }}" aria-label="{{ __('formUpdateRole') }}">
                     <!-- Modal header -->
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalUpdateLabel"><b>Alterar informações do usuário</b></h5>
+                        <h5 class="modal-title" id="modalUpdateLabel"><b>Alterar informações do perfil de usuário</b></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -201,78 +197,68 @@
 
                         <!-- Nome -->
                         <div class="form-group row">
-                            <label for="nameUpdate" class="col-md-4 col-form-label text-md-right">{{ __('Nome Completo') }}</label>
+                            <label for="nameUpdate" class="col-md-4 col-form-label text-md-right">{{ __('Nome do perfil') }}</label>
                             <div class="col-md-6">                    
                                 <input id="nameUpdate" 
                                     type="text" 
                                     class="nameUpdate form-control" 
-                                    name="nameUpdate" value="{{ old('nameUpdate') }}" 
+                                    name="nameUpdate" 
+                                    value="{{ old('nameUpdate') }}"
+                                    required autofocus>
+                            </div>
+                        </div>
+                        
+                        <!-- Descrição do perfil -->
+                        <div class="form-group row">
+                            <label for="descriptionUpdate" class="col-md-4 col-form-label text-md-right">{{ __('Descrição do perfil') }}</label>
+                            <div class="col-md-6">                    
+                                <input id="descriptionUpdate" 
+                                    type="text" 
+                                    class="descriptionUpdate form-control" 
+                                    name="descriptionUpdate" 
+                                    value="{{ old('descriptionUpdate') }}"
+                                    placeholder="Administrador do sistema" 
                                     required autofocus>
                             </div>
                         </div>
 
-                        <!-- E-mail -->
+                        <!-- Permissões -->
                         <div class="form-group row">
-                            <label for="emailUpdate" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail ') }}</label>
-                            <div class="col-md-6">
-                                <input id="emailUpdate" 
-                                    type="email" 
-                                    class="emailUpdate form-control" 
-                                    name="emailUpdate" 
-                                    value="{{ old('emailUpdate') }}" 
-                                    required>
-                            </div>
-                        </div>
-
-                        <!-- Senha -->
-                        <div class="form-group row">
-                            <label for="passwordUpdate" class="col-md-4 col-form-label text-md-right">{{ __('Senha') }}</label>
-                            <div class="col-md-6">
-                                <input id="passwordUpdate" 
-                                    type="password"
-                                    class="passwordUpdate form-control" 
-                                    name="passwordUpdate" 
-                                    required>
-                            </div>
-                        </div>
-
-                        <!-- Confirmar senha -->
-                        <div class="form-group row">
-                            <label for="passwordUpdate_confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirme a senha') }}</label>
-                            <div class="col-md-6">
-                                <input id="passwordUpdate_confirm" 
-                                    type="password" 
-                                    class="passwordUpdate_confirm form-control" 
-                                    name="passwordUpdate_confirm" 
-                                    required>
-                            </div>
-                        </div>
-
-                        <!-- Data de nascimento -->
-                        <div class="form-group row">
-                            <label for="birthDateUpdate" class="col-md-4 col-form-label text-md-right">{{ __('Data de nascimento') }}</label>
-                            <div class="col-md-6">
-                                <input id="birthDateUpdate" 
-                                    type="date" class="birthDateUpdate form-control" 
-                                    name="birthDateUpdate" 
-                                    required>
-                            </div>
-                        </div>
-
-                        <!-- Tipo de usuário -->
-                        <div class="form-group row">
-                            <label for="roleUpdateSelect" class="col-md-4 col-form-label text-md-right">{{ __('Tipo de usuário') }}</label>
-                            <div class="col-md-6">
-                                <select id="roleUpdateSelect" 
-                                    class="roleUpdateSelect form-control" 
-                                    name="roleUpdateSelect" 
-                                    style="width: 100%" 
-                                    required></select>                                    
+                            <label for="permissionUpdate" class="col-md-4 col-form-label text-md-right">{{ __('Permissões do usuário') }}</label>
+                            <div class="col-md-6"> 
+                                @foreach ($permissions as $key=>$permission)                                    
+                                    @if($key == 0)
+                                        <!-- A primeira permissão é sempre marcada -->
+                                        <div class="form-check">
+                                            <input class="form-check-input fade5" 
+                                                type="checkbox"
+                                                id="{{ $permission->name }}_update"
+                                                name="{{ $permission->name }}" 
+                                                value="{{ $permission->name }}"
+                                                onclick="return false;" 
+                                                checked>
+                                            <label class="form-check-label fade5" for="gridCheck1">
+                                            {{ $permission->label }}
+                                            </label>
+                                        </div>
+                                    @else
+                                        <div class="form-check">
+                                            <input class="form-check-input" 
+                                                type="checkbox" 
+                                                id="{{ $permission->name }}_update"
+                                                name="{{ $permission->name }}"
+                                                value="{{ $permission->name }}">
+                                            <label class="form-check-label" for="gridCheck1">
+                                            {{ $permission->label }}
+                                            </label>
+                                        </div>
+                                    @endif
+                                @endforeach
                             </div>
                         </div>
 
                         <!-- Id do usuário para o update -->
-                        <input type="hidden" class="userIdUpdate" id="userIdUpdate" name="userIdUpdate" value=''>
+                        <input type="hidden" class="roleIdUpdate" id="roleIdUpdate" name="roleIdUpdate" value=''>
                     </div>  
                     
                     <!-- Modal footer -->
@@ -328,35 +314,38 @@
             }
         });
         
-        // // Edição do usuário
-        // $('#userTable').on('click','.edit', function (event) {
-        //     // Previne o redirecionamento do link            
-        //     event.preventDefault();
+        // Edição do usuário
+        $('#roleTable').on('click','.edit', function (event) {
+            // Previne o redirecionamento do link            
+            event.preventDefault();
 
-        //     // Id da dose é posto no form de update de usuário
-        //     $("#userIdUpdate").val($(this).parent().find('.userId').val());
-        //     $.ajax({
-        //         type: "GET",
-        //         data: {
-        //             // Recupera o id do tipo de vacina que se quer modificar
-        //             userId: $(this).parent().find('.userId').val()
-        //         },
-        //         url: "{{ route('painel.updateUser_ajax')}}",                
-        //         dataType : 'json',
-        //         success: function(response) {
-        //             // Valores antigos do usuário
-        //             $("#nameUpdate").val(response.user.name);
-        //             $("#emailUpdate").val(response.user.email);
-        //             $("#birthDateUpdate").val(response.user.nascimento);                    
-        //             $("#roleUpdateSelect").val(response.userRole.role_name);
-        //             $('#roleUpdateSelect').trigger('change');                 
-        //             $("#userUpdateModal").modal("show");
-        //         },
-        //         error: function(request, status, error) {
-        //             alert("Algum erro ocorreu na requisição, tente mais tarde.");
-        //         }
-        //     });
-        // });
+            // Id do perfil é posto no form de update de usuário
+            $("#roleIdUpdate").val($(this).parent().find('.roleId').val());
+            $.ajax({
+                type: "GET",
+                data: {
+                    // Recupera o id do tipo de vacina que se quer modificar
+                    roleId: $(this).parent().find('.roleId').val()
+                },
+                url: "{{ route('painel.updateRole_ajax')}}",                
+                dataType : 'json',
+                success: function(response) {
+                    // Valores antigos do perfil de usuário
+                    $("#nameUpdate").val(response.role.name);
+                    $("#descriptionUpdate").val(response.role.label);
+
+                    // Loop que marca todas as permissões que o perfil de usuário possui
+                    for (key in response.permissions) {
+                        var permission_name = response.permissions[key].permission_name;
+                        $('#' + permission_name + '_update').attr("checked", true);
+                    };                
+                    $("#roleUpdateModal").modal("show");
+                },
+                error: function(request, status, error) {
+                    alert("Algum erro ocorreu na requisição, tente mais tarde.");
+                }
+            });
+        });
 
     });
 </script>

@@ -502,6 +502,22 @@ ul.relatorios li h1{
     margin: 4px;
 }
 
+.delete2:disabled{
+    cursor: default;
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+    padding: 2px 4px 2px 7px;
+    border-style: none;
+    border-radius: 4px;
+    margin: 4px;
+}
+
+/* Checkbox disabled */
+.fade5{
+    opacity:0.5;
+}
+
 h1.title{
     color: rgb(0, 0, 0);
     font-size: 36px;

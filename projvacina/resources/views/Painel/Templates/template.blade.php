@@ -75,7 +75,7 @@
 						@can('view_roles')
 						<li>
 							<a href="/painel/roles">
-								<i class="fas fa-user-cog"></i> Tipos de usuário
+								<i class="fas fa-user-cog"></i> Perfis de usuário
 								<!-- <img src="{{url('Assets\Painel\imgs\funcao-acl.png')}}" alt="roles" class="img-menu"> -->						
 							</a>
 						</li>

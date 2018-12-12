@@ -26,6 +26,7 @@ class RoleController extends Controller
         $roles = $this->role->all();
             //abort(403, 'Not Permissions Lists Post');
 
+        $successMsg = null;
         // Se há uma mensagem de sucesso
         if (!empty(Input::get('successMsg'))) {
             $successMsg = Input::get('successMsg');
@@ -45,7 +46,6 @@ class RoleController extends Controller
                     ->select('roles.*', 'permissions.id as permission_id', 'permissions.name as permission_name', 'permissions.label as permission_label')                    
                     ->get()
                     ->groupBy('name', 'label');
-        // dd($roles);
 
         // Inicialização do vetor de reorganização das funções
         $rolesTable = [];
@@ -63,78 +63,108 @@ class RoleController extends Controller
                                                             );                
             }
         }
-        // dd($rolesTable);
-        return view('painel.roles.index', array('roles' => $rolesTable, 'successMsg'));
+        
+        // Permissões existentes
+        $permissions = DB::table('permissions')                    
+                        ->select('name', 'label')                    
+                        ->get();
+                        
+        return view('painel.roles.index', array('roles' => $rolesTable, 
+                                                'successMsg' => $successMsg, 
+                                                'permissions' => $permissions));
     }
 
     public function store(Request $request) 
-    {    
-        // Persistência do usuário
-        $user = new User;
-        $user->name = $request->nameAdd;
-        $user->email = $request->emailAdd;
-        $user->password = Hash::make($request->passwordAdd);
-        $user->nascimento = $request->birthDate;
-        $user->save();
+    {            
+        // Persistência do perfil
+        $role = new Role;
+        $role->name = $request->nameAdd;
+        $role->label = $request->descriptionAdd;
+        $role->save();
 
-        // Persistência do tipo de usuário
-        $role_user = new Role_user;
-        $role_user->timestamps = false;
-        $role_user->user_id = $user->id;
-        $role_user->role_id = (DB::table('roles')->where('name', '=', $request->roleAddSelect)->first())->id;       
-        $role_user->save(); 
+        // Persistência das relações de permissão e perfil de usuário
+        // Parâmetros do form
+        $parameters = $request->all();
+        foreach($parameters as $key=>$parameter) {
+            // Apenas as permissões são tratadas
+            if($key == '_token' || $key == 'nameAdd' || $key == 'descriptionAdd') {
+                continue;
+            }
+            $permissionRole = new Permission_role;
+            $permissionRole->timestamps = false;
+            $permissionRole->permission_id = (DB::table('permissions')->where('name', '=', $parameter)->first())->id;
+            $permissionRole->role_id = $role->id;
+            $permissionRole->save();
+        }
 
-        // Após o usuário ser adicionado
+        // Após o perfil de usuário ser adicionado
         // retorna para a página de usuários por meio do index
         // com uma mensagem de confirmação
-        $successMsg = 'Usuário cadastrado com sucesso!'; 
+        $successMsg = 'Perfil de usuário cadastrado com sucesso!'; 
         return redirect()->action(
-            'painel\UserController@index', ['successMsg' => $successMsg]
+            'painel\RoleController@index', ['successMsg' => $successMsg]
         );     
     }
 
-    public function updateUser_ajax()
+    public function updateRole_ajax()
     {
-        // Id do nome da vacina selecionada
-        $userId = Input::get('userId');
-        $user = User::findOrFail($userId);
+        // Id do perfil de usuário selecionado
+        $roleId = Input::get('roleId');
+        $role = Role::findOrFail($roleId);
         
-        $userRole = DB::table('role_user')
-                        ->join('roles', 'role_user.role_id', '=', 'roles.id')
-                        ->select('roles.name as role_name')
-                        ->where('user_id', '=', $userId)
-                        ->first();
-        return response()->json(array('user' => $user, 'userRole' => $userRole));  
+        $permissions =  DB::table('roles')
+                            ->join('permission_role', 'permission_role.role_id', '=', 'roles.id')
+                            ->join('permissions', 'permission_role.permission_id', '=', 'permissions.id')
+                            ->select('permissions.name as permission_name')
+                            ->where('roles.id', '=', $roleId)
+                            ->get();
+
+        return response()->json(array(  'role' => $role, 
+                                        'permissions' => $permissions));  
     }
 
     public function update(Request $request)
     {
         // Atualização do usuário
-        $user = User::findOrFail($request->userIdUpdate);
-        $user->name = $request->nameUpdate;
-        $user->email = $request->emailUpdate;
-        $user->password = Hash::make($request->passwordUpdate);
-        $user->nascimento = $request->birthDateUpdate;
-        $user->save();
-        
-        // Atualização do tipo de usuário
-        $role_user = DB::table('role_user')
-                        ->join('roles', 'role_user.role_id', '=', 'roles.id')
-                        ->select('role_user.id')
-                        ->where('user_id', '=', $user->id)
-                        ->first();
-        $role_user = Role_user::findOrFail($role_user->id);
-        $role_user->timestamps = false;
-        $role_user->role_id = (DB::table('roles')->where('name', '=', $request->roleUpdateSelect)->first())->id;
-        $role_user->save(); 
+        $role = Role::findOrFail($request->roleIdUpdate);
+        $role->name = $request->nameUpdate;
+        $role->label = $request->descriptionUpdate;
+        $role->save();
 
+        // Permissões antigas
+        $oldPermissions = DB::table('roles')
+                            ->join('permission_role', 'permission_role.role_id', '=', 'roles.id')
+                            ->join('permissions', 'permission_role.permission_id', '=', 'permissions.id')
+                            ->select('permission_role.id as permission_role_id')
+                            ->where('roles.id', '=', $request->roleIdUpdate)
+                            ->get();
 
-        // Após o usuário ser atualizado
+        // Remoção das antigas relações de permissão e perfil de usuário
+        foreach($oldPermissions as $oldPermission) {
+            $permission_role = Permission_role::findOrFail($oldPermission->permission_role_id);
+            $permission_role->delete();
+        }
+ 
+        // Adição das novas relações de permissão e perfil de usuário
+        $parameters = $request->all();
+        foreach($parameters as $key=>$parameter) {
+            // Apenas as permissões são tratadas
+            if($key == '_token' || $key == 'nameUpdate' || $key == 'descriptionUpdate' || $key == 'roleIdUpdate') {
+                continue;
+            }
+            $permissionRole = new Permission_role;
+            $permissionRole->timestamps = false;
+            $permissionRole->permission_id = (DB::table('permissions')->where('name', '=', $parameter)->first())->id;
+            $permissionRole->role_id = $role->id;
+            $permissionRole->save();
+        }
+
+        // Após o perfil de usuário ser atualizado
         // retorna para a página de usuários por meio do index
         // com uma mensagem de confirmação
-        $successMsg = 'Usuário atualizado com sucesso!'; 
+        $successMsg = 'Perfil de usuário atualizado com sucesso!'; 
         return redirect()->action(
-            'painel\UserController@index', ['successMsg' => $successMsg]
+            'painel\RoleController@index', ['successMsg' => $successMsg]
         );  
     }
 
