@@ -13,7 +13,7 @@
 // Rotas que possuem como prefixo /painel
 Route::group(['prefix' => 'painel', 'as' => 'painel.'], function(){
     //  Rota que direciona para a função index do controller painel,pagina inicial
-    Route::get('/', 'painel\PainelController@index');
+    // Route::get('/', 'painel\PainelController@index');
 
     //  Rota que direciona para a função index do controller User 
     Route::get('users', 'painel\UserController@index');
@@ -52,11 +52,6 @@ Route::group(['prefix' => 'painel', 'as' => 'painel.'], function(){
     //  rota que direciona para a função destroy do controller Vaccine
     Route::post('deleteVaccine', ['as' => 'deleteVaccine', 'uses' => 'painel\VaccineController@destroy']);
 
-    //  rota que direciona para a função index do controller permission
-    Route::get('permissions', 'painel\PermissionController@index');
-    //  rota que direciona para a função new do controller Permission
-    Route::get('newpermission', 'painel\PermissionController@new');
-
     //  rota que direciona para a função index do controller roles são as funções presentes no sistema
     Route::get('roles', 'painel\RoleController@index');   
     //  Rota que direciona para a função store do controller User
@@ -67,9 +62,23 @@ Route::group(['prefix' => 'painel', 'as' => 'painel.'], function(){
     Route::post('updateRole', ['as' => 'updateRole', 'uses' => 'painel\RoleController@update']);
     //  rota que direciona para a função destroy do controller User
     Route::post('deleteRole', ['as' => 'deleteRole', 'uses' => 'painel\RoleController@destroy']);
-    // //  rota que direciona para a função permissions do controller roles onde mostra as permissões atribuidas para cada função
-    // Route::get('role/{id}/permissions', 'painel\RoleController@permissions');
-      
+
+    //  rota que direciona para a função index do controller roles são as funções presentes no sistema
+    // Route::get('permissions', 'painel\PermissionController@index');   
+    // //  Rota que direciona para a função store do controller User
+    // Route::post('storePermission', ['as' => 'storePermission', 'uses' => 'painel\PermissionController@store']);
+    // //  rota para a requisição ajax de update de usuário
+    // Route::get('updatePermission_ajax', ['as' => 'updatePermission_ajax', 'uses' => 'painel\PermissionController@updatePermission_ajax']);
+    // //  Rota que direciona para a função update do controller User
+    // Route::post('updatePermission', ['as' => 'updatePermission', 'uses' => 'painel\PermissionController@update']);
+    // //  rota que direciona para a função destroy do controller User
+    // Route::post('deletePermission', ['as' => 'deletePermission', 'uses' => 'painel\PermissionController@destroy']);
+
+    //  rota que direciona para a função index do controller permission
+    Route::get('permissions', 'painel\PermissionController@index');
+    //  rota que direciona para a função new do controller Permission
+    Route::get('newpermission', 'painel\PermissionController@new');
+    
     //  Rota que direciona para a função new do controller RoleUser
     Route::get('newfunction','painel\RoleUserController@newfunction');
 });
@@ -82,17 +91,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'painel\PainelController@index');
-Route::get('home', 'painel\PainelController@index');
-
-// rota que direciona para a função index do controller do usuario
-Route::resource('users','painel\UserController');
-
-// rota que direciona para a função index do controller de doses
-// Route::resource('dose','painel\DoseController');
+// Route::get('/home', 'painel\PainelController@index');
+// Route::get('home', 'painel\PainelController@index');
 
 // rota que direciona para a função index do controller painel é a pagina que entra logo após o usuario logar no sistema
-Route::resource('painel','painel\PainelController');
-Route::resource('carteira','HomeController');
-Route::resource('funcoes','RoleUserController');
+// Route::resource('painel','painel\PainelController');
 

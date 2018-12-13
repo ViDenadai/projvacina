@@ -117,35 +117,29 @@ class UserController extends Controller
 
     public function destroy(Request $request) 
     {
-        // Atualiza os usários do perfil excluído para usuário comum(Altera a tabela role_user)
-        $role_users =   DB::table('role_user')
-                            ->select('id')
-                            ->where('role_id', '=', $request->roleId)
-                            ->get();
-dd($role_users);
-        // // Deleta o usuário
-        // $user = User::findOrFail($request->userId);
-        // $user->delete();
+        // Deleta o usuário
+        $user = User::findOrFail($request->userId);
+        $user->delete();
 
-        // // Deleta o tipo de usuário relacionado
-        // $role_user = DB::table('role_user')->where('user_id', '=', $user->id)->first();
-        // $role_user = Role_user::findOrFail($role_user->id);
-        // $role_user->delete();
+        // Deleta o tipo de usuário relacionado
+        $role_user = DB::table('role_user')->where('user_id', '=', $user->id)->first();
+        $role_user = Role_user::findOrFail($role_user->id);
+        $role_user->delete();
 
-        // // Deleta as doses relacionadas
-        // $doses = DB::table('doses')->where('id_user', '=', $user->id)->get();
-        // foreach ($doses as $dose) {
-        //     $dose = Dose::findOrFail($dose->id);
-        //     $dose->delete();
-        // }
+        // Deleta as doses relacionadas
+        $doses = DB::table('doses')->where('id_user', '=', $user->id)->get();
+        foreach ($doses as $dose) {
+            $dose = Dose::findOrFail($dose->id);
+            $dose->delete();
+        }
 
-        // // Após o usuário ser excluído
-        // // retorna para a página de usuários por meio do index
-        // // com uma mensagem de confirmação
-        // $successMsg = 'Usuário excluído com sucesso!'; 
-        // return redirect()->action(
-        //     'painel\UserController@index', ['successMsg' => $successMsg]
-        // );          
+        // Após o usuário ser excluído
+        // retorna para a página de usuários por meio do index
+        // com uma mensagem de confirmação
+        $successMsg = 'Usuário excluído com sucesso!'; 
+        return redirect()->action(
+            'painel\UserController@index', ['successMsg' => $successMsg]
+        );          
     }
 
 }

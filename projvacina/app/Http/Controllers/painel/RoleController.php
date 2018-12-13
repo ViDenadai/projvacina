@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Input;
 
 use App\Http\Controllers\Controller;
 use App\Role;
+use App\Role_user;
 use App\Permission_role;
 use App\Permission;
 
@@ -139,7 +140,7 @@ class RoleController extends Controller
                             ->where('roles.id', '=', $request->roleIdUpdate)
                             ->get();
 
-        // Remoção das antigas relações de permissão e perfil de usuário
+        // Remoção das antigas relações entre permissão e perfil de usuário
         foreach($oldPermissions as $oldPermission) {
             $permission_role = Permission_role::findOrFail($oldPermission->permission_role_id);
             $permission_role->delete();
@@ -170,28 +171,38 @@ class RoleController extends Controller
 
     public function destroy(Request $request) 
     {
-        // Deleta o usuário
-        $user = User::findOrFail($request->userId);
-        $user->delete();
-
-        // Deleta o tipo de usuário relacionado
-        $role_user = DB::table('role_user')->where('user_id', '=', $user->id)->first();
-        $role_user = Role_user::findOrFail($role_user->id);
-        $role_user->delete();
-
-        // Deleta as doses relacionadas
-        $doses = DB::table('doses')->where('id_user', '=', $user->id)->get();
-        foreach ($doses as $dose) {
-            $dose = Dose::findOrFail($dose->id);
-            $dose->delete();
+        // Alteração da tabela role_user (perfil deletado torna-se usuário comum) 
+        $roles_user = DB::table('role_user')
+                        ->where('role_id', '=', $request->roleId)
+                        ->get();
+        foreach ($roles_user as $role_user) {
+            $role_user = Role_user::findOrFail($role_user->id);
+            $role_user->timestamps = false;
+            // Alteração para usário comum (adm -> id:1, usuario -> id:2 e profissionl_saude -> id:3)
+            $role_user->role_id = 2;
+            $role_user->save();
         }
 
-        // Após o usuário ser excluído
-        // retorna para a página de usuários por meio do index
+        // Permissões relacionadas ao perfil
+        $permissions = DB::table('roles')
+                            ->join('permission_role', 'permission_role.role_id', '=', 'roles.id')
+                            ->join('permissions', 'permission_role.permission_id', '=', 'permissions.id')
+                            ->select('permission_role.id as permission_role_id')
+                            ->where('roles.id', '=', $request->roleId)
+                            ->get();
+
+        // Remoção das relações entre permissão e perfil de usuário
+        foreach($permissions as $permissions) {
+            $permission_role = Permission_role::findOrFail($permissions->permission_role_id);
+            $permission_role->delete();
+        }
+
+        // Após o perfil ser excluído
+        // retorna para a página de perfis por meio do index
         // com uma mensagem de confirmação
-        $successMsg = 'Usuário excluído com sucesso!'; 
+        $successMsg = 'Perfil excluído com sucesso!'; 
         return redirect()->action(
-            'painel\UserController@index', ['successMsg' => $successMsg]
+            'painel\RoleController@index', ['successMsg' => $successMsg]
         );          
     }
 

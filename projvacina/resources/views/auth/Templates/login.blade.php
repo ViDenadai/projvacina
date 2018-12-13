@@ -23,32 +23,12 @@
 </head>
 <body>
 	<div class="login">
-	<a href="/"><i class="fas fa-home"></i></a>
+		<a href="/"><i class="fas fa-home"></i></a>
 		<div class="login-header">
 			<img src="{{url("Assets\Painel\imgs/acl-branca.png")}}" alt="acl" class="logo-login2">
 		</div>
 
-@yield('content-form')
-<!--
-		<form class="login form" >
-			<div class="form-group">
-				<input type="text" name="email" placeholder="Informe o seu e-mail" class="form-control">
-			</div>
-			<div class="form-group">
-				<input type="password" name="password" placeholder="Informe a sua senha" class="form-control">
-			</div>
-
-			<div class="form-group">
-				<a href="home.php" class="btn btn-login">
-					Entrar
-				</a>
-			</div>
-			<div class="form-group text-right">
-				<a href="recuperar.php" class="recuperar">
-					Recuperar Senha?
-				</a>
-			</div>
-		</form>-->
+		@yield('content-form')
 	</div>
 </body>
 </html>

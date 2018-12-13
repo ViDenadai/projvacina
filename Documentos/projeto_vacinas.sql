@@ -25,13 +25,33 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `vaccines`
+--
+DROP TABLE IF EXISTS `vaccines`;
+CREATE TABLE IF NOT EXISTS `vaccines` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Inserindo dados na tabela `vaccines`
+--
+
+INSERT INTO `vaccines` (`id`, `name`) VALUES
+(1, 'Febre Amarela'),
+(2, 'Poliomielite'),
+(3, 'Caxumba'),
+(4, 'Gripe A');
+
+--
 -- Estrutura da tabela `doses`
 --
 
 DROP TABLE IF EXISTS `doses`;
 CREATE TABLE IF NOT EXISTS `doses` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `nome` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `vaccine_id` int(10) UNSIGNED NOT NULL,
   `local` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `id_user` int(10) UNSIGNED NOT NULL,
   `numerodose` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -39,30 +59,25 @@ CREATE TABLE IF NOT EXISTS `doses` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `doses_id_user_foreign` (`id_user`)
+  KEY `doses_id_user_foreign` (`id_user`),
+  KEY `doses_vaccine_id_foreign` (`vaccine_id`)  
 ) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `doses`
+-- Inserindo dados na tabela `doses`
 --
 
-INSERT INTO `doses` (`id`, `nome`, `local`, `id_user`, `numerodose`, `validade`, `created_at`, `updated_at`) VALUES
-(1, 'Gripe A', 'Posto BPS', 1, 'primeira dose', '2019-02-01', NULL, NULL),
-(2, 'HPV ', 'Posto BPS', 1, 'Segunda Dose', '2019-02-01', NULL, NULL),
-(3, 'caxumba', 'morro chic', 2, 'primeira', '2020-05-15', NULL, NULL),
-(4, 'Gripe a', 'BPS unifei', 3, 'dose unica', '2019-07-20', NULL, NULL),
-(5, 'teste', 'teste', 1, '1', '2019-02-02', '2018-08-22 16:26:22', '2018-08-22 16:26:22'),
-(6, 'teste', 'teste', 1, '1', '2019-02-02', '2018-08-22 16:27:16', '2018-08-22 16:27:16'),
-(7, 'gripe a', 'bps', 4, '1', '2019-05-30', '2018-08-24 01:58:33', '2018-08-24 01:58:33'),
-(8, 'teste', 'qualquer', 3, '1', '2018-08-16', NULL, NULL),
-(9, 'gripe', 'bps', 4, '2', '2020-03-06', '2018-08-31 20:01:03', '2018-08-31 20:01:03'),
-(10, 'gripe', 'bps', 3, '2', '2020-03-06', '2018-08-31 20:03:19', '2018-08-31 20:03:19'),
-(31, 'teste', 'bps', 3, '3', '2020-03-03', '2018-08-31 20:36:19', '2018-08-31 20:36:19'),
-(34, 'dose', 'bps', 3, '2', '2020-02-02', '2018-08-31 20:50:20', '2018-08-31 20:50:20'),
-(35, 'fabio', 'bps', 4, '1', '2019-08-17', '2018-08-31 21:15:55', '2018-08-31 21:15:55'),
-(36, 'fabio', 'bps', 4, '1', '2019-08-17', '2018-08-31 21:17:53', '2018-08-31 21:17:53'),
-(37, 'fabio', 'bps', 3, '1', '2018-08-04', '2018-08-31 21:22:42', '2018-08-31 21:22:42'),
-(39, 'devmedia', 'teste', 4, '1', '2018-08-07', '2018-08-31 21:23:40', '2018-08-31 21:23:40');
+INSERT INTO `doses` (`id`, `vaccine_id`, `local`, `id_user`, `numerodose`, `validade`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Posto BPS', 1, '1', '2019-02-01', NULL, NULL),
+(2, 2, 'Posto BPS', 1, '2', '2019-02-01', NULL, NULL),
+(3, 1, 'morro chic', 2, '1', '2020-05-15', NULL, NULL),
+(4, 1, 'BPS unifei', 3, '1', '2019-07-20', NULL, NULL),
+(5, 3, 'teste', 1, '1', '2019-02-02', '2018-08-22 16:26:22', '2018-08-22 16:26:22'),
+(6, 4, 'teste', 1, '1', '2019-02-02', '2018-08-22 16:27:16', '2018-08-22 16:27:16'),
+(8, 2, 'qualquer', 3, '1', '2018-08-16', NULL, NULL),
+(9, 1, 'bps', 4, '2', '2020-03-06', '2018-08-31 20:01:03', '2018-08-31 20:01:03'),
+(10, 3, 'bps', 3, '2', '2020-03-06', '2018-08-31 20:03:19', '2018-08-31 20:03:19'),
+(31, 4, 'bps', 3, '3', '2020-03-03', '2018-08-31 20:36:19', '2018-08-31 20:36:19');
 
 -- --------------------------------------------------------
 
@@ -87,7 +102,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (2, '2014_10_12_100000_create_password_resets_table', 1),
 (3, '2018_08_20_151536_create_doses_table', 1),
 (4, '2018_08_21_103345_create_roles_table', 2),
-(5, '2018_08_21_103524_create_permissions_table', 2);
+(5, '2018_08_21_103524_create_permissions_table', 2),
+(6, '2018_08_21_103524_create_role_user_table', 1);
 
 -- --------------------------------------------------------
 
@@ -130,13 +146,20 @@ CREATE TABLE IF NOT EXISTS `permissions` (
 --
 
 INSERT INTO `permissions` (`id`, `name`, `label`, `created_at`, `updated_at`) VALUES
-(1, 'view_vacina', 'visualiza a carteira de vacinas', NULL, NULL),
-(2, 'create_vacina', 'registra uma nova dose', NULL, NULL),
-(3, 'delete_vacina', 'remove uma dose', NULL, NULL),
-(4, 'edit_vacina', 'edita dados da dose', NULL, NULL),
-(5, 'view_users', 'visualiza todos os usuários no sistemas', NULL, NULL),
-(6, 'view_roles', 'visualiza todas as funções no sistema', NULL, NULL),
-(7, 'view_permissions', 'visualiza todas as permissões no sistema', NULL, NULL);
+(1, 'view_vacina', 'Visualizar a carteira de vacinação', NULL, NULL),
+(2, 'create_dose', 'Registrar uma nova dose', NULL, NULL),
+(3, 'delete_dose', 'Remover uma dose', NULL, NULL),
+(4, 'edit_dose', 'Editar dados da dose', NULL, NULL),
+(5, 'view_users', 'Visualizar todos os usuários no sistemas', NULL, NULL),
+(6, 'view_roles', 'Visualizar todas as funções no sistema', NULL, NULL),
+(7, 'view_permissions', 'Visualizar todas as permissões no sistema', NULL, NULL),
+(8, 'create_vaccine_types', 'Registrar um novo tipo de vacina', NULL, NULL),
+(9, 'delete_vaccine_types', 'Remover um tipo de vacina', NULL, NULL),
+(10, 'edit_vaccine_types', 'Editar um tipo de vacina', NULL, NULL),
+(11, 'view_vaccine_types', 'Visualizar os tipos de vacinas existentes no sistema', NULL, NULL),
+(12, 'create_users', 'Registrar um novo usuário no sistema', NULL, NULL),
+(13, 'edit_users', 'Editar informações de um usuário do sistema', NULL, NULL),
+(14, 'delete_users', 'Deletar um usuário do sistema', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -167,8 +190,14 @@ INSERT INTO `permission_role` (`id`, `permission_id`, `role_id`) VALUES
 (6, 5, 1),
 (7, 6, 1),
 (8, 7, 1),
-(9, 1, 2),
-(10, 1, 3);
+(9, 1, 3),
+(10, 8, 1),
+(11, 9, 1),
+(12, 10, 1),
+(13, 11, 1),
+(14, 12, 1),
+(15, 13, 1),
+(16, 14, 1);
 
 -- --------------------------------------------------------
 
@@ -192,7 +221,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
 
 INSERT INTO `roles` (`id`, `name`, `label`, `created_at`, `updated_at`) VALUES
 (1, 'adm', 'Administrador do sistema', NULL, NULL),
-(2, 'usuario', 'usuario comum', NULL, NULL),
+(2, 'usuario', 'Usuário comum', NULL, NULL),
 (3, 'profissional_saude', 'Responsável pelo cadastramento de doses', NULL, NULL);
 
 -- --------------------------------------------------------
@@ -216,16 +245,17 @@ CREATE TABLE IF NOT EXISTS `role_user` (
 --
 
 INSERT INTO `role_user` (`id`, `user_id`, `role_id`) VALUES
+(1, 1, 1),
 (2, 2, 2),
 (3, 3, 2),
-(4, 1, 1),
-(5, 4, 2),
-(6, 5, 3),
+(4, 4, 1),
+(5, 5, 2),
+(6, 6, 3),
 (7, 7, 2),
-(8, 10, 3),
-(9, 0, 2),
-(10, 0, 2),
-(11, 13, 2);
+(8, 8, 3),
+(9, 9, 2),
+(10, 11, 2),
+(11, 12, 2);
 
 -- --------------------------------------------------------
 
@@ -260,22 +290,22 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `nascimento`, `remember_
 (7, 'james', 'james@teste.com', '$2y$10$5o2LmTzTHB7bq1qG7rxfFO5vqk34ZZrddPAv1TQY49a71FMqphLcW', '2001-04-01', 'nzSw3s84IvilfYsZy0dTnCsko2INEfY38RcmoBGOgXQ7uZULK6oOrEDjwX7U', '2018-08-28 16:02:05', '2018-08-28 16:02:05'),
 (9, 'novo', 'novo@novo.com', '$2y$10$DYhE.TwqZW3iTIJ.J7PG9OquR9Gpo9uwyHPlyUQij0e5s0okMbQi.', '2018-08-08', 'DjFnrHLkAN27jl4jt1ng7w70a3xBAZJ2iI01VRCesBLCsGO69cFwRhIi2U8s', '2018-08-30 14:13:23', '2018-08-30 14:13:23'),
 (10, 'teste1', 'teste1@teste.com', '$2y$10$5uuRh15z9763D0u2yIIFN.LxDSCe9g2aNCtDRhJmSaI/9JnWkzLbi', '2018-08-01', 'tawevVsQ5NZZ6NsCgMDkLpnnXVoov70xP9RrIXR0NuXYZYZcHG21cYtmu15m', '2018-08-31 20:48:08', '2018-08-31 20:48:08'),
-(12, 'benedito', 'guedes@gmail.com', '$2y$10$pwbn3SpuaIHBmKlzt846tuQfNbnk3YEB5jWJc2rUyecyLrapBTZsu', '1975-01-02', 'jZfRtWjhSiJigXknoZZDobTlB1lce9reMS9jrlVcWXabVREeDwyN3xpRrSoq', '2018-09-03 20:39:58', '2018-09-03 20:39:58'),
-(13, 'xxxx', 'xxxx@teste.com', '$2y$10$9TPBCOSphNJ25i8Idc8Wp.N8cOjEPcxDqKWS9AC4p.nicfnquH4We', '1983-02-01', '8wJaoBzWrc29n82IkG7bVU2ThG9rl9NPFOwdhF66hllW2lkphohs2pmKglpL', '2018-09-03 20:41:54', '2018-09-03 20:41:54');
+(11, 'benedito', 'guedes@gmail.com', '$2y$10$pwbn3SpuaIHBmKlzt846tuQfNbnk3YEB5jWJc2rUyecyLrapBTZsu', '1975-01-02', 'jZfRtWjhSiJigXknoZZDobTlB1lce9reMS9jrlVcWXabVREeDwyN3xpRrSoq', '2018-09-03 20:39:58', '2018-09-03 20:39:58'),
+(12, 'xxxx', 'xxxx@teste.com', '$2y$10$9TPBCOSphNJ25i8Idc8Wp.N8cOjEPcxDqKWS9AC4p.nicfnquH4We', '1983-02-01', '8wJaoBzWrc29n82IkG7bVU2ThG9rl9NPFOwdhF66hllW2lkphohs2pmKglpL', '2018-09-03 20:41:54', '2018-09-03 20:41:54');
 
 --
 -- Acionadores `users`
 --
-DROP TRIGGER IF EXISTS `novousuario1`;
-DELIMITER $$
-CREATE TRIGGER `novousuario1` AFTER INSERT ON `users` FOR EACH ROW BEGIN
-    INSERT INTO role_user
-    SET user_id = new.id,
-     role_id =2; 
-END
-$$
-DELIMITER ;
-COMMIT;
+-- DROP TRIGGER IF EXISTS `novousuario1`;
+-- DELIMITER $$
+-- CREATE TRIGGER `novousuario1` AFTER INSERT ON `users` FOR EACH ROW BEGIN
+--     INSERT INTO role_user
+--     SET user_id = new.id,
+--      role_id =2; 
+-- END
+-- $$
+-- DELIMITER ;
+-- COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

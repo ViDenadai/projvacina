@@ -66,8 +66,7 @@
 						@can('view_users')
 						<li>
 							<a href="/painel/users">
-								<i class="fa fa-list" aria-hidden="true"></i> Listar usuários
-								<!-- <img src="{{url('Assets\Painel\imgs\perfil-acl.png')}}" alt="Meu Perfil" class="img-menu"> -->						
+								<i class="fa fa-list" aria-hidden="true"></i> Listar usuários								
 							</a>
 						</li>
 						@endcan
@@ -75,19 +74,17 @@
 						@can('view_roles')
 						<li>
 							<a href="/painel/roles">
-								<i class="fas fa-user-cog"></i> Perfis de usuário
-								<!-- <img src="{{url('Assets\Painel\imgs\funcao-acl.png')}}" alt="roles" class="img-menu"> -->						
+								<i class="fas fa-user-cog"></i> Perfis de usuário								
 							</a>
 						</li>
 						@endcan
 
 						@can('view_permissions')
-						<li>
+						<!-- <li>
 							<a href="/painel/permissions">
-								<i class="fas fa-user-lock"></i> Permissões de usuário
-								<!-- <img src="{{url('Assets\Painel\imgs\permissao-acl.png')}}" alt="permissions" class="img-menu"> -->								
+								<i class="fas fa-user-lock"></i> Permissões de usuário								
 							</a>
-						</li>
+						</li> -->
 						@endcan
 					</ul>					
 				</li>
@@ -95,7 +92,9 @@
 
 				<!-- Seção de funcionalidades relacionadas à vacinas -->
 				<li>
-					<a href="#vaccinesSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-syringe"></i> Vacinas</a>
+					<a href="#vaccinesSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+						<i class="fas fa-syringe"></i> Vacinas
+					</a>
 					<ul class="collapse list-unstyled" id="vaccinesSubmenu">
 						@can('view_vacina')
 						<li>

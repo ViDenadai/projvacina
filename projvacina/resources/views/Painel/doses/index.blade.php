@@ -170,7 +170,7 @@
                             <label for="id_user" class="col-md-4 col-form-label text-md-right">{{ __('Paciente') }}</label>
                             <div class="col-md-6">                                
                                 <select id="patientSelectName" 
-                                    class="patientSelectName" 
+                                    class="selectsAdd" 
                                     name="patientSelectName" 
                                     style="width: 100%" 
                                     required></select>
@@ -182,7 +182,7 @@
                             <label for="nome" class="col-md-4 col-form-label text-md-right">{{ __('Nome da vacina') }}</label>
                             <div class="col-md-6">
                                 <select id="vaccineNameSelect" 
-                                    class="vaccineNameSelect" 
+                                    class="selectsAdd" 
                                     name="vaccineNameSelect" 
                                     style="width: 100%" 
                                     required></select>
@@ -277,7 +277,11 @@
                         <div class="form-group row">
                             <label for="id_user" class="col-md-4 col-form-label text-md-right">{{ __('Paciente') }}</label>
                             <div class="col-md-6">                                
-                                <select id="patientSelectNameUpdate" class="selectsUpdate" name="patientSelectNameUpdate" style="width: 100%" required></select>
+                                <select id="patientSelectNameUpdate" 
+                                    class="selectsUpdate" 
+                                    name="patientSelectNameUpdate" 
+                                    style="width: 100%" 
+                                    required></select>
                             </div>                            
                         </div>
 
@@ -285,7 +289,11 @@
                         <div class="form-group row">
                             <label for="nome" class="col-md-4 col-form-label text-md-right">{{ __('Nome da vacina') }}</label>
                             <div class="col-md-6">
-                                <select id="vaccineNameSelectUpdate" class="selectsUpdate" name="vaccineNameSelectUpdate" style="width: 100%" required></select>
+                                <select id="vaccineNameSelectUpdate" 
+                                    class="selectsUpdate" 
+                                    name="vaccineNameSelectUpdate" 
+                                    style="width: 100%" 
+                                    required></select>
                             </div>
                         </div>
 
@@ -293,7 +301,11 @@
                         <div class="form-group row">
                             <label for="numerodose" class="col-md-4 col-form-label text-md-right">{{ __('Números de doses disponíveis') }}</label>
                             <div class="col-md-6">
-                                <select class="doseSelectUpdate" id="doseSelectUpdate" name="doseSelectUpdate" style="width: 15%" required></select>
+                                <select id="doseSelectUpdate"
+                                    class="doseSelectUpdate"  
+                                    name="doseSelectUpdate" 
+                                    style="width: 15%" 
+                                    required></select>
                             </div>
                         </div>
 
@@ -402,16 +414,6 @@
             patientsSelect.push({id:patientsName[key].name, text:patientsName[key].name});
         };
         
-        // Inicialização select de nome da vacina no formulário de registro de dose
-        $('#vaccineNameSelect').select2({
-            "data": vaccinesNameSelect,
-            "language": {
-                "noResults": function(){
-                    return "Nenhum resultado foi encontrado...";
-                }
-            },
-        });
-
         // Inicialização select de paciente no formulário de registro de dose
         $('#patientSelectName').select2({
             "data": patientsSelect,
@@ -422,9 +424,23 @@
             },
         });
 
+        // Inicialização select de nome da vacina no formulário de registro de dose
+        $('#vaccineNameSelect').select2({
+            "data": vaccinesNameSelect,
+            "language": {
+                "noResults": function(){
+                    return "Nenhum resultado foi encontrado...";
+                }
+            },
+        });
+
+        
+
         // Evento ao alterar o nome da vacina que 
-        // busca o número da próxima dose
-        $('.vaccineNameSelect').on("change", function (e) {  
+        // o paciente -> busca o número da próxima dose 
+        // no formulário de adição de dose
+        $('.selectsAdd').on("change", function (e) {  
+            console.log('123');
             $.ajax({
                 type: "GET",
                 data: {
@@ -500,9 +516,9 @@
             });
         });
 
-        // Evento ao alterar o nome da vacina que 
-        // busca os números de doses possíveis no
-        // formulário de alteração de dose
+        // Evento ao alterar o nome da vacina ou
+        // o paciente -> busca os números de doses 
+        // possíveis no formulário de alteração de dose
         $('.selectsUpdate').on("change", function (e) {  
             $.ajax({
                 type: "GET",

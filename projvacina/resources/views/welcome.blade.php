@@ -41,18 +41,14 @@
             .top-right {
                 position: absolute;
                 right: 10px;
-                top: 18px;
-                
-               
+                top: 18px;                               
             }
 
             .content {
-                text-align: center;
-               
+                text-align: center;               
             }
 
-            .title {
-            
+            .title {            
                 font: 50px Verdana;
             }
 
@@ -71,7 +67,9 @@
             .m-b-md {
                 margin-bottom: 15px;
             }
-            img.logo-login{max-width: 600px;}
+            img.logo-login{
+                max-width: 600px;
+            }
         </style>
     </head>
     <body>
@@ -96,14 +94,6 @@
                 <img src="{{url("Assets\Painel\imgs/acl-branca.png")}}" alt="acl" class="logo-login"></a>
                 {{-- logo do sistema minhas vacinas --}}
                 </div>
-<!--
-                <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div> -->
             </div>
         </div>
     </body>

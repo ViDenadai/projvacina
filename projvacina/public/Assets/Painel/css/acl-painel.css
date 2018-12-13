@@ -59,7 +59,7 @@ a:focus {
 #sidebar {
     min-width: 250px;
     max-width: 250px;
-    background: linear-gradient(rgb(7, 230, 230), rgba(3, 95, 95, 0.596));
+    background: rgb(10, 216, 216);
     color: #fff;
     transition: all 0.3s;
 }
@@ -91,7 +91,7 @@ a:focus {
 
 #sidebar ul li a:hover {
     color: #fff;
-    background: rgba(2, 175, 175, 0.986);
+    background: rgba(2, 175, 175, 0.986) !important;
 }
 
 #sidebar ul li.active>a,

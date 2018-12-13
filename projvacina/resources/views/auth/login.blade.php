@@ -1,22 +1,16 @@
-@extends('auth.Templates.template')
+@extends('auth.templates.login')
 
 @section('content-form')
-
-
-
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                
-
+            <div class="card">            
                 <div class="card-body">
                     <form class="login form" method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
                         @csrf
 
                         <div class="form-group">
                             {{-- formulario de login composto por email e senha --}}
-
                             <div class="col-md-7">
                             E-mail:
                                 <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>

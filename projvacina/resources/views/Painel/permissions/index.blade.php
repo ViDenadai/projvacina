@@ -1,63 +1,188 @@
 @extends('painel.templates.template')
 
 @section('content')
-
-<!--Filters and actions-->
-<div class="actions">
-    <div class="container">
-        
-        @can('view_users')
-        <div class="col-md-2 text-center">
-				<a href="/painel/newpermission">
-				<span style="font-size: 50px; color: #fff;">
-  <i class="fas fa-user-check"><h1 class="subtitle">Adicionar Permissão</h1></i>
-</span>
-					
-				</a>
-</div>
-@endcan
-    </div>
-</div><!--Actions-->
-
-<div class="clear"></div>
-
 <div class="container">
+    @if(!empty($successMsg))
+    <div class="alert alert-success" role="alert"><i class="fas fa-check"></i> {{ $successMsg }} </div>
+    @endif
+    <br>
     <h1 class="title">
-        Listagem das Permissões
+        <div class="d-flex">
+            <div class="mr-auto p-2"><b>Todas as permissões</b></div>
+                <!-- <div class="ml-auto p-2">
+                    <a href="/painel/newDose" data-toggle="modal" data-target="#permissionAddModal">
+                        <b><i class="far fa-plus-square add"></i></b>
+                    </a>  
+                </div> -->
+        </div>
     </h1>
-
-    <table class="table table-hover">
-        <tr>
-            <th>Nome</th>
-            <th>Label</th>
-            
-            
-            <th width="100px">Ações</th>
-        </tr>
-
-        @forelse( $permissions as $permission )
-        <tr>
-            <td>{{$permission->name}}</td>
-            <td>{{$permission->label}}</td>
-            
-            <td>
-                <a href="{{url("/painel/permission/$permission->id/edit")}}" class="edit">
-                    <i class="fa fa-pencil-square-o"></i>
-                </a>
-                <a href="{{url("/painel/permission/$permission->id/delete")}}" class="delete">
-                    <i class="fa fa-trash"></i>
-                </a>
-            </td>
-        </tr>
-        @empty
-        <tr>
-            <td colspan="90">
-                <p>Nenhum Resultado!</p>
-            </td>
-        </tr>
-        @endforelse
+    <hr>
+    <table id="permissionTable" class="table table-striped" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th width="100px">Ações</th>   
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($permissions as $permission)
+                <tr>
+                    <td>{{ $permission->name }}</td>
+                    <td>{{ $permission->label }}</td>
+                    
+                    <!-- Ações(Editar/Excluir) -->
+                    <td> 
+                        <button class="delete2" disabled>
+                            <i class="fa fa-pencil-square-o"></i>                                                    
+                        </button>
+                        <button type="submit" class="delete" disabled>
+                            <i class="fa fa-trash"></i>                                                    
+                        </button>
+                        <!-- <a class="edit" href="#" title="Editar">
+                            <i class="fa fa-pencil-square-o"></i>
+                            <input type="hidden" class="permissionId" id="permissionId" name="permissionId" value='{{ $permission->id }}'>
+                        </a>
+                        <form style="display: inline-block;" method="POST" 
+                            action="{{ route('painel.deletePermission') }}"                                                        
+                            data-toggle="tooltip" data-placement="top"
+                            title="Excluir" 
+                            onsubmit="return confirm('Caso você exclua esse tipo de vacina, todas as doses relacionadas à esse tipo serão excluídas. Você deseja excluir?')">
+                            <input type="hidden" class="permissionId" id="permissionId" name="permissionId" value='{{ $permission->id }}'>
+                            {{-- method_field('DELETE') --}}{{ csrf_field() }}                                                
+                            <button type="submit" class ="delete">
+                                <i class="fa fa-trash"></i>                                                    
+                            </button>
+                        </form> -->
+                    </td>      
+                </tr>
+            @endforeach
+        </tbody>
     </table>
 
-</div>
+    <!-- Modal de adição de permissões (Não implementado)-->
+    <div class="modal fade" id="permissionAddModal" role="dialog" aria-labelledby="permissionAddModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form method="POST" action="{{ route('painel.storePermission') }}" aria-label="{{ __('formAddPermission') }}">
+                    <!-- Modal header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAddLabel"><b>Adicionar permissão</b></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
 
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <!-- CSRF protection -->
+                        @csrf
+
+                    </div>                                
+                    
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">{{ __('Adicionar') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de edição de permissão (Não implementado) -->
+    <div class="modal fade" id="permissionUpdateModal" role="dialog" aria-labelledby="permissionUpdateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form method="POST" action="{{ route('painel.updatePermission') }}" aria-label="{{ __('formUpdatePermission') }}">
+                    <!-- Modal header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalUpdateLabel"><b>Alterar permissão</b></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <!-- CSRF protection -->
+                        @csrf
+
+                        
+                    </div>                                
+                    
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">{{ __('Alterar') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section("scripts")
+<!-- DataTable Bootstrap 4 -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"/>
+<!-- DataTable Js Bootstrap 4 -->
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+        // Tabela de tipos de vacinas
+        $('#permissionTable').DataTable({
+            "language": {
+                "decimal":        "",
+                "emptyTable":     "Não há informações na tabela",
+                "info":           "Mostrando _START_ a _END_ de _TOTAL_ entradas",
+                "infoEmpty":      "Mostrando 0 a 0 de 0 entradas",
+                "infoFiltered":   "(Filtrados de um total de _MAX_ entradas)",
+                "infoPostFix":    "",
+                "thousands":      ",",
+                "lengthMenu":     "Mostrar _MENU_ entradas",
+                "loadingRecords": "Carregando...",
+                "processing":     "Processando...",
+                "search":         "Procurar:",
+                "zeroRecords":    "Não foram econtrados registros correspondentes",
+                "paginate": {
+                    "first":      "Primeira",
+                    "last":       "Última",
+                    "next":       "Próxima",
+                    "previous":   "Anterior"
+                },
+                "aria": {
+                    "sortAscending":  ": ativar ordenação crescente da coluna",
+                    "sortDescending": ": ativar ordenação decrescente da coluna"
+                }
+            }
+        });
+        
+        // Edição do tipos de vacina
+        $('#permissionTable').on('click','.edit', function (event) {
+            // Previne o redirecionamento do link            
+            event.preventDefault();
+            $.ajax({
+                type: "GET",
+                data: {
+                    // Recupera o id do tipo de vacina que se quer modificar
+                    vaccineId: $(this).parent().find('.vaccineId').val()
+                },
+                url: "{{ route('painel.updatePermission_ajax')}}",                
+                dataType : 'json',
+                success: function(response) {
+                    $("#nameUpdate").val(response.vaccine.name);
+                    $("#vaccineIdUpdate").val(response.vaccine.id);
+                    $("#vaccineUpdateModal").modal("show");
+                },
+                error: function(request, status, error) {
+                    alert("Algum erro ocorreu na requisição, tente mais tarde.");
+                }
+            });
+        });
+
+    });
+</script>
 @endsection
