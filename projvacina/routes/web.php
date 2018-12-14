@@ -91,8 +91,8 @@ Route::get('/', function () {
 
 Auth::routes();
 
-// Route::get('/home', 'painel\PainelController@index');
-// Route::get('home', 'painel\PainelController@index');
+Route::get('/home', 'painel\DoseController@index');
+Route::get('home', 'painel\DoseController@index');
 
 // rota que direciona para a função index do controller painel é a pagina que entra logo após o usuario logar no sistema
 // Route::resource('painel','painel\PainelController');

@@ -1,4 +1,4 @@
-@extends('auth.Templates.template')
+@extends('auth.templates.unlogged')
 
 @section('content-form')
 <div class="form-control">

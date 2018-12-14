@@ -1,4 +1,4 @@
-@extends('auth.Templates.template')
+@extends('auth.templates.unlogged')
 
 @section('content-form')
 <form class="login form" method="POST" action="{{ route('password.request') }}" aria-label="{{ __('Reset Password') }}">
