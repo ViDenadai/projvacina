@@ -86,7 +86,7 @@
         </tbody>
     </table>
 
-    <!-- Modal de adição de tipos de vacinas -->
+    <!-- Modal de adição do usuário -->
     <div class="modal fade" id="userAddModal" role="dialog" aria-labelledby="userAddModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -197,7 +197,12 @@
     <div class="modal fade" id="userUpdateModal" role="dialog" aria-labelledby="userUpdateModal" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <form method="POST" action="{{ route('painel.updateUser') }}" aria-label="{{ __('formUpdateUser') }}">
+                <form class=""
+                    method="POST" 
+                    id="formUpdateUser" 
+                    action="{{ route('painel.updateUser') }}" 
+                    aria-label="{{ __('formUpdateUser') }}"
+                    oninput='passwordUpdate_confirm.setCustomValidity(passwordUpdate_confirm.value != passwordUpdate.value ? "As senhas não são iguais." : "")'>
                     <!-- Modal header -->
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalUpdateLabel"><b>Alterar informações do usuário</b></h5>

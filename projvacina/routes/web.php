@@ -94,6 +94,9 @@ Auth::routes();
 Route::get('/home', 'painel\DoseController@index');
 Route::get('home', 'painel\DoseController@index');
 
+// Rota de registro de usuário
+Route::post('userRegister', ['as' => 'userRegister', 'uses' => 'Auth\RegisterController@register']);
+
 // rota que direciona para a função index do controller painel é a pagina que entra logo após o usuario logar no sistema
 // Route::resource('painel','painel\PainelController');
 

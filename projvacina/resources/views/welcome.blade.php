@@ -81,9 +81,9 @@
                         <a href="{{ url('/home') }}">Home</a>
                     @else
                     {{-- se o usuario nao estiver logado aparece as opções de registro e login --}}
-                        <a href="{{ route('login') }}">Entrar</a>
+                        <a href="{{ route('login') }}">Entrar / Registro</a>
                         {{-- rota para a pagina de login do usauario --}}
-                        <a href="{{ route('register') }}">Registrar</a>
+                        <!-- <a href="{{ route('register') }}">Registrar</a> -->
                         {{-- rota para a pagina de registro de um novo usuario --}}
                     @endauth
                 </div>
