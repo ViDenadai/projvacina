@@ -17,6 +17,7 @@ class PermissionController extends Controller
     
     public function __construct(Permission $permissions)
     {
+        $this->middleware('auth');
         $this->permission = $permissions;        
     }
     

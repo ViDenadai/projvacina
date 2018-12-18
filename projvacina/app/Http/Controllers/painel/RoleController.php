@@ -19,6 +19,7 @@ class RoleController extends Controller
     
     public function __construct(role $roles)
     {
+        $this->middleware('auth');
         $this->role = $roles;                
     }
     

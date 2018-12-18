@@ -19,6 +19,7 @@ class DoseController extends Controller
     
     public function __construct(dose $doses)
     {
+        $this->middleware('auth');
         $this->dose = $doses;
         // referencia a tabela dose        
     }

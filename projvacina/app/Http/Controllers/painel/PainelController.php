@@ -10,6 +10,11 @@ use App\Permission;
 use App\Dose;
 class PainelController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         $totalUsers = User::count();

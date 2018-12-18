@@ -10,8 +10,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 // Rotas que possuem como prefixo /painel
-Route::group(['prefix' => 'painel', 'as' => 'painel.'], function(){
+Route::group(['prefix' => 'painel', 'as' => 'painel.', 'middleware' => ['auth']], function(){
     //  Rota que direciona para a função index do controller painel,pagina inicial
     // Route::get('/', 'painel\PainelController@index');
 
@@ -74,13 +75,13 @@ Route::group(['prefix' => 'painel', 'as' => 'painel.'], function(){
     // //  rota que direciona para a função destroy do controller User
     // Route::post('deletePermission', ['as' => 'deletePermission', 'uses' => 'painel\PermissionController@destroy']);
 
-    //  rota que direciona para a função index do controller permission
-    Route::get('permissions', 'painel\PermissionController@index');
-    //  rota que direciona para a função new do controller Permission
-    Route::get('newpermission', 'painel\PermissionController@new');
+    // //  rota que direciona para a função index do controller permission
+    // Route::get('permissions', 'painel\PermissionController@index');
+    // //  rota que direciona para a função new do controller Permission
+    // Route::get('newpermission', 'painel\PermissionController@new');
     
-    //  Rota que direciona para a função new do controller RoleUser
-    Route::get('newfunction','painel\RoleUserController@newfunction');
+    // //  Rota que direciona para a função new do controller RoleUser
+    // Route::get('newfunction','painel\RoleUserController@newfunction');
 });
 
 Route::get('/', function () {
@@ -96,6 +97,9 @@ Route::get('home', 'painel\DoseController@index');
 
 // Rota de registro de usuário
 Route::post('userRegister', ['as' => 'userRegister', 'uses' => 'Auth\RegisterController@register']);
+
+// Rota de logout
+Route::get('logout', ['as' => 'logout', 'uses' => 'Auth\LoginController@logout']);
 
 // rota que direciona para a função index do controller painel é a pagina que entra logo após o usuario logar no sistema
 // Route::resource('painel','painel\PainelController');

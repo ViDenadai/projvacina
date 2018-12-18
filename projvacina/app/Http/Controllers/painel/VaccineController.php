@@ -23,6 +23,7 @@ class VaccineController extends Controller
      */
     public function __construct(Vaccine $vaccine)
     {
+        $this->middleware('auth');
         // referencia a tabela vacine
         $this->vaccine = $vaccine;                
     }

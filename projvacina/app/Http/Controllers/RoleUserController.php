@@ -8,16 +8,12 @@ use App\Http\Controllers\Controller;
 use App\Role_user;
 
 class RoleUserController extends Controller
-{ 
-    
-    
-    
+{     
     public function index()
-    {
-       
-        
+    {               
         return view('newfunction');
     }
+    
     public function newfunction()
     {
        

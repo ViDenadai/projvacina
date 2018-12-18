@@ -5,9 +5,19 @@
 	<div class="d-flex justify-content-center h-100">
 		<div class="card">
 			<div class="card-header">
-				<a class="navbar-brand pb-2" href="/">
-                    <img src="{{url("Assets\Painel\imgs/acl-branca.png")}}" alt="acl" class="logo-login2">
-                </a>                
+                <div class="d-flex justify-content-start">
+                    <div class="pt-1 login-first-head">
+                        <a class="navbar-brand pb-2" href="/">  
+                            <i class="fas fa-home"></i>
+                        </a>                         
+                    </div>
+                    
+                    <div class="pt-1">
+                        <a class="pb-2" href="/">                     
+                            <img src="{{url("Assets\Painel\imgs/acl-branca.png")}}" alt="acl" class="logo-login2">
+                        </a>                     
+                    </div>
+                </div>                                                                                                                     
 			</div>
 			<div class="card-body">
                 {{-- Form login, composto por email e senha --}}
@@ -19,7 +29,7 @@
                     @csrf
 
                     {{-- E-mail --}}
-                    <div class="input-group form-group">
+                    <div class="input-group form-group pt-3">
 						<div class="input-group-prepend">
 							<span class="input-group-text"><i class="fas fa-user"></i></span>
 						</div>
@@ -178,76 +188,6 @@
         </div>
     </div>
 </div>
-<!-- <a href="/"><i class="fas fa-home"></i></a>
-<div class="login-header">
-    <img src="{{url("Assets\Painel\imgs/acl-branca.png")}}" alt="acl" class="logo-login2">
-</div>
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">            
-                <div class="card-body">
-                    <form class="login form" method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
-                        @csrf
-
-                        <div class="form-group">
-                            {{-- formulario de login composto por email e senha --}}
-                            <div class="col-md-7">
-                            E-mail:
-                                <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
-
-                                @if ($errors->has('email'))
-                                    <span class="invalid-feedback" role="alert" >
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            
-
-                            <div class="col-md-7">
-                            Senha:
-                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
-
-                                @if ($errors->has('password'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-md-7 offset-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                                    <label class="form-check-label" for="remember">
-                                        {{ __('Lembrar-me') }}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-7 offset-md-4">
-                                <button type="submit" class="btn btn-login">
-                                    {{ __('Login') }}
-                                </button>
-
-                                <a class="btn btn-link" href="{{ route('password.request') }}">
-                                    {{ __('Esqueceu sua senha?') }}
-                                </a>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
 @endsection
 
 @section("scripts")
@@ -255,14 +195,25 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.32.4/sweetalert2.all.min.js"></script>
 
 <script>
-    $(document).ready(function(){        
+    $(document).ready(function(){ 
+        // Hash vinda da landing page, utilizada
+        // para abrir o modal de cadastro
+        var hash = window.location.hash;
+        if (hash == "#openRegModal"){
+            setTimeout(function(){
+                $('#userAddModal').modal({backdrop: 'static', show: true});
+            }, 500);  
+        }
+
         // Registro do usuário
         $('#registerLink').on('click', function (event) {
             // Previne o redirecionamento do link            
             event.preventDefault();
 
             // Exibe o modal de registro e previne fechamento ao clicar fora de sua área
-            $('#userAddModal').modal({backdrop: 'static', show: true});      
+            setTimeout(function(){
+                $('#userAddModal').modal({backdrop: 'static', show: true});    
+            }, 400);   
         });
 
         // Envio das informações de cadastro

@@ -14,9 +14,8 @@ class RoleUserController extends Controller
     
     public function __construct(permission $role_users)
     {
-        $this->role_user = $role_users;
-        
-        
+        $this->middleware('auth');
+        $this->role_user = $role_users;                
     }
     
    

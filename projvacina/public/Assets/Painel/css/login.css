@@ -84,6 +84,7 @@ input:focus{
 .login_btn:hover{
     color: rgb(255, 255, 255);
     background-color: rgba(3, 95, 95, 0.836);
+    box-shadow: 0px 2px 2px rgba(173, 173, 173, 0.5);
 }
 
 .links{
@@ -106,4 +107,17 @@ img.logo-login2{
 
 .login-link:hover{
     color: #0be064a4;
+}
+
+.login-first-head{
+    width: 100px;
+}
+
+/* Estilo do link na página de login */
+.fa-home{    
+    color: white;
+}
+
+.fa-home:hover{
+    color: black;
 }
