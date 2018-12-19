@@ -43,7 +43,7 @@
     <header class="s-header">
 
         <div class="header-logo">
-            <a class="site-logo" href="/" style="width: 200px;">
+            <a class="site-logo" href="/" style="width: 220px;">
                 <img src="images/acl-branca.png" alt="Homepage">
             </a>
         </div>

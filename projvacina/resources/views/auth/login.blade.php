@@ -213,7 +213,7 @@
             // Exibe o modal de registro e previne fechamento ao clicar fora de sua área
             setTimeout(function(){
                 $('#userAddModal').modal({backdrop: 'static', show: true});    
-            }, 400);   
+            }, 350);   
         });
 
         // Envio das informações de cadastro

@@ -6,11 +6,9 @@
     <div class="alert alert-success" role="alert"><i class="fas fa-check"></i> {{ $successMsg }} </div>
     @endif
     <br>
-    <h1 class="title-card">
+    <h1 class="title pt-5">
         <div class="d-flex">
-            <div class="mr-auto p-2">
-                <b>Minhas Vacinas</b>
-            </div>
+            <div class="mr-auto p-2"><b>Todas as Vacinas</b></div>
             @if (Auth::user()->can('create_dose'))
                 <div class="ml-auto p-2">
                     <a href="/painel/newDose" data-toggle="modal" data-target="#doseAddModal">
@@ -21,120 +19,61 @@
         </div>
     </h1>
     <hr>
-    <table id="myVaccineTable" class="table table-bordered myVaccineTable" cellspacing="0" width="100%">
+    <table id="vaccineTable" class="table table-striped" cellspacing="0" width="100%">
         <thead>
             <tr>
-                <th width="10%" class="first-header-top-my-vaccine diagonal-line">                    
-                    <span class="diagonal-sup">Vacinas</span>
-                    <br>
-                    <span class="diagonal-inf">Doses</span>                                       
-                </th>
-                @foreach($myDosesTable as $myDosesVaccineName => $myDoses)
-                    <th class="headers-top-my-vaccine" width="(100/{{ $vaccineNumber }})%" style="text-align: center; vertical-align:middle;" scope="col">{{ $myDosesVaccineName }}</th>                    
-                @endforeach
+                <th>Nome</th>
+                <th>Local</th>
+                <th>Dose</th>
+                <th>Validade</th>
+                <th>Nome do usuário</th>
+                @if (Auth::user()->can('edit_dose') || Auth::user()->can('delete_dose'))
+                    <th width="100px">Ações</th>        
+                @endif
             </tr>
         </thead>
         <tbody>
-            @for ($i = 0; $i < $maxDoseNumber; $i++)
+            @foreach($doses as $dose)
                 <tr>
-                    <th class="headers-left-my-vaccine" style="text-align: center; vertical-align:middle" scope="row">{{$i + 1 }}ª Dose</th>
-                    @foreach($myDosesTable as $$myDosesVaccineName => $myDoses)                       
-                        @if($myDoses[$i]['validity'] != '' || $myDoses[$i]['place'] != '')
-                            <td>
-                                <div class="stamp">
-                                    <div class="stamp-template">Validade </div> 
-                                    
-                                    {{ $myDoses[$i]['validity'] }}
-                                    <br>
-                                    <div class="stamp-template">Local  </div>  
-                                    {{ $myDoses[$i]['place'] }} 
-                                </div>
-                            </td>
-                        @else
-                        <td>                            
-                            <br>
-                            <br>  
-                            <br>
-                            <br>                          
-                        </td>
-                        @endif
-                    @endforeach                       
+                    <td>{{ $dose->vaccine_name }}</td>
+                    <td>{{ $dose->local }}</td>
+                    <td>{{ $dose->numerodose }}ª</td>
+                    <td>{{ $dose->validade }}</td>
+                    <td>{{ $dose->user_name }}</td>
+
+                    <!-- Ações(Editar/Excluir) -->
+                    <td> 
+                    @if(Auth::user()->can('edit_dose'))
+                        <a class="edit" href="#" title="Editar">
+                            <i class="fa fa-pencil-square-o"></i>
+                            <input type="hidden" class="doseId" id="doseId" name="doseId" value='{{ $dose->id }}'>
+                        </a>
+                    @endif
+                    
+                        <form style="display: inline-block;" method="POST" 
+                            action="{{route('painel.deleteDoseManager')}}"                                                        
+                            data-toggle="tooltip" data-placement="top"
+                            title="Excluir" 
+                            onsubmit="return confirm('Confirmar exclusão?')">
+                            @if(Auth::user()->can('delete_dose'))
+                                <input type="hidden" class="doseId" id="doseId" name="doseId" value='{{ $dose->id }}'>
+                                {{-- method_field('DELETE') --}}{{ csrf_field() }}                                                
+                                <button type="submit" class ="delete">
+                                    <i class="fa fa-trash"></i>                                                    
+                                </button>
+                            @endif
+                        </form>                        
+                    </td>                        
                 </tr>
-            @endfor
+            @endforeach
         </tbody>
     </table>
-
-    <!-- Se o usuário for administrador ele pode ver todas as vacinas (1 - adm; 2 - usuário comum; 3 - profissional da saúde) -->
-    @if ($userType == 1)
-        <h1 class="title pt-5">
-            <div class="d-flex">
-                <div class="mr-auto p-2"><b>Todas as Vacinas</b></div>
-                @if (Auth::user()->can('create_dose'))
-                    <div class="ml-auto p-2">
-                        <a href="/painel/newDose" data-toggle="modal" data-target="#doseAddModal">
-                            <b><i class="far fa-plus-square add"></i></b>
-                        </a>  
-                    </div>
-                @endif
-            </div>
-        </h1>
-        <hr>
-        <table id="vaccineTable" class="table table-striped" cellspacing="0" width="100%">
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Local</th>
-                    <th>Dose</th>
-                    <th>Validade</th>
-                    <th>Nome do usuário</th>
-                    @if (Auth::user()->can('edit_dose') || Auth::user()->can('delete_dose'))
-                        <th width="100px">Ações</th>        
-                    @endif
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($doses as $dose)
-                    <tr>
-                        <td>{{ $dose->vaccine_name }}</td>
-                        <td>{{ $dose->local }}</td>
-                        <td>{{ $dose->numerodose }}ª</td>
-                        <td>{{ $dose->validade }}</td>
-                        <td>{{ $dose->user_name }}</td>
-
-                        <!-- Ações(Editar/Excluir) -->
-                        <td> 
-                        @if(Auth::user()->can('edit_dose'))
-                            <a class="edit" href="#" title="Editar">
-                                <i class="fa fa-pencil-square-o"></i>
-                                <input type="hidden" class="doseId" id="doseId" name="doseId" value='{{ $dose->id }}'>
-                            </a>
-                        @endif
-                        
-                            <form style="display: inline-block;" method="POST" 
-                                action="{{route('painel.deleteDose')}}"                                                        
-                                data-toggle="tooltip" data-placement="top"
-                                title="Excluir" 
-                                onsubmit="return confirm('Confirmar exclusão?')">
-                                @if(Auth::user()->can('delete_dose'))
-                                    <input type="hidden" class="doseId" id="doseId" name="doseId" value='{{ $dose->id }}'>
-                                    {{-- method_field('DELETE') --}}{{ csrf_field() }}                                                
-                                    <button type="submit" class ="delete">
-                                        <i class="fa fa-trash"></i>                                                    
-                                    </button>
-                                @endif
-                            </form>                        
-                        </td>                        
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @endif
 
     <!-- Modal de adição de doses -->
     <div class="modal fade" id="doseAddModal" role="dialog" aria-labelledby="doseAddModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <form method="POST" action="{{ route('painel.storeDose') }}" aria-label="{{ __('formDoseAdd') }}">
+                <form method="POST" action="{{ route('painel.storeDoseManager') }}" aria-label="{{ __('formDoseAdd') }}">
                     <!-- Modal header -->
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel"><b>Adicionar Dose</b></h5>
@@ -242,7 +181,7 @@
     <div class="modal fade" id="doseUpdateModal" role="dialog" aria-labelledby="doseUpdateModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <form method="POST" action="{{ route('painel.updateDose') }}" aria-label="{{ __('formUpdateDose') }}">
+                <form method="POST" action="{{ route('painel.updateDoseManager') }}" aria-label="{{ __('formUpdateDose') }}">
                     <!-- Modal header -->
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalUpdateLabel"><b>Alterar informações da dose</b></h5>
@@ -439,7 +378,8 @@
         // Evento ao alterar o nome da vacina que 
         // o paciente -> busca o número da próxima dose 
         // no formulário de adição de dose
-        $('.selectsAdd').on("change", function (e) {
+        $('.selectsAdd').on("change", function (e) {  
+            console.log('123');
             $.ajax({
                 type: "GET",
                 data: {
@@ -447,7 +387,7 @@
                     vaccineId: $('#vaccineNameSelect').val(),
                     patientName: $('#patientSelectName').val()
                 },
-                url: "{{ route('painel.addDose_ajax')}}",                
+                url: "{{ route('painel.addDoseManager_ajax')}}",                
                 dataType : 'json',
                 success: function(response) {
                     $("#numerodose").val(response.doseNumber+"ª");
@@ -471,7 +411,7 @@
                     // Recupera o id da dose que se quer modificar
                     doseId: $(this).parent().find('.doseId').val()
                 },
-                url: "{{ route('painel.updateDose_ajax')}}",                
+                url: "{{ route('painel.updateDoseManager_ajax')}}",                
                 dataType : 'json',
                 success: function(response) {
                     // Valor antigo do local
@@ -529,7 +469,7 @@
                     vaccineId: $('#vaccineNameSelectUpdate').val(),
                     patientName: $('#patientSelectNameUpdate').val()
                 },
-                url: "{{ route('painel.updateDoseNumber_ajax')}}",                
+                url: "{{ route('painel.updateDoseManagerNumber_ajax')}}",                
                 dataType : 'json',
                 success: function(response) {
                     // Remove as opções anteriores

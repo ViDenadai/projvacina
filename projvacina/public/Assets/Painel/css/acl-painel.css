@@ -524,6 +524,17 @@ h1.title{
     font-weight: bold;
 }
 
+h1.title-card{
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    font-size: 36px;
+    font-weight: bold;
+    /* border-style: solid;
+    border-width: 2px; */
+    /* border-bottom: 4px solid rgb(0, 0, 0); */
+    /* border-left: 6px solid rgb(0, 0, 0); */
+}
+
 h1.subtitle{
     color: rgb(255, 255, 255);
     font-size: 12px;

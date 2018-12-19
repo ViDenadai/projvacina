@@ -17,6 +17,7 @@
 	<link rel="icon" type="image/png" href="{{url("Assets\Painel\imgs\favicon-acl.png")}}">
 	
 	<!--icones utilizados no sistemas estão disponiveis em https://fontawesome.com/   -->
+	<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous"> -->
   	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">	
 
 	<style>
@@ -90,10 +91,17 @@
 						@can('view_vacina')
 						<li>
 							<a href="{{ route('painel.doses') }}">
-								<i class="fa fa-id-card" aria-hidden="true"></i></i> Carteira de vacinação						
+								<i class="fa fa-id-card" aria-hidden="true"></i> Carteira de vacinação						
 							</a>
 						</li>
 						@endcan
+						@if (Auth::user()->can('edit_dose') || Auth::user()->can('delete_dose'))
+						<li>
+							<a href="{{ route('painel.doseManager') }}">
+								<i class="fa fa-table" aria-hidden="true"></i> Gerenciamento de doses						
+							</a>
+						</li>
+						@endif
 						@can ('view_vaccine_types')
 						<li>
 							<a href="{{ route('painel.vaccines') }}">

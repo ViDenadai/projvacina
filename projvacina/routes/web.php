@@ -42,6 +42,21 @@ Route::group(['prefix' => 'painel', 'as' => 'painel.', 'middleware' => ['auth']]
     //  rota que direciona para a função destroy do controller Dose
     Route::post('deleteDose', ['as' => 'deleteDose', 'uses' => 'painel\DoseController@destroy']);
 
+    //  rota que direciona para a função index do controller DoseManager
+    Route::get('doseManager', ['as' => 'doseManager', 'uses' => 'painel\DoseManagerController@index']);
+    //  rota para a requisição ajax de adição de dose
+    Route::get('addDoseManager_ajax', ['as' => 'addDoseManager_ajax', 'uses' => 'painel\DoseManagerController@addDose_ajax']);    
+    //  Rota que direciona para a função store do controller DoseManager
+    Route::post('storeDoseManager', ['as' => 'storeDoseManager', 'uses' => 'painel\DoseManagerController@store']);
+    //  rota para a requisição ajax de update de dose
+    Route::get('updateDoseManager_ajax', ['as' => 'updateDoseManager_ajax', 'uses' => 'painel\DoseManagerController@update_ajax']);
+    //  rota para a requisição ajax de update do número da dose
+    Route::get('updateDoseManagerNumber_ajax', ['as' => 'updateDoseManagerNumber_ajax', 'uses' => 'painel\DoseManagerController@updateDoseNumber_ajax']);
+    //  Rota que direciona para a função update do controller DoseManager
+    Route::post('updateDoseManager', ['as' => 'updateDoseManager', 'uses' => 'painel\DoseManagerController@update']);
+    //  rota que direciona para a função destroy do controller DoseManager
+    Route::post('deleteDoseManager', ['as' => 'deleteDoseManager', 'uses' => 'painel\DoseManagerController@destroy']);
+
     //  rota que direciona para a função index do controller Vaccine
     Route::get('vaccines', ['as' => 'vaccines', 'uses' => 'painel\VaccineController@index']);
     //  rota para a requisição ajax de update do tipo de vacina

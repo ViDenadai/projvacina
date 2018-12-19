@@ -74,7 +74,7 @@ html, body {
 }
 
 body {
-    background: #111111;
+    background: #fffefe;
     font-family: "lora-regular", serif;
     font-size: 1.7rem;
     font-style: normal;
@@ -527,7 +527,7 @@ form,
     left: 0;
     right: 0;
     bottom: 0;
-    background: #050505;
+    background: #ffffff;
     z-index: 800;
     height: 100%;
     width: 100%;
@@ -1471,8 +1471,8 @@ button::-moz-focus-inner, input::-moz-focus-inner {
  * ## main navigation 
  * ------------------------------------------------------------------- */
 .header-nav {
-    background: #0C0C0C;
-    color: rgba(255, 255, 255, 0.25);
+    background: rgb(240, 240, 240);
+    color: rgba(0, 0, 0, 0.25);
     font-family: "montserrat-light", sans-serif;
     font-size: 1.3rem;
     line-height: 1.846;
@@ -1496,13 +1496,13 @@ button::-moz-focus-inner, input::-moz-focus-inner {
 }
 
 .header-nav a, .header-nav a:visited {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(0, 0, 0, 0.5);
 }
 
 .header-nav a:hover,
 .header-nav a:focus,
 .header-nav a:active {
-    color: white;
+    color: rgb(0, 0, 0);
 }
 
 .header-nav h3 {
@@ -1542,7 +1542,7 @@ button::-moz-focus-inner, input::-moz-focus-inner {
 
 .header-nav__list a,
 .header-nav__list a:visited {
-    color: #FFFFFF;
+    color: rgb(0, 0, 0);
 }
 
 .header-nav__social {
@@ -1665,7 +1665,7 @@ button::-moz-focus-inner, input::-moz-focus-inner {
 }
 
 .header-menu-toggle:hover, .header-menu-toggle:focus {
-    color: #FFFFFF;
+    color: rgb(255, 255, 255);
 }
 
 .header-menu-text {
@@ -1687,7 +1687,7 @@ button::-moz-focus-inner, input::-moz-focus-inner {
     top: 50%;
     right: auto;
     bottom: auto;
-    background-color: white;
+    background-color: rgb(255, 255, 255);
     -webkit-transition: all 0.5s ease-in-out;
     transition: all 0.5s ease-in-out;
 }
@@ -3336,7 +3336,7 @@ footer {
     font-size: 15px;
     line-height: 2;
     text-align: center;
-    color: rgba(255, 255, 255, 0.3);
+    color: #39b54a;
 }
 
 footer h4 {
