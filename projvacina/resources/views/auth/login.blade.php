@@ -85,7 +85,7 @@
 					Não é cadastrado ainda?<a id="registerLink" class="login-link" href="#">Cadastre-se</a>
 				</div>
 				<div class="d-flex justify-content-center">
-                    <a class="login-link" href="{{ route('password.request') }}">
+                    <a id="forgotPasswordLink" class="login-link" href="#">
                         {{ __('Esqueceu sua senha?') }}
                     </a>
 				</div>
@@ -188,6 +188,56 @@
         </div>
     </div>
 </div>
+
+<!-- Modal de esqueceu a senha -->
+<div class="modal fade" id="forgotPasswordModal" role="dialog" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <form class="" 
+                method="POST" 
+                action="{{ route('password.email') }}" 
+                aria-label="{{ __('formForgotPassword') }}" 
+                id="formForgotPassword">               
+                
+                <!-- Modal header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAddLabel"><b>Recuperação de senha</b></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <!-- CSRF protection -->
+                    @csrf
+
+                    <h6>Informe seu e-mail e enviaremos instruções para você redefinir sua senha.</h6>
+                    <hr>
+
+                    <!-- E-mail -->
+                    <div class="form-group row">
+                        <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail ') }}</label>
+                        <div class="col-md-6">
+                            <input id="email" 
+                                type="email" 
+                                class="email form-control" 
+                                name="email" 
+                                value="{{ old('email') }}" 
+                                required>
+                        </div>
+                    </div>                              
+                </div>                                
+                
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success" >{{ __('Enviar') }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section("scripts")
@@ -213,6 +263,17 @@
             // Exibe o modal de registro e previne fechamento ao clicar fora de sua área
             setTimeout(function(){
                 $('#userAddModal').modal({backdrop: 'static', show: true});    
+            }, 350);   
+        });
+
+        // Recuperação de senha
+        $('#forgotPasswordLink').on('click', function (event) {
+            // Previne o redirecionamento do link            
+            event.preventDefault();
+
+            // Exibe o modal de registro e previne fechamento ao clicar fora de sua área
+            setTimeout(function(){
+                $('#forgotPasswordModal').modal({backdrop: 'static', show: true});    
             }, 350);   
         });
 
@@ -266,6 +327,27 @@
                         title: 'Erro',
                         text: 'Algo não ocorreu bem, tente mais tarde.'
                     });
+                }
+            });
+        });
+
+        // Envio do e-mail na recuperação de senha
+        $('#formForgotPassword').submit(function(event) {
+            // Previne o submit do form            
+            event.preventDefault();
+            $.ajax({
+                type: "GET",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    email: $(this).parent().find('#email').val()
+                },
+                url: "{{ route('forgotPass_email_ajax')}}",                
+                dataType : 'json',
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(request, status, error) {
+                    console.log(error);                    
                 }
             });
         });

@@ -36,19 +36,6 @@ class DoseController extends Controller
 
         // Nome dos pacientes existentes na plataforma
         $patientsName = DB::table('users')->select('name')->get();
-        if ($user->hasAnyRoles('adm')) {
-            // Recupera todas as informações de doses junto com os nomes dos usuários correspondentes 
-            $doses = DB::table('doses')
-                        ->join('users', 'doses.id_user', '=', 'users.id')
-                        ->join('vaccines', 'doses.vaccine_id', '=', 'vaccines.id')
-                        ->select('doses.*', 'users.name as user_name', 'vaccines.name as vaccine_name')
-                        ->get();
-
-            // Formatação de data
-            foreach ($doses as $dose) {
-                $dose->validade = date_format(new \DateTime($dose->validade), 'd/m/Y'); 
-            }
-        }
 
         // Tipo do usuário (1 - adm; 2 - usuário comum; 3 - profissional da saúde)
         $userType = (DB::table('role_user')
@@ -134,8 +121,7 @@ class DoseController extends Controller
         $vaccineNumber = count($vaccinesName);
         
         // painel.Vacinas.index => view da carteira de vacinação com todas as doses
-        return view('painel.doses.index', compact(
-                                                'doses', 
+        return view('painel.doses.index', compact( 
                                                 'myDoses', 
                                                 'patientsName', 
                                                 'userType' , 
@@ -190,94 +176,5 @@ class DoseController extends Controller
         return redirect()->action(
             'painel\DoseController@index', ['successMsg' => $successMsg]
         ); 
-    }
-
-    // Função que retorna os dados necessários para
-    // a atualização da dose
-    public function update_ajax()
-    {        
-        // Id da dose selecionada
-        $doseId = Input::get('doseId');
-
-        // Dose correspondente
-        $dose = DB::table('doses')
-                    ->join('users', 'doses.id_user', '=', 'users.id')
-                    ->select('doses.*', 'users.name as patientName')
-                    ->where('doses.id', '=', $doseId)
-                    ->first();
-        return response()->json(array('dose' => $dose));  
-    }
-
-    public function updateDoseNumber_ajax(Request $request)
-    {
-        // Id da dose selecionada no update
-        $doseId = Input::get('doseId');
-        
-        // Id do nome da vacina selecionada
-        $vaccine_id = Input::get('vaccineId');
-
-        // Nome do paciente
-        $patientName = Input::get('patientName');
-
-        // Números das doses existentes para a vacina e a pessoa
-        // selecionada
-        $doseNumbers =  DB::table('doses')
-                            ->join('users', 'doses.id_user', '=', 'users.id')
-                            ->select('doses.numerodose', 'doses.id')
-                            ->where('vaccine_id', '=', $vaccine_id)
-                            ->where('users.name', '=', $patientName)
-                            ->orderBy('numerodose', 'asc')
-                            ->distinct()
-                            ->get();
-                            
-        // Doses podem possuir valores de 1 a 15(É a minha definição,
-        // alterar aqui se mais números forem necessários)
-        $doseNumbersPossibilities = range(1, 15);
-        
-        foreach ($doseNumbers as $doseNumber) {
-            // O número da dose atual do registro é mantido entre as
-            // possibilidades de seleção
-            if ($doseNumber->id != $doseId) {
-                unset($doseNumbersPossibilities[intval($doseNumber->numerodose)-1]);
-            }
-        }
-        return response()->json(array('doseNumbersPossibilities' => $doseNumbersPossibilities)); 
-    }
-
-    public function update(Request $request)
-    {
-        $dose = Dose::findOrFail($request->doseIdUpdate); 
-        $dose->vaccine_id = $request->vaccineNameSelectUpdate;
-        $dose->local = $request->localUpdate;
-        $dose->id_user = (DB::table('users')->select('id')->where('name', '=', $request->patientSelectNameUpdate)->first())->id;
-        
-        // Em numerodose permanecem apenas os números
-        $dose->numerodose = filter_var($request->doseSelectUpdate, FILTER_SANITIZE_NUMBER_INT);
-        $dose->validade = $request->dateUpdate;
-        $dose->save();
-
-        // Após a dose ser atualizada
-        // retorna para a página de doses por meio do index
-        // com uma mensagem de confirmação
-        $successMsg = 'Dose atualizada com sucesso!'; 
-        return redirect()->action(
-            'painel\DoseController@index', ['successMsg' => $successMsg]
-        );  
-    }
-
-    // Função que recebe no parâmetro o id da dose a ser removida da tabela
-    public function destroy(Request $request) 
-    {
-        $dose = Dose::findOrFail($request->doseId);
-        $dose->delete();
-
-        // Após a dose ser removida 
-        // retorna para a página de doses por meio do index
-        // com uma mensagem de confirmação
-        $successMsg = 'Dose removida com sucesso!';
-        return redirect()->action(
-            'painel\DoseController@index', ['successMsg' => $successMsg]
-        );     
-    }
-    
+    }  
 }

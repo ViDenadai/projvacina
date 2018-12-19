@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 class ForgotPasswordController extends Controller
 {
     /*
@@ -29,4 +32,27 @@ class ForgotPasswordController extends Controller
     {
         $this->middleware('guest');
     }
+
+    /**
+     * Verifica se o e-mail existe antes de submeter o e-mail de recuperação
+     *
+     * @return   boolean    $exists      Se for true existe o e-mail, caso contrário, é false 
+     *
+     */
+    public function forgotPass_email_ajax()
+    {
+        // Email digitado
+        $email = Input::get('email');
+        $user = DB::table('users')
+                    ->where('email', '=', $email)
+                    ->get();
+        // Se existe o e-mail existe
+        if ($user != NULL) {
+            $exists = true;
+        } else {
+            $exists = false;
+        }
+        return response()->json(array('exists' => $exists));  
+    }
+
 }

@@ -110,7 +110,7 @@
 
             <div class="row home-content__main">
 
-                <h3>Bem-vindo à Minhas Vacinas</h3>
+                <h3>Bem-vindo ao Minhas Vacinas</h3>
 
                 <h1>
                     A sua plataforma de <br>

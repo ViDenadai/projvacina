@@ -33,14 +33,6 @@ Route::group(['prefix' => 'painel', 'as' => 'painel.', 'middleware' => ['auth']]
     Route::get('addDose_ajax', ['as' => 'addDose_ajax', 'uses' => 'painel\DoseController@addDose_ajax']);    
     //  Rota que direciona para a função store do controller Dose
     Route::post('storeDose', ['as' => 'storeDose', 'uses' => 'painel\DoseController@store']);
-    //  rota para a requisição ajax de update de dose
-    Route::get('updateDose_ajax', ['as' => 'updateDose_ajax', 'uses' => 'painel\DoseController@update_ajax']);
-    //  rota para a requisição ajax de update do número da dose
-    Route::get('updateDoseNumber_ajax', ['as' => 'updateDoseNumber_ajax', 'uses' => 'painel\DoseController@updateDoseNumber_ajax']);
-    //  Rota que direciona para a função update do controller Dose
-    Route::post('updateDose', ['as' => 'updateDose', 'uses' => 'painel\DoseController@update']);
-    //  rota que direciona para a função destroy do controller Dose
-    Route::post('deleteDose', ['as' => 'deleteDose', 'uses' => 'painel\DoseController@destroy']);
 
     //  rota que direciona para a função index do controller DoseManager
     Route::get('doseManager', ['as' => 'doseManager', 'uses' => 'painel\DoseManagerController@index']);
@@ -115,6 +107,9 @@ Route::post('userRegister', ['as' => 'userRegister', 'uses' => 'Auth\RegisterCon
 
 // Rota de logout
 Route::get('logout', ['as' => 'logout', 'uses' => 'Auth\LoginController@logout']);
+
+// Rota para verificação de e-mail na recuperação de senha
+Route::get('forgotPass_email_ajax', ['as' => 'forgotPass_email_ajax', 'uses' => 'Auth\ForgotPasswordController@forgotPass_email_ajax']);
 
 // rota que direciona para a função index do controller painel é a pagina que entra logo após o usuario logar no sistema
 // Route::resource('painel','painel\PainelController');
