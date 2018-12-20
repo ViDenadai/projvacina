@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 
 class ForgotPasswordController extends Controller
 {
@@ -45,9 +46,11 @@ class ForgotPasswordController extends Controller
         $email = Input::get('email');
         $user = DB::table('users')
                     ->where('email', '=', $email)
-                    ->get();
-        // Se existe o e-mail existe
-        if ($user != NULL) {
+                    ->first();
+
+        // Caso o e-mail esteja linkado à um usuário retorna um booleano
+        // informando a sua existência
+        if (!empty($user)) {
             $exists = true;
         } else {
             $exists = false;

@@ -33,8 +33,7 @@
 						<div class="input-group-prepend">
 							<span class="input-group-text"><i class="fas fa-user"></i></span>
 						</div>
-						<input id="email" 
-                            type="email" 
+						<input type="email"                             
                             class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" 
                             name="email" 
                             value="{{ old('email') }}" 
@@ -218,13 +217,13 @@
                     <!-- E-mail -->
                     <div class="form-group row">
                         <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail ') }}</label>
-                        <div class="col-md-6">
+                        <div id="divForgotEmailInput" class="col-md-6">
                             <input id="email" 
                                 type="email" 
                                 class="email form-control" 
                                 name="email" 
                                 value="{{ old('email') }}" 
-                                required>
+                                required>                         
                         </div>
                     </div>                              
                 </div>                                
@@ -250,6 +249,7 @@
         // para abrir o modal de cadastro
         var hash = window.location.hash;
         if (hash == "#openRegModal"){
+            // Existe um delay para abrir o modal de cadastro
             setTimeout(function(){
                 $('#userAddModal').modal({backdrop: 'static', show: true});
             }, 500);  
@@ -260,7 +260,8 @@
             // Previne o redirecionamento do link            
             event.preventDefault();
 
-            // Exibe o modal de registro e previne fechamento ao clicar fora de sua área
+            // Exibe o modal de registro, com um delay, e previne o
+            // fechamento ao clicar fora de sua área
             setTimeout(function(){
                 $('#userAddModal').modal({backdrop: 'static', show: true});    
             }, 350);   
@@ -271,7 +272,8 @@
             // Previne o redirecionamento do link            
             event.preventDefault();
 
-            // Exibe o modal de registro e previne fechamento ao clicar fora de sua área
+            // Exibe o modal de registro, com um delay, e previne o
+            // fechamento ao clicar fora de sua área
             setTimeout(function(){
                 $('#forgotPasswordModal').modal({backdrop: 'static', show: true});    
             }, 350);   
@@ -315,8 +317,7 @@
 
                         // Reseta os valores do form de registro e fecha o modal
                         $('#formAddUser')[0].reset();
-                        $('#userAddModal').modal('hide');  
-                                              
+                        $('#userAddModal').modal('hide');                                                
                     });
                 },
                 error: function(request, status, error) {
@@ -334,7 +335,7 @@
         // Envio do e-mail na recuperação de senha
         $('#formForgotPassword').submit(function(event) {
             // Previne o submit do form            
-            event.preventDefault();
+            event.preventDefault();            
             $.ajax({
                 type: "GET",
                 data: {
@@ -344,7 +345,57 @@
                 url: "{{ route('forgotPass_email_ajax')}}",                
                 dataType : 'json',
                 success: function(response) {
-                    console.log(response);
+                    // Se o e-mail existe o submit do form é feito
+                    if (response.exists) {  
+                        // Alerta carregamento durante o envio do e-mail
+                        swal({
+                            title: 'Enviando os dados...'
+                        });
+                        swal.showLoading(); 
+                        
+                        // Submit do form por meio de uma requisição ajax                      
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('password.email') }}",
+                            data: {
+                                _token: "{{ csrf_token() }}",
+                                email: $('#email').val()
+                            },
+                            success: function(response) {
+                                setTimeout(function(){                            
+                                    Swal({
+                                        allowOutsideClick: false,
+                                        type: 'success',
+                                        title: 'Requisição enviada!',
+                                        text: 'Em algum tempo você receberá um e-mail com instruções para a alteração da senha.'
+                                    });
+                                }, 400);
+
+                                // Reseta os valores do form de input de e-mail no
+                                // esqueci a senha e fecha o modal
+                                $('#formForgotPassword')[0].reset();
+                                $('#invalidFeedbackEmail').remove();
+                                $('#forgotPasswordModal').modal('hide');
+                            },
+                            error: function(request, status, error) {                            
+                                Swal({
+                                    allowOutsideClick: false,
+                                    target: document.getElementById('#forgotPasswordModal'),
+                                    type: 'error',
+                                    title: 'Erro',
+                                    text: 'Algo não ocorreu bem, tente mais tarde.'
+                                }); 
+                            } 
+                        });                        
+                    } else {
+                        $('#divForgotEmailInput').append(
+                            '<span id="invalidFeedbackEmail" class="valid-feedback d-block" style="color: red;">'
+                                +'<strong>'
+                                    +'O e-mail informado não está presente na plataforma! Verifique o que foi digitado.'
+                                +'</strong>'
+                            +'</span>'
+                        );
+                    }
                 },
                 error: function(request, status, error) {
                     console.log(error);                    
